@@ -967,6 +967,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
+const WHICH_VERSION = 'beta';
+
 var displays = {
     uptake: {
         title: 'Uptake',
@@ -991,7 +993,22 @@ var displays = {
         title: "Crash Rate",
         description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         scaffoldData: i => 100000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 500 - i * 100,
-        xAxisLabel: 'days since release'
+        xAccessor: 'activity_date',
+        yAccessor: 'crash_rate',
+        formatData: data => {
+            data = MG.convert.date(data, 'activity_date');
+            data = MG.convert.number(data, 'usage_khours');
+            data = MG.convert.number(data, 'M + C - S');
+            data = data.map(d => {
+                d.crash_rate = d['M + C - S'] / d.usage_khours;
+                d.date = d.activity_date;
+                return d;
+            });
+            data = data.filter(d => d.channel === WHICH_VERSION && d.build_version == '57.0' && d.date > new Date('2017-10-01')); // && 
+            return data;
+        },
+        xAxisLabel: 'days since release',
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/1092/results.csv?api_key=f7dac61893e040ca59c76fd616f082479e2a1c85'
     },
     pagesVisited: {
         title: "Total Pages Visited",
@@ -1057,7 +1074,10 @@ TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'crashRate', title: displays.stability.title,
             description: displays.stability.description,
-            scaffoldData: displays.stability.scaffoldData,
+            apiURI: displays.stability.apiURI,
+            formatData: displays.stability.formatData,
+            xAccessor: displays.stability.xAccessor,
+            yAccessor: displays.stability.yAccessor,
             xAxisLabel: displays.stability.xAxisLabel })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -21411,24 +21431,50 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
     componentDidMount() {
         // API call - get that data, then plot it.
         //var dataHarness = fakeIt(100, (i)=>Math.sin(i/10)*10+(Math.random()-.5)*10)
-        var args = [100];
-        if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData);
-        var dataHarness = fakeIt(...args);
-        MG.data_graphic({
-            target: '#' + this.state.id,
-            data: dataHarness,
-            legend: ['Firefox 57'],
-            x_accessor: 'x',
-            y_accessor: 'y',
-            color: 'black',
-            area: false,
-            width: this.props.width,
-            right: 30,
-            height: 250,
-            description: this.props.description,
-            title: this.props.title
 
-        });
+        // formatData: function
+        // 
+
+        if (this.props.hasOwnProperty('apiURI')) {
+            d3.csv(this.props.apiURI, data => {
+                if (this.props.formatData !== undefined) data = this.props.formatData(data);
+
+                MG.data_graphic({
+                    target: '#' + this.state.id,
+                    data: data,
+                    x_accessor: this.props.xAccessor,
+                    y_accessor: this.props.yAccessor,
+                    color: 'black',
+                    legend: ['Fx57'],
+                    markers: [{ label: '57', date: new Date('2017-11-14') }],
+                    area: false,
+                    width: this.props.width,
+                    right: 30,
+                    height: 250,
+                    description: this.props.description,
+                    title: this.props.title
+                });
+            });
+        } else {
+            var args = [100];
+            if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData);
+            var data = fakeIt(...args);
+            MG.data_graphic({
+                target: '#' + this.state.id,
+                data: data,
+                legend: ['Firefox 57'],
+                x_accessor: 'x',
+                y_accessor: 'y',
+                color: 'black',
+                area: false,
+                width: this.props.width,
+                right: 30,
+                height: 250,
+                description: this.props.description,
+                title: this.props.title
+
+            });
+        }
     }
 }
 

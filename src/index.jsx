@@ -2,7 +2,7 @@ import React from 'react'
 import {render} from 'react-dom'
 import {GraphicDisplay, DisplayRow, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber} from './layout.jsx'
 
-
+const WHICH_VERSION = 'beta'
 
 
 var displays = {
@@ -29,7 +29,22 @@ var displays = {
         title: "Crash Rate",
         description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         scaffoldData: i=>  100000 + (Math.random()*Math.cos(i/10)*10 + 1) * 500 - i*100,
-        xAxisLabel: 'days since release'
+        xAccessor: 'activity_date',
+        yAccessor: 'crash_rate',
+        formatData: (data) => {
+            data = MG.convert.date(data, 'activity_date')
+            data = MG.convert.number(data, 'usage_khours')
+            data = MG.convert.number(data, 'M + C - S')
+            data = data.map(d=>{
+                d.crash_rate = d['M + C - S'] / d.usage_khours
+                d.date = d.activity_date
+                return d
+            })
+            data = data.filter(d=>d.channel === WHICH_VERSION && d.build_version=='57.0' && d.date > new Date('2017-10-01')) // && 
+            return data
+        },
+        xAxisLabel: 'days since release',
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/1092/results.csv?api_key=f7dac61893e040ca59c76fd616f082479e2a1c85'
     },
     pagesVisited: {
         title: "Total Pages Visited",
@@ -84,7 +99,10 @@ TwoByFour.RowTwo = (
     <GraphicContainer>
         <DataGraphic id="crashRate"    title={displays.stability.title}    
                                         description={displays.stability.description}
-                                        scaffoldData={displays.stability.scaffoldData}
+                                        apiURI={displays.stability.apiURI}
+                                        formatData={displays.stability.formatData}
+                                        xAccessor={displays.stability.xAccessor}
+                                        yAccessor={displays.stability.yAccessor}
                                         xAxisLabel={displays.stability.xAxisLabel} />
     </GraphicContainer>
     <GraphicContainer>

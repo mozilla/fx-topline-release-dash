@@ -15,11 +15,11 @@ text.mg-active-datapoint {
 }
 
 g.mg-x-axis text {
-    font-size: 14px
+    font-size: 12px
 }
-g.mg-y-axis text {
-    font-size: 14px
-}
+/* g.mg-y-axis text {
+    font-size: 12px
+} */
 
 div.gd-header {
     margin-top:20px;

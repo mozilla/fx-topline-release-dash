@@ -88,24 +88,52 @@ class DataGraphic extends React.Component {
     componentDidMount() {
         // API call - get that data, then plot it.
         //var dataHarness = fakeIt(100, (i)=>Math.sin(i/10)*10+(Math.random()-.5)*10)
-        var args = [100]
-        if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData)
-        var dataHarness = fakeIt(...args)
-        MG.data_graphic({
-            target: '#' + this.state.id,
-            data: dataHarness,
-            legend: ['Firefox 57'],
-            x_accessor: 'x',
-            y_accessor: 'y',
-            color: 'black',
-            area: false,
-            width: this.props.width,
-            right:30,
-            height: 250,
-            description: this.props.description,
-            title: this.props.title
 
-        })
+        // formatData: function
+        // 
+
+        if (this.props.hasOwnProperty('apiURI')) {
+            d3.csv(this.props.apiURI, (data)=> {
+                if (this.props.formatData !== undefined) data = this.props.formatData(data)
+                
+                MG.data_graphic({
+                    target: '#' + this.state.id,
+                    data: data,
+                    x_accessor: this.props.xAccessor,
+                    y_accessor: this.props.yAccessor,
+                    color: 'black',
+                    legend: ['Fx57'],
+                    markers: [{label: '57', date: new Date('2017-11-14')}],
+                    area: false,
+                    width: this.props.width,
+                    right: 30,
+                    height: 250,
+                    description: this.props.description,
+                    title: this.props.title
+                })
+            })
+        } else {
+            var args = [100]
+            if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData)
+            var data = fakeIt(...args)
+            MG.data_graphic({
+                target: '#' + this.state.id,
+                data: data,
+                legend: ['Firefox 57'],
+                x_accessor: 'x',
+                y_accessor: 'y',
+                color: 'black',
+                area: false,
+                width: this.props.width,
+                right:30,
+                height: 250,
+                description: this.props.description,
+                title: this.props.title
+    
+            })
+        }
+
+
     }
 }
 
