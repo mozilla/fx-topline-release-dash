@@ -33,9 +33,14 @@ class Header extends React.Component {
     }
 
     render() {
+        var icon = this.props.hasOwnProperty('img') ? <img src={this.props.img} width={60} /> : undefined
+        var mainText = <div className='gd-header-text'>{icon} {this.props.title}</div>
+        var rightText = this.props.hasOwnProperty('secondText') ? <div className='gd-header-second-text'>{this.props.secondText}</div> : undefined
+        
         return (
-            <div>
-                <h1 className='header'>{this.props.title}</h1>
+            <div className='gd-header'>
+                {mainText}
+                {rightText}
             </div>
         )
     }
@@ -94,14 +99,71 @@ class DataGraphic extends React.Component {
             y_accessor: 'y',
             color: 'black',
             area: false,
-            width: 400,
+            width: this.props.width,
             right:30,
-            height: 300,
+            height: 250,
             description: this.props.description,
             title: this.props.title
 
         })
-        //this.showToolTip()
+    }
+}
+
+// display full width display thingy.
+
+class SingleNumber extends React.Component {
+    constructor(props){
+        super(props)
+    }
+
+    render() {
+        return (
+            <div className='gd-single-number'>
+                <div className='gd-single-number-label'>
+                    {this.props.label}
+                </div>
+                <div className='gd-single-number-value'>
+                    {this.props.value}
+                </div>
+            </div>
+        )
+    }
+}
+
+
+class GraphicContainer extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        // this is where we clone the children and also get the container siblingCount.
+        // this lets us set the width.
+        var containerWidth = 1400 / this.props.totalSiblings - 20
+        var children = React.Children.map(this.props.children, (child)=>{
+            return React.cloneElement(child, {
+                width: containerWidth
+            })
+        })
+        return (
+            <div className='gd-graphic-container' style={{width: containerWidth}}>
+                {children}
+            </div>
+        )
+    }
+}
+
+class GraphicDisclaimer extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <div className='gd-graphic-disclaimer'>
+                {this.props.children}
+            </div>
+        )
     }
 }
 
@@ -118,18 +180,23 @@ class Divider extends React.Component {
     }
 }
 
-class ThreePieceRow extends React.Component {
+class DisplayRow extends React.Component {
     constructor(props) {
         super(props)
     }
 
     render() {
+        var children = React.Children.map(this.props.children, (child)=>{
+            return React.cloneElement(child, {
+                totalSiblings: this.props.children.length
+            })
+        })
         return (
-            <div className='three-row'>
-                {this.props.children}
+            <div className='gd-row'>
+                {children}
             </div>
         )
     }
 }
 
-export { ThreePieceRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer }
+export { DisplayRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber }

@@ -21,10 +21,26 @@ g.mg-y-axis text {
     font-size: 14px
 }
 
-h1.header {
+div.gd-header {
+    margin-top:20px;
+    display:flex;
+    align-items:baseline;
+}
+
+div.gd-header-text {
     font-weight:900;
     text-transform: uppercase;
-    text-align:center;
+    font-size:30px;
+    width:50%;
+}
+
+div.gd-header-second-text {
+    font-weight:300;
+    text-align:right;
+    font-style:italic;
+    width:50%;
+    color:gray;
+    font-size:20px
 }
 
 div.dl-divider {
@@ -40,17 +56,24 @@ div.graphic-display {
     margin:auto;
 }
 
-div.three-row {
+div.gd-row {
     display: flex;
     justify-content: space-around;
     width:100%;
     margin:auto;
 }
 
+div.gd-graphic-container {
+}
+
 div.data-graphic {
-    width: 400px;
-    height: 300px;
     margin:15px;
+}
+
+div.data-graphic svg {
+}
+
+div.gd-graphic-disclaimer {
 }
 
 div.gd-main-disclaimer {
@@ -63,4 +86,21 @@ div.gd-main-disclaimer {
     padding-bottom:25px;
     background-color:pink;
     border-radius:5px;
+}
+
+div.gd-single-number {
+    margin:auto;
+    margin-bottom:20px;
+    text-align:center
+    
+}
+
+div.gd-single-number-label {
+    font-size:16px;
+    margin-bottom:-5px
+}
+
+div.gd-single-number-value {
+    font-size:38px;
+    font-weight:bold;
 }

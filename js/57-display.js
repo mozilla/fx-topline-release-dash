@@ -972,71 +972,131 @@ var displays = {
         title: 'Uptake',
         description: 'How quickly does our overall daily usage come from 57?',
         polling: () => {},
-        scaffoldData: i => Math.sin(i / 10) * 10 + (Math.random() - .5) * 5
+        scaffoldData: i => Math.sin(i / 10) * 10 + (Math.random() - .5) * 5,
+        xAxisLabel: 'days since release'
     },
     newUsers: {
         title: "New Users",
         description: "based on new profile ping",
-        scaffoldData: i => (Math.exp(i / 30) * 10 + (Math.random() - .5) * 10) * 100000
+        scaffoldData: i => (Math.exp(i / 30) * 10 + (Math.random() - .5) * 10) * 100000,
+        xAxisLabel: 'days since release'
     },
     dau: {
         title: "DAU for release on 57",
         description: "Average Daily Active Users (DAU) over the last 7 days",
-        scaffoldData: i => 1000000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 5000 + i * 3000
+        scaffoldData: i => 1000000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 5000 + i * 3000,
+        xAxisLabel: 'days since release'
     },
     stability: {
         title: "Crash Rate",
         description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
-        scaffoldData: i => 100000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 500 - i * 100
-
+        scaffoldData: i => 100000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 500 - i * 100,
+        xAxisLabel: 'days since release'
     },
     pagesVisited: {
         title: "Total Pages Visited",
         description: "Total number of URIs visited",
-        scaffoldData: i => 50000 + 10000 * (Math.log((i + 1) / 10) + 1) + Math.random() * 3000
+        scaffoldData: i => 50000 + 10000 * (Math.log((i + 1) / 10) + 1) + Math.random() * 3000,
+        xAxisLabel: 'days since release'
     },
     sessionHours: {
         title: "Total Session Hours",
         description: "Total number of hours",
-        scaffoldData: i => 500000 + 100000 * (Math.log((i + 1) / 10) * .5 + 1) + Math.random() * 30000
+        scaffoldData: i => 500000 + 100000 * (Math.log((i + 1) / 10) * .5 + 1) + Math.random() * 30000,
+        xAxisLabel: 'days since release'
     }
 };
 
-Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["b" /* GraphicDisplay */],
+var TwoByFour = {};
+TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["b" /* DisplayRow */],
     null,
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* Header */], { title: 'Firefox 57 Release Metrics' }),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["d" /* MainDisclaimer */],
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
         null,
-        'This is a very rough proof of concept. The overall design is not solidified, the data is fake, and all the interactions are nonexistent. Keep that in mind for now.'
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { style: { height: '60px' } }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* SingleNumber */], { value: '5,543,105', label: 'Total Downloads' }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* SingleNumber */], { value: '23 days', label: 'Days Since Release' })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* ThreePieceRow */],
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'uptake', title: displays.uptake.title,
             description: displays.uptake.description,
-            scaffoldData: displays.uptake.scaffoldData }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'newUsers', title: displays.newUsers.title,
-            description: displays.newUsers.description,
-            scaffoldData: displays.newUsers.scaffoldData }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'dau', title: displays.dau.title,
-            description: displays.dau.description,
-            scaffoldData: displays.dau.scaffoldData })
+            scaffoldData: displays.uptake.scaffoldData,
+            xAxisLabel: displays.uptake.xAxisLabel }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["d" /* GraphicDisclaimer */],
+            null,
+            'This is a note.'
+        )
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* ThreePieceRow */],
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
+        null,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'newUsers', title: displays.newUsers.title,
+            description: displays.newUsers.description,
+            scaffoldData: displays.newUsers.scaffoldData,
+            xAxisLabel: displays.newUsers.xAxisLabel })
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
+        null,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'dau', title: displays.dau.title,
+            description: displays.dau.description,
+            scaffoldData: displays.dau.scaffoldData,
+            xAxisLabel: displays.dau.xAxisLabel })
+    )
+);
+
+TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["b" /* DisplayRow */],
+    null,
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'crashRate', title: displays.stability.title,
             description: displays.stability.description,
-            scaffoldData: displays.stability.scaffoldData }),
+            scaffoldData: displays.stability.scaffoldData,
+            xAxisLabel: displays.stability.xAxisLabel })
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
+        null,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'crashRate2', title: displays.stability.title,
+            description: displays.stability.description,
+            scaffoldData: displays.stability.scaffoldData,
+            xAxisLabel: displays.stability.xAxisLabel })
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
+        null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'pagesVisited', title: displays.pagesVisited.title,
             description: displays.pagesVisited.description,
-            scaffoldData: displays.pagesVisited.scaffoldData }),
+            scaffoldData: displays.pagesVisited.scaffoldData,
+            xAxisLabel: displays.pagesVisited.xAxisLabel })
+    ),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
+        null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'sessionHours', title: displays.sessionHours.title,
             description: displays.sessionHours.description,
-            scaffoldData: displays.sessionHours.scaffoldData })
+            scaffoldData: displays.sessionHours.scaffoldData,
+            xAxisLabel: displays.sessionHours.xAxisLabel })
     )
+);
+
+Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* GraphicDisplay */],
+    null,
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["f" /* Header */], { title: 'Firefox 57 Release Metrics', secondText: 'last updated: 8 minutes ago', img: 'ff-57.png' }),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* MainDisclaimer */],
+        null,
+        'This is a very rough proof of concept. The overall design is not solidified, the data is fake, and all the interactions are nonexistent. Keep that in mind for now.'
+    ),
+    TwoByFour.RowOne,
+    TwoByFour.RowTwo
 ), document.getElementById('page'));
 
 /***/ }),
@@ -21243,12 +21303,15 @@ module.exports = function() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ThreePieceRow; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return GraphicDisplay; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return Header; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return DisplayRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return GraphicDisplay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Header; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataGraphic; });
 /* unused harmony export Divider */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return MainDisclaimer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return MainDisclaimer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return GraphicContainer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return GraphicDisclaimer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return SingleNumber; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 
@@ -21286,14 +21349,25 @@ class Header extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     }
 
     render() {
+        var icon = this.props.hasOwnProperty('img') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: this.props.img, width: 60 }) : undefined;
+        var mainText = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-header-text' },
+            icon,
+            ' ',
+            this.props.title
+        );
+        var rightText = this.props.hasOwnProperty('secondText') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-header-second-text' },
+            this.props.secondText
+        ) : undefined;
+
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            null,
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'h1',
-                { className: 'header' },
-                this.props.title
-            )
+            { className: 'gd-header' },
+            mainText,
+            rightText
         );
     }
 }
@@ -21348,14 +21422,74 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
             y_accessor: 'y',
             color: 'black',
             area: false,
-            width: 400,
+            width: this.props.width,
             right: 30,
-            height: 300,
+            height: 250,
             description: this.props.description,
             title: this.props.title
 
         });
-        //this.showToolTip()
+    }
+}
+
+// display full width display thingy.
+
+class SingleNumber extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-single-number' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'gd-single-number-label' },
+                this.props.label
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'gd-single-number-value' },
+                this.props.value
+            )
+        );
+    }
+}
+
+class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        // this is where we clone the children and also get the container siblingCount.
+        // this lets us set the width.
+        var containerWidth = 1400 / this.props.totalSiblings - 20;
+        var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, child => {
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.cloneElement(child, {
+                width: containerWidth
+            });
+        });
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-graphic-container', style: { width: containerWidth } },
+            children
+        );
+    }
+}
+
+class GraphicDisclaimer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-graphic-disclaimer' },
+            this.props.children
+        );
     }
 }
 
@@ -21369,16 +21503,21 @@ class Divider extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     }
 }
 
-class ThreePieceRow extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+class DisplayRow extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
     }
 
     render() {
+        var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, child => {
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.cloneElement(child, {
+                totalSiblings: this.props.children.length
+            });
+        });
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'three-row' },
-            this.props.children
+            { className: 'gd-row' },
+            children
         );
     }
 }
