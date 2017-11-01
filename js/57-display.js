@@ -1003,10 +1003,14 @@ var displays = {
 };
 
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicDisplay */],
+    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["b" /* GraphicDisplay */],
     null,
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["d" /* Header */], { title: 'Firefox 57 Release Metrics' }),
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["b" /* Divider */], null),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* Header */], { title: 'Firefox 57 Release Metrics' }),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["d" /* MainDisclaimer */],
+        null,
+        'This is a very rough proof of concept. The overall design is not solidified, the data is fake, and all the interactions are nonexistent. Keep that in mind for now.'
+    ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* ThreePieceRow */],
         null,
@@ -21240,10 +21244,11 @@ module.exports = function() {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return ThreePieceRow; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return GraphicDisplay; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return Header; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return GraphicDisplay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return Header; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataGraphic; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return Divider; });
+/* unused harmony export Divider */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return MainDisclaimer; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 
@@ -21289,6 +21294,20 @@ class Header extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
                 { className: 'header' },
                 this.props.title
             )
+        );
+    }
+}
+
+class MainDisclaimer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-main-disclaimer' },
+            this.props.children
         );
     }
 }

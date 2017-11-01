@@ -41,7 +41,19 @@ class Header extends React.Component {
     }
 }
 
+class MainDisclaimer extends React.Component {
+    constructor(props) {
+        super(props)
+    }
 
+    render() {
+        return (
+            <div className='gd-main-disclaimer'>
+                {this.props.children}
+            </div>
+        )
+    }
+}
 
 class DataGraphic extends React.Component {
     constructor(props) {
@@ -120,4 +132,4 @@ class ThreePieceRow extends React.Component {
     }
 }
 
-export { ThreePieceRow, GraphicDisplay, Header, DataGraphic, Divider }
+export { ThreePieceRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer }

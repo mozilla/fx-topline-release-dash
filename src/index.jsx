@@ -1,6 +1,6 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {GraphicDisplay, ThreePieceRow, Header, DataGraphic, Divider} from './layout.jsx'
+import {GraphicDisplay, ThreePieceRow, Header, DataGraphic, Divider, MainDisclaimer} from './layout.jsx'
 
 
 
@@ -43,7 +43,11 @@ var displays = {
 render(
 <GraphicDisplay>
     <Header title='Firefox 57 Release Metrics' />
-    <Divider />
+    <MainDisclaimer>
+        This is a very rough proof of concept. 
+        The overall design is not solidified, the data is fake, and all the interactions are nonexistent. 
+        Keep that in mind for now.
+    </MainDisclaimer>
     <ThreePieceRow>
         <DataGraphic id="uptake"   title={displays.uptake.title} 
                                    description={displays.uptake.description} 
