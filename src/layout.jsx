@@ -81,8 +81,8 @@ class DataGraphic extends React.Component {
             width: 400,
             right:30,
             height: 300,
-            description: 'hey what is this' + this.state.id,
-            title: this.state.id.toUpperCase()
+            description: this.props.description,
+            title: this.props.title
 
         })
         //this.showToolTip()
