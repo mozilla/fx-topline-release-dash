@@ -1,0 +1,54 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+text.mg-header {
+    font-size: 20px
+}
+
+tspan.mg-chart-description {
+    font-size:20px
+}
+
+text.mg-active-datapoint {
+    font-size:14px
+}
+
+g.mg-x-axis text {
+    font-size: 14px
+}
+g.mg-y-axis text {
+    font-size: 14px
+}
+
+h1.header {
+    font-weight:900;
+    text-transform: uppercase;
+    text-align:center;
+}
+
+div.dl-divider {
+    border-bottom:1px solid gray
+}
+
+.mg-popover {
+    font-size:14px
+}
+
+div.graphic-display {
+    max-width:1400px;
+    margin:auto;
+}
+
+div.three-row {
+    display: flex;
+    justify-content: space-around;
+    width:100%;
+    margin:auto;
+}
+
+div.data-graphic {
+    width: 400px;
+    height: 300px;
+    margin:15px;
+}
