@@ -1,11 +1,12 @@
 
 import React from 'react'
 
-function fakeIt(length) {
+function fakeIt(length, otherFcn) {
+    if (otherFcn === undefined) otherFcn=(d)=>Math.random()*10
     var arr = []
     for (var i=0; i< length; i++) {
         arr.push({
-            y:Math.random() * 10 + i,
+            y: otherFcn(i) + i,
             x: i
         })
     }
@@ -69,11 +70,14 @@ class DataGraphic extends React.Component {
 
     componentDidMount() {
         // API call - get that data, then plot it.
-        var dataHarness = fakeIt(100)
+        //var dataHarness = fakeIt(100, (i)=>Math.sin(i/10)*10+(Math.random()-.5)*10)
+        var args = [100]
+        if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData)
+        var dataHarness = fakeIt(...args)
         MG.data_graphic({
             target: '#' + this.state.id,
             data: dataHarness,
-            legend: [Math.round(dataHarness[dataHarness.length-1].y)],
+            legend: ['Firefox 57'],
             x_accessor: 'x',
             y_accessor: 'y',
             color: 'black',

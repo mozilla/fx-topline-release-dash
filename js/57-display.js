@@ -971,27 +971,34 @@ var displays = {
     uptake: {
         title: 'Uptake',
         description: 'How quickly does our overall daily usage come from 57?',
-        polling: () => {}
+        polling: () => {},
+        scaffoldData: i => Math.sin(i / 10) * 10 + (Math.random() - .5) * 5
     },
     newUsers: {
         title: "New Users",
-        description: "based on new profile ping"
+        description: "based on new profile ping",
+        scaffoldData: i => (Math.exp(i / 30) * 10 + (Math.random() - .5) * 10) * 100000
     },
     dau: {
         title: "DAU for release on 57",
-        description: "Average Daily Active Users (DAU) over the last 7 days"
+        description: "Average Daily Active Users (DAU) over the last 7 days",
+        scaffoldData: i => 1000000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 5000 + i * 3000
     },
     stability: {
         title: "Crash Rate",
-        description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours"
+        description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
+        scaffoldData: i => 100000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 500 - i * 100
+
     },
     pagesVisited: {
         title: "Total Pages Visited",
-        description: "Total number of URIs visited"
+        description: "Total number of URIs visited",
+        scaffoldData: i => 50000 + 10000 * (Math.log((i + 1) / 10) + 1) + Math.random() * 3000
     },
     sessionHours: {
         title: "Total Session Hours",
-        description: "Total number of hours"
+        description: "Total number of hours",
+        scaffoldData: i => 500000 + 100000 * (Math.log((i + 1) / 10) * .5 + 1) + Math.random() * 30000
     }
 };
 
@@ -1003,16 +1010,28 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* ThreePieceRow */],
         null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'uptake', title: displays.uptake.title, description: displays.uptake.description }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'newUsers', title: displays.newUsers.title, description: displays.newUsers.description }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'dau', title: displays.dau.title, description: displays.dau.description })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'uptake', title: displays.uptake.title,
+            description: displays.uptake.description,
+            scaffoldData: displays.uptake.scaffoldData }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'newUsers', title: displays.newUsers.title,
+            description: displays.newUsers.description,
+            scaffoldData: displays.newUsers.scaffoldData }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'dau', title: displays.dau.title,
+            description: displays.dau.description,
+            scaffoldData: displays.dau.scaffoldData })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* ThreePieceRow */],
         null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'crashRate', title: displays.stability.title, description: displays.stability.description }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'pagesVisited', title: displays.pagesVisited.title, description: displays.pagesVisited.description }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'sessionHours', title: displays.sessionHours.title, description: displays.sessionHours.description })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'crashRate', title: displays.stability.title,
+            description: displays.stability.description,
+            scaffoldData: displays.stability.scaffoldData }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'pagesVisited', title: displays.pagesVisited.title,
+            description: displays.pagesVisited.description,
+            scaffoldData: displays.pagesVisited.scaffoldData }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'sessionHours', title: displays.sessionHours.title,
+            description: displays.sessionHours.description,
+            scaffoldData: displays.sessionHours.scaffoldData })
     )
 ), document.getElementById('page'));
 
@@ -21230,11 +21249,12 @@ module.exports = function() {
 
 
 
-function fakeIt(length) {
+function fakeIt(length, otherFcn) {
+    if (otherFcn === undefined) otherFcn = d => Math.random() * 10;
     var arr = [];
     for (var i = 0; i < length; i++) {
         arr.push({
-            y: Math.random() * 10 + i,
+            y: otherFcn(i) + i,
             x: i
         });
     }
@@ -21297,11 +21317,14 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 
     componentDidMount() {
         // API call - get that data, then plot it.
-        var dataHarness = fakeIt(100);
+        //var dataHarness = fakeIt(100, (i)=>Math.sin(i/10)*10+(Math.random()-.5)*10)
+        var args = [100];
+        if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData);
+        var dataHarness = fakeIt(...args);
         MG.data_graphic({
             target: '#' + this.state.id,
             data: dataHarness,
-            legend: [Math.round(dataHarness[dataHarness.length - 1].y)],
+            legend: ['Firefox 57'],
             x_accessor: 'x',
             y_accessor: 'y',
             color: 'black',
