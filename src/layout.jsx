@@ -120,19 +120,19 @@ class DataGraphic extends React.Component {
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-            console.log(this.props.title, this.props.data)
+            var plotArgs = this.props.plotArgs
             var mgArgs = {
                 target: '#' + this.state.id,
                 data: this.props.data,
                 x_accessor: this.props.xAccessor,
                 y_accessor: this.props.yAccessor,
-                legend: ['Fx57'],
+                legend: plotArgs !== undefined ? this.props.plotArgs.legend || ['Quantum'] : ['Quantum'],
                 markers: [{label: '57', date: new Date('2017-11-14')}],
                 area: false,
                 interpolate:  d3.curveMonotoneX,
                 width: this.props.width,
-                right: 30,
-                left:30,
+                right: 40,
+                left:40,
                 height: 250,
                 bottom:20,
                 description: this.props.description,

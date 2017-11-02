@@ -7,8 +7,10 @@ const RELEASE_DATE = new Date('2017-11-14')
 
 var displays = {
     successfulInstalls: {
+        id: "successfulInstalls",
         title: "Successful Installs",
         description: "the percentage of attempted installs that are successful",
+        plotArgs: {format: 'Percentage'},
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/3648/results.csv?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs',
         formatData: data => {
             
@@ -37,6 +39,8 @@ var displays = {
 
     uptake: {
         title: 'Uptake',
+        id: "uptake",
+        plotArgs: {format: 'Percentage'},
         description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
         polling: ()=>{},
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48552/results.csv?api_key=OjrW1fBixUDsqinC00X3P6JPGTk7A9iNjwYeRd8h',
@@ -56,6 +60,7 @@ var displays = {
 
     newUsers: {
         title: "New Users",
+        id: "newUsers",
         description: "The number of new Firefox 57 profiles",
         scaffoldData: i=>(Math.exp(i/30)*10 +  (Math.random()-.5)*10)*100000,
         formatData: (data) => {
@@ -71,6 +76,7 @@ var displays = {
 
     dau: {
         title: "Daily Active Users (DAUs)",
+        id: 'dau',
         description: "Daily Active Users (DAU), smoothed over the previous 7 days",
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48553/results.csv?api_key=EBSmbDQLOUxuqqTXIjax1ARNUYRcqn9y7UiHca3r',
         formatData: (data) => {
@@ -97,7 +103,7 @@ var displays = {
                 d.date = d.activity_date
                 return d
             })
-            data = data.filter(d=>d.channel === WHICH_VERSION && d.build_version=='57.0' && d.date > new Date('2017-10-01')) // && 
+            data = data.filter(d=>d.channel === WHICH_VERSION && d.build_version=='57.0' && d.date > new Date('2017-10-01'))
             return data
         },
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/1092/results.csv?api_key=f7dac61893e040ca59c76fd616f082479e2a1c85'
@@ -105,14 +111,35 @@ var displays = {
 
     pagesVisited: {
         title: "Total Pages Visited",
+        id: "pagesVisited",
         description: "Total number of URIs visited",
-        scaffoldData: i=> 50000 + 10000 * (Math.log((i+1)/10) + 1) +  Math.random()*3000,
+        apiURI: "https://sql.telemetry.mozilla.org/api/queries/48561/results.csv?api_key=VhhFFQa8sFzCK9Y96KMoOSXGtSivXFyUIpOVBEPe",
+        formatData: (data) => {
+            data = MG.convert.date(data, 'date', '%Y%m%d')
+            data = MG.convert.number(data, 'uriAll')
+            data = MG.convert.number(data, 'uri56')
+            return data
+        },
+        xAccessor: 'date',
+        yAccessor: ['uri56', 'uriAll'],
+        plotArgs: {legend: ['Quantum', 'All']}
     },
 
     sessionHours: {
         title: "Total Session Hours",
+        id: "sessionHours",
         description: "Total number of hours logged by Firefox 57 profiles",
-        scaffoldData: i=> 500000 + 100000 * (Math.log((i+1)/10)*.5 + 1) +  Math.random()*30000,
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48558/results.csv?api_key=dlqKmwx4TP8oiF2aOiSAfwDCFVTbrCUmOOw7gWwq',
+        formatData: data => {
+            data = MG.convert.date(data, 'date', '%Y%m%d')
+            data = MG.convert.number(data, 'ahrsAll')
+            data = MG.convert.number(data, 'ahrs56')
+            console.log(data)
+            return data
+        },
+        xAccessor: 'date',
+        yAccessor: ['ahrs56', 'ahrsAll'],
+        plotArgs: {'legend': ['Quantum', 'All']}
     }
 }
 
@@ -133,76 +160,38 @@ var displays = {
     </ GraphicContainer>
 */
 
+function dataGraphicCell(args) {
+    var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
+    return (
+        <GraphicContainer apiURI={args.apiURI} formatData={args.formatData}>
+            <DataGraphic id={args.id}
+                title={args.title}
+                description={args.description}
+                xAccessor={args.xAccessor}
+                yAccessor={args.yAccessor}
+                plotArgs={args.plotArgs || {}}
+             />
+        </GraphicContainer>
+    )
+}
+
 
 var TwoByFour={}
-TwoByFour.RowOne = (<DisplayRow>
-
-<GraphicContainer apiURI={displays.uptake.apiURI} formatData={displays.uptake.formatData} >
-    <DataGraphic id="uptake"   title={displays.uptake.title} 
-                            description={displays.uptake.description} 
-                            xAxisLabel={displays.uptake.xAxisLabel}
-                            xAccessor={displays.uptake.xAccessor}
-                            yAccessor={displays.uptake.yAccessor}
-                            plotArgs={{format: 'Percentage'}} />
-</GraphicContainer>
-<GraphicContainer apiURI={displays.newUsers.apiURI} formatData={displays.newUsers.formatData} scaffoldData={displays.newUsers.scaffoldData}>
-
-    <DataGraphic id="newUsers" title={displays.newUsers.title}  
-                            description={displays.newUsers.description}
-                            xAxisLabel={displays.newUsers.xAxisLabel}
-                            xAccessor={displays.newUsers.xAccessor}
-                            yAccessor={displays.newUsers.yAccessor} />
-</GraphicContainer>
-
-<GraphicContainer apiURI={displays.dau.apiURI} formatData={displays.dau.formatData} >
-
-    <DataGraphic id="dau"      title={displays.dau.title} 
-                            description={displays.dau.description}
-                            xAccessor={displays.dau.xAccessor}
-                            yAccessor={displays.dau.yAccessor}
-                             />
-</GraphicContainer>
-
-</DisplayRow>)
-
-/*
-            <GraphicDisclaimer>
-                <span style={{fontWeight:900, paddingRight:10}}>NOTE</span> 
-                <span style={{fontStyle: 'italic'}}>
-                    we expect this metric to settle down within 6-18 hours of release.
-                </span>
-            </GraphicDisclaimer>
-*/
+TwoByFour.RowOne = (
+    <DisplayRow>
+        {dataGraphicCell(displays.uptake)}
+        {dataGraphicCell(displays.newUsers)}
+        {dataGraphicCell(displays.dau)}
+    </DisplayRow>
+)
 
 TwoByFour.RowTwo = (
 <DisplayRow>
-    <GraphicContainer apiURI={displays.successfulInstalls.apiURI} formatData={displays.successfulInstalls.formatData} >
-        <DataGraphic id="successfulInstalls"    title={displays.successfulInstalls.title}    
-                                        description={displays.successfulInstalls.description}
-                                        xAccessor={displays.successfulInstalls.xAccessor}
-                                        yAccessor={displays.successfulInstalls.yAccessor}
-                                        plotArgs={{format: 'Percentage'}}
-                                         />
 
-    </GraphicContainer>
+    {dataGraphicCell(displays.successfulInstalls)}
+    {dataGraphicCell(displays.pagesVisited)}
+        {dataGraphicCell(displays.sessionHours)}
 
-        <GraphicContainer scaffoldData={displays.pagesVisited.scaffoldData}>
-            <DataGraphic id="pagesVisited" title={displays.pagesVisited.title} 
-                                       description={displays.pagesVisited.description}
-                                       
-                                       xAxisLabel={displays.pagesVisited.xAxisLabel}
-                                       xAccessor='x'
-                            yAccessor='y' />
-        </GraphicContainer>
-
-        <GraphicContainer scaffoldData={displays.sessionHours.scaffoldData}>
-
-            <DataGraphic id="sessionHours" title={displays.sessionHours.title}     
-                                       description={displays.sessionHours.description}
-                                       xAxisLabel={displays.sessionHours.xAxisLabel}
-                                       xAccessor='x'
-                            yAccessor='y' />
-        </GraphicContainer>
 
     </DisplayRow>
 
@@ -215,14 +204,6 @@ function mainDisclaimer() {
         Keep that in mind for now.
         </MainDisclaimer>)
 }
-
-/* 
-    <Footer>
-        <div> Here is a footer </div>
-    </Footer>
-
-*/
-
 
 
 render(
@@ -237,12 +218,8 @@ render(
             x1.setHours(12,0,0);
                 return Math.abs(Math.round( (x1 - x0) / msPerDay ))
             })() + ' days'} label={new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release'} />
-        
         <ToplineElement label='Total Firefox Quantum Downloads' value='43,543,254' />
-
     </ToplineRow>
     {TwoByFour.RowOne}
     {TwoByFour.RowTwo}
-
-</ GraphicDisplay>    
-    , document.getElementById('page'))
+</ GraphicDisplay>, document.getElementById('page'))
