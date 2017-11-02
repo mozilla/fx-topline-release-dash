@@ -6,12 +6,42 @@ const WHICH_VERSION = 'beta'
 const RELEASE_DATE = new Date('2017-11-14')
 
 var displays = {
+    successfulInstalls: {
+        title: "Successful Installs",
+        description: "the percentage of attempted installs that are successful",
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/3648/results.csv?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs',
+        formatData: data => {
+            
+            data = MG.convert.number(data, 'instances')
+            var tmp = data.reduce((obj, d) => {
+                if (!obj.hasOwnProperty(d.day)) obj[d.day] = {}
+                obj[d.day][d.succeeded] = d.instances
+                return obj
+            }, {})
+            
+            var out = Object.keys(tmp).reduce((arr,d)=> {
+                var di = tmp[d]
+                var True = di.True || 0
+                var False = di.False || 0
+                arr.push({day: d, successfulInstalls: True  / (True + False)})
+                return arr
+            }, [])
+
+            out = MG.convert.date(out, 'day')
+
+            return out
+        },
+        xAccessor: 'day',
+        yAccessor: 'successfulInstalls'
+    },
+
     uptake: {
         title: 'Uptake',
         description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
         polling: ()=>{},
         scaffoldData:  i=>Math.sin(i/10)*10 + (Math.random()-.5)*5,
     },
+
     newUsers: {
         title: "New Users",
         description: "The number of new Firefox 57 profiles",
@@ -25,11 +55,13 @@ var displays = {
         yAccessor: 'new_profiles',
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48504/results.csv?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt'
     },
+
     dau: {
         title: "Daily Active Users (DAUs)",
         description: "Average Daily Active Users (DAU) over the last 7 days",
         scaffoldData: i=> 1000000 + (Math.random()*Math.cos(i/10)*10 + 1) * 5000 + i*3000,
     },
+
     stability: {
         title: "Crash Rate",
         description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
@@ -50,11 +82,13 @@ var displays = {
         },
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/1092/results.csv?api_key=f7dac61893e040ca59c76fd616f082479e2a1c85'
     },
+
     pagesVisited: {
         title: "Total Pages Visited",
         description: "Total number of URIs visited",
         scaffoldData: i=> 50000 + 10000 * (Math.log((i+1)/10) + 1) +  Math.random()*3000,
     },
+
     sessionHours: {
         title: "Total Session Hours",
         description: "Total number of hours logged by Firefox 57 profiles",
@@ -111,19 +145,25 @@ TwoByFour.RowOne = (<DisplayRow>
 
 </DisplayRow>)
 
-TwoByFour.RowTwo = (
-<DisplayRow>
-    <GraphicContainer apiURI={displays.stability.apiURI} formatData={displays.stability.formatData} >
-        <DataGraphic id="crashRate"    title={displays.stability.title}    
-                                        description={displays.stability.description}
-                                        xAccessor={displays.stability.xAccessor}
-                                        yAccessor={displays.stability.yAccessor} />
+/*
             <GraphicDisclaimer>
                 <span style={{fontWeight:900, paddingRight:10}}>NOTE</span> 
                 <span style={{fontStyle: 'italic'}}>
                     we expect this metric to settle down within 6-18 hours of release.
                 </span>
             </GraphicDisclaimer>
+*/
+
+TwoByFour.RowTwo = (
+<DisplayRow>
+    <GraphicContainer apiURI={displays.successfulInstalls.apiURI} formatData={displays.successfulInstalls.formatData} >
+        <DataGraphic id="successfulInstalls"    title={displays.successfulInstalls.title}    
+                                        description={displays.successfulInstalls.description}
+                                        xAccessor={displays.successfulInstalls.xAccessor}
+                                        yAccessor={displays.successfulInstalls.yAccessor}
+                                        plotArgs={{format: 'Percentage'}}
+                                         />
+
     </GraphicContainer>
 
         <GraphicContainer scaffoldData={displays.pagesVisited.scaffoldData}>
@@ -167,7 +207,7 @@ function mainDisclaimer() {
 
 render(
 <GraphicDisplay>
-    <Header title='Firefox 57 Release Metrics' secondText='last updated: 8 minutes ago' img='ff-57.png' />
+    <Header title='Firefox Quantum' subtitle='release metrics' secondText='last updated: 8 minutes ago' img='ff-57.png' />
     <ToplineRow>
         <ToplineElement value={(()=>{
             var msPerDay = 8.64e7;

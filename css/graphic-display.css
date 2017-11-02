@@ -54,14 +54,19 @@ div.gd-header-text {
     font-weight:900;
     text-transform: uppercase;
     font-size:30px;
-    width:50%;
+    width:70%;
+}
+
+span.gd-header-subtitle {
+    font-weight:300;
+    text-transform: none;
 }
 
 div.gd-header-second-text {
     font-weight:300;
     text-align:right;
     font-style:italic;
-    width:50%;
+    width:30%;
     color:gray;
     font-size:20px
 }

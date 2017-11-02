@@ -34,7 +34,8 @@ class Header extends React.Component {
 
     render() {
         var icon = this.props.hasOwnProperty('img') ? <img src={this.props.img} width={60} /> : undefined
-        var mainText = <div className='gd-header-text'>{icon} {this.props.title}</div>
+        var subtitle = this.props.hasOwnProperty('subtitle') ? <span className='gd-header-subtitle'>{this.props.subtitle}</span> : undefined
+        var mainText = <div className='gd-header-text'>{icon} {this.props.title} {subtitle} </div>
         var rightText = this.props.hasOwnProperty('secondText') ? <div className='gd-header-second-text'>{this.props.secondText}</div> : undefined
         
         return (
@@ -119,12 +120,12 @@ class DataGraphic extends React.Component {
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-            MG.data_graphic({
+
+            var mgArgs = {
                 target: '#' + this.state.id,
                 data: this.props.data,
                 x_accessor: this.props.xAccessor,
                 y_accessor: this.props.yAccessor,
-                color: 'black',
                 legend: ['Fx57'],
                 markers: [{label: '57', date: new Date('2017-11-14')}],
                 area: false,
@@ -136,10 +137,13 @@ class DataGraphic extends React.Component {
                 bottom:20,
                 description: this.props.description,
                 title: this.props.title
-            })
+            }
+            mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
+            MG.data_graphic(mgArgs)
         }
     }
 }
+
 
 // display full width display thingy.
 

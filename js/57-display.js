@@ -971,12 +971,42 @@ const WHICH_VERSION = 'beta';
 const RELEASE_DATE = new Date('2017-11-14');
 
 var displays = {
+    successfulInstalls: {
+        title: "Successful Installs",
+        description: "the percentage of attempted installs that are successful",
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/3648/results.csv?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs',
+        formatData: data => {
+
+            data = MG.convert.number(data, 'instances');
+            var tmp = data.reduce((obj, d) => {
+                if (!obj.hasOwnProperty(d.day)) obj[d.day] = {};
+                obj[d.day][d.succeeded] = d.instances;
+                return obj;
+            }, {});
+
+            var out = Object.keys(tmp).reduce((arr, d) => {
+                var di = tmp[d];
+                var True = di.True || 0;
+                var False = di.False || 0;
+                arr.push({ day: d, successfulInstalls: True / (True + False) });
+                return arr;
+            }, []);
+
+            out = MG.convert.date(out, 'day');
+
+            return out;
+        },
+        xAccessor: 'day',
+        yAccessor: 'successfulInstalls'
+    },
+
     uptake: {
         title: 'Uptake',
         description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
         polling: () => {},
         scaffoldData: i => Math.sin(i / 10) * 10 + (Math.random() - .5) * 5
     },
+
     newUsers: {
         title: "New Users",
         description: "The number of new Firefox 57 profiles",
@@ -990,11 +1020,13 @@ var displays = {
         yAccessor: 'new_profiles',
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48504/results.csv?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt'
     },
+
     dau: {
         title: "Daily Active Users (DAUs)",
         description: "Average Daily Active Users (DAU) over the last 7 days",
         scaffoldData: i => 1000000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 5000 + i * 3000
     },
+
     stability: {
         title: "Crash Rate",
         description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
@@ -1015,11 +1047,13 @@ var displays = {
         },
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/1092/results.csv?api_key=f7dac61893e040ca59c76fd616f082479e2a1c85'
     },
+
     pagesVisited: {
         title: "Total Pages Visited",
         description: "Total number of URIs visited",
         scaffoldData: i => 50000 + 10000 * (Math.log((i + 1) / 10) + 1) + Math.random() * 3000
     },
+
     sessionHours: {
         title: "Total Session Hours",
         description: "Total number of hours logged by Firefox 57 profiles",
@@ -1076,30 +1110,27 @@ TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     )
 );
 
+/*
+            <GraphicDisclaimer>
+                <span style={{fontWeight:900, paddingRight:10}}>NOTE</span> 
+                <span style={{fontStyle: 'italic'}}>
+                    we expect this metric to settle down within 6-18 hours of release.
+                </span>
+            </GraphicDisclaimer>
+*/
+
 TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["b" /* DisplayRow */],
     null,
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        { apiURI: displays.stability.apiURI, formatData: displays.stability.formatData },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'crashRate', title: displays.stability.title,
-            description: displays.stability.description,
-            xAccessor: displays.stability.xAccessor,
-            yAccessor: displays.stability.yAccessor }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["d" /* GraphicDisclaimer */],
-            null,
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'span',
-                { style: { fontWeight: 900, paddingRight: 10 } },
-                'NOTE'
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'span',
-                { style: { fontStyle: 'italic' } },
-                'we expect this metric to settle down within 6-18 hours of release.'
-            )
-        )
+        { apiURI: displays.successfulInstalls.apiURI, formatData: displays.successfulInstalls.formatData },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'successfulInstalls', title: displays.successfulInstalls.title,
+            description: displays.successfulInstalls.description,
+            xAccessor: displays.successfulInstalls.xAccessor,
+            yAccessor: displays.successfulInstalls.yAccessor,
+            plotArgs: { format: 'Percentage' }
+        })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
@@ -1124,7 +1155,7 @@ TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
 
 function mainDisclaimer() {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* MainDisclaimer */],
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["f" /* MainDisclaimer */],
         null,
         'This is a very rough proof of concept. The overall design is not solidified, the data is fake, and all the interactions are nonexistent. Keep that in mind for now.'
     );
@@ -1138,13 +1169,13 @@ function mainDisclaimer() {
 */
 
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* GraphicDisplay */],
+    __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["d" /* GraphicDisplay */],
     null,
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["f" /* Header */], { title: 'Firefox 57 Release Metrics', secondText: 'last updated: 8 minutes ago', img: 'ff-57.png' }),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* Header */], { title: 'Firefox Quantum', subtitle: 'release metrics', secondText: 'last updated: 8 minutes ago', img: 'ff-57.png' }),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["i" /* ToplineRow */],
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* ToplineRow */],
         null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* ToplineElement */], { value: (() => {
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* ToplineElement */], { value: (() => {
                 var msPerDay = 8.64e7;
                 var x0 = RELEASE_DATE;
                 var x1 = new Date();
@@ -1152,7 +1183,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
                 x1.setHours(12, 0, 0);
                 return Math.abs(Math.round((x1 - x0) / msPerDay));
             })() + ' days', label: new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release' }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* ToplineElement */], { label: 'Total Firefox 57 Downloads', value: '43,543,254' })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* ToplineElement */], { label: 'Total Firefox 57 Downloads', value: '43,543,254' })
     ),
     TwoByFour.RowOne,
     TwoByFour.RowTwo
@@ -21363,16 +21394,16 @@ module.exports = function() {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return DisplayRow; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return GraphicDisplay; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return Header; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return GraphicDisplay; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return Header; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataGraphic; });
 /* unused harmony export Divider */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return MainDisclaimer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return MainDisclaimer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return GraphicContainer; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return GraphicDisclaimer; });
+/* unused harmony export GraphicDisclaimer */
 /* unused harmony export SingleNumber */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return ToplineRow; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return ToplineElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return ToplineRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return ToplineElement; });
 /* unused harmony export Footer */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
@@ -21412,12 +21443,20 @@ class Header extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
 
     render() {
         var icon = this.props.hasOwnProperty('img') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: this.props.img, width: 60 }) : undefined;
+        var subtitle = this.props.hasOwnProperty('subtitle') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'span',
+            { className: 'gd-header-subtitle' },
+            this.props.subtitle
+        ) : undefined;
         var mainText = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-header-text' },
             icon,
             ' ',
-            this.props.title
+            this.props.title,
+            ' ',
+            subtitle,
+            ' '
         );
         var rightText = this.props.hasOwnProperty('secondText') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
@@ -21517,12 +21556,12 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-            MG.data_graphic({
+
+            var mgArgs = {
                 target: '#' + this.state.id,
                 data: this.props.data,
                 x_accessor: this.props.xAccessor,
                 y_accessor: this.props.yAccessor,
-                color: 'black',
                 legend: ['Fx57'],
                 markers: [{ label: '57', date: new Date('2017-11-14') }],
                 area: false,
@@ -21534,7 +21573,9 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 bottom: 20,
                 description: this.props.description,
                 title: this.props.title
-            });
+            };
+            mgArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
+            MG.data_graphic(mgArgs);
         }
     }
 }
