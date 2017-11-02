@@ -968,26 +968,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 const WHICH_VERSION = 'beta';
+const RELEASE_DATE = new Date('2017-11-14');
 
 var displays = {
     uptake: {
         title: 'Uptake',
         description: 'How quickly does our overall daily usage come from 57?',
         polling: () => {},
-        scaffoldData: i => Math.sin(i / 10) * 10 + (Math.random() - .5) * 5,
-        xAxisLabel: 'days since release'
+        scaffoldData: i => Math.sin(i / 10) * 10 + (Math.random() - .5) * 5
     },
     newUsers: {
         title: "New Users",
         description: "based on new profile ping",
         scaffoldData: i => (Math.exp(i / 30) * 10 + (Math.random() - .5) * 10) * 100000,
-        xAxisLabel: 'days since release'
+        formatData: data => {
+            data = MG.convert.date(data, 'submission', '%Y%m%d');
+            data = MG.convert.number(data, 'new_profiles');
+            return data;
+        },
+        xAccessor: 'submission',
+        yAccessor: 'new_profiles',
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48504/results.csv?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt'
     },
     dau: {
         title: "DAU for release on 57",
         description: "Average Daily Active Users (DAU) over the last 7 days",
-        scaffoldData: i => 1000000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 5000 + i * 3000,
-        xAxisLabel: 'days since release'
+        scaffoldData: i => 1000000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 5000 + i * 3000
     },
     stability: {
         title: "Crash Rate",
@@ -1007,34 +1013,39 @@ var displays = {
             data = data.filter(d => d.channel === WHICH_VERSION && d.build_version == '57.0' && d.date > new Date('2017-10-01')); // && 
             return data;
         },
-        xAxisLabel: 'days since release',
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/1092/results.csv?api_key=f7dac61893e040ca59c76fd616f082479e2a1c85'
     },
     pagesVisited: {
         title: "Total Pages Visited",
         description: "Total number of URIs visited",
-        scaffoldData: i => 50000 + 10000 * (Math.log((i + 1) / 10) + 1) + Math.random() * 3000,
-        xAxisLabel: 'days since release'
+        scaffoldData: i => 50000 + 10000 * (Math.log((i + 1) / 10) + 1) + Math.random() * 3000
     },
     sessionHours: {
         title: "Total Session Hours",
         description: "Total number of hours",
-        scaffoldData: i => 500000 + 100000 * (Math.log((i + 1) / 10) * .5 + 1) + Math.random() * 30000,
-        xAxisLabel: 'days since release'
+        scaffoldData: i => 500000 + 100000 * (Math.log((i + 1) / 10) * .5 + 1) + Math.random() * 30000
     }
-};
 
-var TwoByFour = {};
+    /*
+    
+        <GraphicContainer>
+            <div style={{height: '60px'}}></div>
+            <SingleNumber value={'5,543,105'} label={'Total Downloads'} />
+            <SingleNumber value={(()=>{
+                var msPerDay = 8.64e7;
+                var x0 = RELEASE_DATE;
+                var x1 = new Date();
+                x0.setHours(12,0,0);
+                x1.setHours(12,0,0);
+                    return Math.abs(Math.round( (x1 - x0) / msPerDay ))
+                })() + ' days'} label={new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release'} />
+        </ GraphicContainer>
+    */
+
+};var TwoByFour = {};
 TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["b" /* DisplayRow */],
     null,
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { style: { height: '60px' } }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* SingleNumber */], { value: '5,543,105', label: 'Total Downloads' }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* SingleNumber */], { value: '23 days', label: 'Days Since Release' })
-    ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
         null,
@@ -1054,7 +1065,11 @@ TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'newUsers', title: displays.newUsers.title,
             description: displays.newUsers.description,
             scaffoldData: displays.newUsers.scaffoldData,
-            xAxisLabel: displays.newUsers.xAxisLabel })
+            xAxisLabel: displays.newUsers.xAxisLabel,
+            apiURI: displays.newUsers.apiURI,
+            xAccessor: displays.newUsers.xAccessor,
+            yAccessor: displays.newUsers.yAccessor,
+            formatData: displays.newUsers.formatData })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
@@ -1077,16 +1092,7 @@ TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             apiURI: displays.stability.apiURI,
             formatData: displays.stability.formatData,
             xAccessor: displays.stability.xAccessor,
-            yAccessor: displays.stability.yAccessor,
-            xAxisLabel: displays.stability.xAxisLabel })
-    ),
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        null,
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'crashRate2', title: displays.stability.title,
-            description: displays.stability.description,
-            scaffoldData: displays.stability.scaffoldData,
-            xAxisLabel: displays.stability.xAxisLabel })
+            yAccessor: displays.stability.yAccessor })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
@@ -1106,14 +1112,30 @@ TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     )
 );
 
+function mainDisclaimer() {
+    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* MainDisclaimer */],
+        null,
+        'This is a very rough proof of concept. The overall design is not solidified, the data is fake, and all the interactions are nonexistent. Keep that in mind for now.'
+    );
+}
+
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* GraphicDisplay */],
     null,
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["f" /* Header */], { title: 'Firefox 57 Release Metrics', secondText: 'last updated: 8 minutes ago', img: 'ff-57.png' }),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* MainDisclaimer */],
+        __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["i" /* ToplineRow */],
         null,
-        'This is a very rough proof of concept. The overall design is not solidified, the data is fake, and all the interactions are nonexistent. Keep that in mind for now.'
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* ToplineElement */], { value: (() => {
+                var msPerDay = 8.64e7;
+                var x0 = RELEASE_DATE;
+                var x1 = new Date();
+                x0.setHours(12, 0, 0);
+                x1.setHours(12, 0, 0);
+                return Math.abs(Math.round((x1 - x0) / msPerDay));
+            })() + ' days', label: new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release' }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* ToplineElement */], { label: 'Total Firefox 57 Downloads', value: '43,543,254' })
     ),
     TwoByFour.RowOne,
     TwoByFour.RowTwo
@@ -21331,7 +21353,9 @@ module.exports = function() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return MainDisclaimer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return GraphicContainer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return GraphicDisclaimer; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return SingleNumber; });
+/* unused harmony export SingleNumber */
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return ToplineRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return ToplineElement; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 
@@ -21406,11 +21430,51 @@ class MainDisclaimer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compo
     }
 }
 
+class ToplineElement extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        var label = this.props.hasOwnProperty('label') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-single-number-label' },
+            this.props.label
+        ) : undefined;
+        var value = this.props.hasOwnProperty('value') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-single-number-value' },
+            this.props.value
+        ) : undefined;
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-topline-element gd-single-number' },
+            label,
+            value
+        );
+    }
+}
+
+class ToplineRow extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-topline-row' },
+            this.props.children
+        );
+    }
+}
+
 class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: props.id || Math.floor(Math.random() * 100000)
+            id: props.id || Math.floor(Math.random() * 100000),
+            loaded: false
         };
         this.showToolTip = this.showToolTip.bind(this);
         this.hideToolTip = this.hideToolTip.bind(this);
@@ -21425,7 +21489,16 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
     }
 
     render() {
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { ref: 'display', className: 'data-graphic', id: this.state.id });
+        var loadingIcon = !this.state.loaded ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-loading-graphic' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-circle-o-notch fa-spin fa-3x fa-fw' })
+        ) : undefined;
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { ref: 'display', className: 'data-graphic', id: this.state.id },
+            loadingIcon
+        );
     }
 
     componentDidMount() {
@@ -21438,7 +21511,7 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
         if (this.props.hasOwnProperty('apiURI')) {
             d3.csv(this.props.apiURI, data => {
                 if (this.props.formatData !== undefined) data = this.props.formatData(data);
-
+                this.setState({ loaded: true });
                 MG.data_graphic({
                     target: '#' + this.state.id,
                     data: data,
@@ -21456,6 +21529,7 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 });
             });
         } else {
+            this.setState({ loaded: true });
             var args = [100];
             if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData);
             var data = fakeIt(...args);

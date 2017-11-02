@@ -60,11 +60,42 @@ class MainDisclaimer extends React.Component {
     }
 }
 
+class ToplineElement extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+    
+    render() {
+        var label = this.props.hasOwnProperty('label') ? <div className='gd-single-number-label'>{this.props.label}</div> : undefined
+        var value = this.props.hasOwnProperty('value') ? <div className='gd-single-number-value'>{this.props.value}</div> : undefined
+        return (
+            <div className='gd-topline-element gd-single-number'>
+                {label}{value}
+            </div>
+        )
+    }
+}
+
+class ToplineRow extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <div className='gd-topline-row'>
+                {this.props.children}
+            </div>
+        )
+    }
+}
+
 class DataGraphic extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: props.id || Math.floor(Math.random()*100000)
+            id: props.id || Math.floor(Math.random()*100000),
+            loaded: false
         }
         this.showToolTip = this.showToolTip.bind(this)
         this.hideToolTip = this.hideToolTip.bind(this)
@@ -79,8 +110,10 @@ class DataGraphic extends React.Component {
     }
 
     render() {
+        var loadingIcon = !this.state.loaded ? <div className='gd-loading-graphic'><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div> : undefined
         return (
             <div ref='display' className='data-graphic' id={this.state.id}>
+                {loadingIcon}
             </div>
         )
     }
@@ -95,7 +128,7 @@ class DataGraphic extends React.Component {
         if (this.props.hasOwnProperty('apiURI')) {
             d3.csv(this.props.apiURI, (data)=> {
                 if (this.props.formatData !== undefined) data = this.props.formatData(data)
-                
+                this.setState({loaded:true})
                 MG.data_graphic({
                     target: '#' + this.state.id,
                     data: data,
@@ -113,6 +146,7 @@ class DataGraphic extends React.Component {
                 })
             })
         } else {
+            this.setState({loaded:true})
             var args = [100]
             if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData)
             var data = fakeIt(...args)
@@ -227,4 +261,4 @@ class DisplayRow extends React.Component {
     }
 }
 
-export { DisplayRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber }
+export { DisplayRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow, ToplineElement }
