@@ -128,6 +128,7 @@ class DataGraphic extends React.Component {
                 legend: ['Fx57'],
                 markers: [{label: '57', date: new Date('2017-11-14')}],
                 area: false,
+                interpolate:  d3.curveMonotoneX,
                 width: this.props.width,
                 right: 30,
                 left:30,

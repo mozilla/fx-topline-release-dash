@@ -11,7 +11,6 @@ var config = {
     filename: '57-display.js'
   },
   devtool: 'source-map',
-
   module : {
     loaders : [
       {
