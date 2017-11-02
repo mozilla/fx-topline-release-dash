@@ -1004,6 +1004,18 @@ var displays = {
         title: 'Uptake',
         description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
         polling: () => {},
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48552/results.csv?api_key=OjrW1fBixUDsqinC00X3P6JPGTk7A9iNjwYeRd8h',
+        formatData: data => {
+            data = MG.convert.date(data, 'd', '%Y%m%d');
+            data = MG.convert.number(data, 'uptake');
+            data = data.map(d => {
+                d.uptake = d.uptake / 100;
+                return d;
+            });
+            return data;
+        },
+        xAccessor: 'd',
+        yAccessor: 'uptake',
         scaffoldData: i => Math.sin(i / 10) * 10 + (Math.random() - .5) * 5
     },
 
@@ -1012,6 +1024,7 @@ var displays = {
         description: "The number of new Firefox 57 profiles",
         scaffoldData: i => (Math.exp(i / 30) * 10 + (Math.random() - .5) * 10) * 100000,
         formatData: data => {
+
             data = MG.convert.date(data, 'submission', '%Y%m%d');
             data = MG.convert.number(data, 'new_profiles');
             return data;
@@ -1023,8 +1036,15 @@ var displays = {
 
     dau: {
         title: "Daily Active Users (DAUs)",
-        description: "Average Daily Active Users (DAU) over the last 7 days",
-        scaffoldData: i => 1000000 + (Math.random() * Math.cos(i / 10) * 10 + 1) * 5000 + i * 3000
+        description: "Daily Active Users (DAU), smoothed over the previous 7 days",
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48553/results.csv?api_key=EBSmbDQLOUxuqqTXIjax1ARNUYRcqn9y7UiHca3r',
+        formatData: data => {
+            data = MG.convert.date(data, 'date', '%Y%m%d');
+            data = MG.convert.number(data, 'smooth56');
+            return data;
+        },
+        xAccessor: 'date',
+        yAccessor: 'smooth56'
     },
 
     stability: {
@@ -1082,12 +1102,13 @@ TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     null,
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        { scaffoldData: displays.uptake.scaffoldData },
+        { apiURI: displays.uptake.apiURI, formatData: displays.uptake.formatData },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'uptake', title: displays.uptake.title,
             description: displays.uptake.description,
             xAxisLabel: displays.uptake.xAxisLabel,
-            xAccessor: 'x',
-            yAccessor: 'y' })
+            xAccessor: displays.uptake.xAccessor,
+            yAccessor: displays.uptake.yAccessor,
+            plotArgs: { format: 'Percentage' } })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
@@ -1100,12 +1121,11 @@ TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        { scaffoldData: displays.dau.scaffoldData },
+        { apiURI: displays.dau.apiURI, formatData: displays.dau.formatData },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'dau', title: displays.dau.title,
             description: displays.dau.description,
-            xAxisLabel: displays.dau.xAxisLabel,
-            xAccessor: 'x',
-            yAccessor: 'y'
+            xAccessor: displays.dau.xAccessor,
+            yAccessor: displays.dau.yAccessor
         })
     )
 );
@@ -1183,7 +1203,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
                 x1.setHours(12, 0, 0);
                 return Math.abs(Math.round((x1 - x0) / msPerDay));
             })() + ' days', label: new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release' }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* ToplineElement */], { label: 'Total Firefox 57 Downloads', value: '43,543,254' })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["g" /* ToplineElement */], { label: 'Total Firefox Quantum Downloads', value: '43,543,254' })
     ),
     TwoByFour.RowOne,
     TwoByFour.RowTwo
@@ -21556,7 +21576,7 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-
+            console.log(this.props.title, this.props.data);
             var mgArgs = {
                 target: '#' + this.state.id,
                 data: this.props.data,

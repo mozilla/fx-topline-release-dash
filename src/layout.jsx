@@ -120,7 +120,7 @@ class DataGraphic extends React.Component {
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-
+            console.log(this.props.title, this.props.data)
             var mgArgs = {
                 target: '#' + this.state.id,
                 data: this.props.data,
