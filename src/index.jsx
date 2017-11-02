@@ -8,13 +8,13 @@ const RELEASE_DATE = new Date('2017-11-14')
 var displays = {
     uptake: {
         title: 'Uptake',
-        description: 'How quickly does our overall daily usage come from 57?',
+        description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
         polling: ()=>{},
         scaffoldData:  i=>Math.sin(i/10)*10 + (Math.random()-.5)*5,
     },
     newUsers: {
         title: "New Users",
-        description: "based on new profile ping",
+        description: "The number of new Firefox 57 profiles",
         scaffoldData: i=>(Math.exp(i/30)*10 +  (Math.random()-.5)*10)*100000,
         formatData: (data) => {
             data = MG.convert.date(data, 'submission', '%Y%m%d')
@@ -26,7 +26,7 @@ var displays = {
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48504/results.csv?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt'
     },
     dau: {
-        title: "DAU for release on 57",
+        title: "Daily Active Users (DAUs)",
         description: "Average Daily Active Users (DAU) over the last 7 days",
         scaffoldData: i=> 1000000 + (Math.random()*Math.cos(i/10)*10 + 1) * 5000 + i*3000,
     },
@@ -57,7 +57,7 @@ var displays = {
     },
     sessionHours: {
         title: "Total Session Hours",
-        description: "Total number of hours",
+        description: "Total number of hours logged by Firefox 57 profiles",
         scaffoldData: i=> 500000 + 100000 * (Math.log((i+1)/10)*.5 + 1) +  Math.random()*30000,
     }
 }
@@ -87,21 +87,18 @@ TwoByFour.RowOne = (<DisplayRow>
     <DataGraphic id="uptake"   title={displays.uptake.title} 
                             description={displays.uptake.description} 
                             scaffoldData={displays.uptake.scaffoldData}
-                            xAxisLabel={displays.uptake.xAxisLabel} />
-    <GraphicDisclaimer>
-            This is a note.
-    </GraphicDisclaimer>
+                            xAxisLabel={displays.uptake.xAxisLabel}
+                            xAccessor='x'
+                            yAccessor='y' />
 </GraphicContainer>
-<GraphicContainer>
+<GraphicContainer apiURI={displays.newUsers.apiURI} formatData={displays.newUsers.formatData}>
 
     <DataGraphic id="newUsers" title={displays.newUsers.title}  
                             description={displays.newUsers.description}
                             scaffoldData={displays.newUsers.scaffoldData}
                             xAxisLabel={displays.newUsers.xAxisLabel}
-                            apiURI={displays.newUsers.apiURI}
                             xAccessor={displays.newUsers.xAccessor}
-                            yAccessor={displays.newUsers.yAccessor}
-                            formatData={displays.newUsers.formatData} />
+                            yAccessor={displays.newUsers.yAccessor} />
 </GraphicContainer>
 
 <GraphicContainer>
@@ -109,27 +106,36 @@ TwoByFour.RowOne = (<DisplayRow>
     <DataGraphic id="dau"      title={displays.dau.title} 
                             description={displays.dau.description}
                             scaffoldData={displays.dau.scaffoldData}
-                            xAxisLabel={displays.dau.xAxisLabel} />
+                            xAxisLabel={displays.dau.xAxisLabel}
+                            xAccessor='x'
+                            yAccessor='y'
+                             />
 </GraphicContainer>
 
 </DisplayRow>)
 
 TwoByFour.RowTwo = (
 <DisplayRow>
-    <GraphicContainer>
+    <GraphicContainer apiURI={displays.stability.apiURI} formatData={displays.stability.formatData} >
         <DataGraphic id="crashRate"    title={displays.stability.title}    
                                         description={displays.stability.description}
-                                        apiURI={displays.stability.apiURI}
-                                        formatData={displays.stability.formatData}
                                         xAccessor={displays.stability.xAccessor}
                                         yAccessor={displays.stability.yAccessor} />
+            <GraphicDisclaimer>
+                <span style={{fontWeight:900, paddingRight:10}}>NOTE</span> 
+                <span style={{fontStyle: 'italic'}}>
+                    we expect this metric to settle down within 6-18 hours of release.
+                </span>
+            </GraphicDisclaimer>
     </GraphicContainer>
 
         <GraphicContainer>
             <DataGraphic id="pagesVisited" title={displays.pagesVisited.title} 
                                        description={displays.pagesVisited.description}
                                        scaffoldData={displays.pagesVisited.scaffoldData}
-                                       xAxisLabel={displays.pagesVisited.xAxisLabel} />
+                                       xAxisLabel={displays.pagesVisited.xAxisLabel}
+                                       xAccessor='x'
+                            yAccessor='y' />
         </GraphicContainer>
 
         <GraphicContainer>
@@ -137,7 +143,9 @@ TwoByFour.RowTwo = (
             <DataGraphic id="sessionHours" title={displays.sessionHours.title}     
                                        description={displays.sessionHours.description}
                                        scaffoldData={displays.sessionHours.scaffoldData}
-                                       xAxisLabel={displays.sessionHours.xAxisLabel} />
+                                       xAxisLabel={displays.sessionHours.xAxisLabel}
+                                       xAccessor='x'
+                            yAccessor='y' />
         </GraphicContainer>
 
     </DisplayRow>

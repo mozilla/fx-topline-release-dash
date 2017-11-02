@@ -60,7 +60,7 @@ div.dl-divider {
 }
 
 div.graphic-display {
-    max-width:1400px;
+    max-width:1200px;
     margin:auto;
     
 }
@@ -85,6 +85,9 @@ div.data-graphic svg {
 }
 
 div.gd-graphic-disclaimer {
+    padding-left:60px;
+    padding-right:40px;
+    min-height:40px;
 }
 
 div.gd-main-disclaimer {
@@ -103,21 +106,14 @@ div.gd-topline-row {
     background: rgba(0, 0, 0, 0) linear-gradient(45deg, rgb(255, 255, 255), rgb(237, 237, 237)) repeat scroll 0% 0%;
     font-weight:300;
     font-size:16px;
-    margin-top:20px;
-    margin-bottom:40px;
+    margin-top:15px;
+    margin-bottom:30px;
     text-align:center;
-    padding-top:25px;
-    padding-bottom:25px;
+    padding-top:15px;
+    padding-bottom:15px;
     border-radius:5px;
     display: flex;
 }
-
-div.gd-topline-element {
-
-}
-
-
-
 
 div.gd-single-number {
     margin:auto;
@@ -126,12 +122,12 @@ div.gd-single-number {
 }
 
 div.gd-single-number-label {
-    font-size:16px;
+    font-size:14px;
     margin-bottom:-5px
 }
 
 div.gd-single-number-value {
-    font-size:38px;
+    font-size:32px;
     font-weight:bold;
 }
 

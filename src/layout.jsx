@@ -113,61 +113,30 @@ class DataGraphic extends React.Component {
         var loadingIcon = !this.state.loaded ? <div className='gd-loading-graphic'><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div> : undefined
         return (
             <div ref='display' className='data-graphic' id={this.state.id}>
-                {loadingIcon}
             </div>
         )
     }
 
     componentDidMount() {
-        // API call - get that data, then plot it.
-        //var dataHarness = fakeIt(100, (i)=>Math.sin(i/10)*10+(Math.random()-.5)*10)
-
-        // formatData: function
-        // 
-
-        if (this.props.hasOwnProperty('apiURI')) {
-            d3.csv(this.props.apiURI, (data)=> {
-                if (this.props.formatData !== undefined) data = this.props.formatData(data)
-                this.setState({loaded:true})
-                MG.data_graphic({
-                    target: '#' + this.state.id,
-                    data: data,
-                    x_accessor: this.props.xAccessor,
-                    y_accessor: this.props.yAccessor,
-                    color: 'black',
-                    legend: ['Fx57'],
-                    markers: [{label: '57', date: new Date('2017-11-14')}],
-                    area: false,
-                    width: this.props.width,
-                    right: 30,
-                    height: 250,
-                    description: this.props.description,
-                    title: this.props.title
-                })
-            })
-        } else {
-            this.setState({loaded:true})
-            var args = [100]
-            if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData)
-            var data = fakeIt(...args)
+        if (this.props.hasOwnProperty('data')) {
+            console.log(this.props.data)
             MG.data_graphic({
                 target: '#' + this.state.id,
-                data: data,
-                legend: ['Firefox 57'],
-                x_accessor: 'x',
-                y_accessor: 'y',
+                data: this.props.data,
+                x_accessor: this.props.xAccessor,
+                y_accessor: this.props.yAccessor,
                 color: 'black',
+                legend: ['Fx57'],
+                markers: [{label: '57', date: new Date('2017-11-14')}],
                 area: false,
                 width: this.props.width,
-                right:30,
+                right: 30,
                 height: 250,
+                bottom:20,
                 description: this.props.description,
                 title: this.props.title
-    
             })
         }
-
-
     }
 }
 
@@ -196,22 +165,45 @@ class SingleNumber extends React.Component {
 class GraphicContainer extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {loaded: false}
     }
 
     render() {
         // this is where we clone the children and also get the container siblingCount.
         // this lets us set the width.
-        var containerWidth = 1400 / this.props.totalSiblings - 20
-        var children = React.Children.map(this.props.children, (child)=>{
-            return React.cloneElement(child, {
-                width: containerWidth
+        var containerWidth = 1200 / this.props.totalSiblings - 20
+        
+        if (this.state.loaded) {
+            var children = React.Children.map(this.props.children, (child)=>{
+                return React.cloneElement(child, {
+                    width: containerWidth,
+                    data: this.state.data
+                })
             })
-        })
+        } else {
+            var children =  <div className='gd-loading-graphic'><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>    
+        }
+        
         return (
             <div className='gd-graphic-container' style={{width: containerWidth}}>
                 {children}
             </div>
         )
+    }
+
+    componentDidMount() {
+        if (this.props.hasOwnProperty('apiURI')) {
+            d3.csv(this.props.apiURI, (data)=> {
+                if (this.props.formatData !== undefined) data = this.props.formatData(data)
+                this.setState({loaded:true, data})  
+            })
+        } else {
+            var args =[100]
+            if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData)
+            var data = fakeIt(...args)
+            this.setState({loaded: true, data})
+        }
+        
     }
 }
 
