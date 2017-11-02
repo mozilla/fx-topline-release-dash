@@ -1130,6 +1130,13 @@ function mainDisclaimer() {
     );
 }
 
+/* 
+    <Footer>
+        <div> Here is a footer </div>
+    </Footer>
+
+*/
+
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["e" /* GraphicDisplay */],
     null,
@@ -21366,6 +21373,7 @@ module.exports = function() {
 /* unused harmony export SingleNumber */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return ToplineRow; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return ToplineElement; });
+/* unused harmony export Footer */
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 
@@ -21641,6 +21649,25 @@ class DisplayRow extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-row' },
+            children
+        );
+    }
+}
+
+class Footer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, c => __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            null,
+            c
+        ));
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-footer' },
             children
         );
     }

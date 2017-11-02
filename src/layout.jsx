@@ -253,4 +253,19 @@ class DisplayRow extends React.Component {
     }
 }
 
-export { DisplayRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow, ToplineElement }
+class Footer extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        var children = React.Children.map(this.props.children, c=><div>{c}</div>)
+        return (
+            <div className='gd-footer'>
+                {children}
+            </div>
+        )
+    }
+}
+
+export { DisplayRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow, ToplineElement, Footer }

@@ -1,6 +1,6 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {GraphicDisplay, DisplayRow, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow , ToplineElement} from './layout.jsx'
+import {GraphicDisplay, DisplayRow, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow , ToplineElement, Footer} from './layout.jsx'
 
 const WHICH_VERSION = 'beta'
 const RELEASE_DATE = new Date('2017-11-14')
@@ -156,6 +156,13 @@ function mainDisclaimer() {
         </MainDisclaimer>)
 }
 
+/* 
+    <Footer>
+        <div> Here is a footer </div>
+    </Footer>
+
+*/
+
 
 
 render(
@@ -176,6 +183,6 @@ render(
     </ToplineRow>
     {TwoByFour.RowOne}
     {TwoByFour.RowTwo}
-    
+
 </ GraphicDisplay>    
     , document.getElementById('page'))
