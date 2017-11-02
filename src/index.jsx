@@ -83,29 +83,26 @@ var displays = {
 var TwoByFour={}
 TwoByFour.RowOne = (<DisplayRow>
 
-<GraphicContainer>
+<GraphicContainer scaffoldData={displays.uptake.scaffoldData}>
     <DataGraphic id="uptake"   title={displays.uptake.title} 
                             description={displays.uptake.description} 
-                            scaffoldData={displays.uptake.scaffoldData}
                             xAxisLabel={displays.uptake.xAxisLabel}
                             xAccessor='x'
                             yAccessor='y' />
 </GraphicContainer>
-<GraphicContainer apiURI={displays.newUsers.apiURI} formatData={displays.newUsers.formatData}>
+<GraphicContainer apiURI={displays.newUsers.apiURI} formatData={displays.newUsers.formatData} scaffoldData={displays.newUsers.scaffoldData}>
 
     <DataGraphic id="newUsers" title={displays.newUsers.title}  
                             description={displays.newUsers.description}
-                            scaffoldData={displays.newUsers.scaffoldData}
                             xAxisLabel={displays.newUsers.xAxisLabel}
                             xAccessor={displays.newUsers.xAccessor}
                             yAccessor={displays.newUsers.yAccessor} />
 </GraphicContainer>
 
-<GraphicContainer>
+<GraphicContainer scaffoldData={displays.dau.scaffoldData}>
 
     <DataGraphic id="dau"      title={displays.dau.title} 
                             description={displays.dau.description}
-                            scaffoldData={displays.dau.scaffoldData}
                             xAxisLabel={displays.dau.xAxisLabel}
                             xAccessor='x'
                             yAccessor='y'
@@ -129,20 +126,19 @@ TwoByFour.RowTwo = (
             </GraphicDisclaimer>
     </GraphicContainer>
 
-        <GraphicContainer>
+        <GraphicContainer scaffoldData={displays.pagesVisited.scaffoldData}>
             <DataGraphic id="pagesVisited" title={displays.pagesVisited.title} 
                                        description={displays.pagesVisited.description}
-                                       scaffoldData={displays.pagesVisited.scaffoldData}
+                                       
                                        xAxisLabel={displays.pagesVisited.xAxisLabel}
                                        xAccessor='x'
                             yAccessor='y' />
         </GraphicContainer>
 
-        <GraphicContainer>
+        <GraphicContainer scaffoldData={displays.sessionHours.scaffoldData}>
 
             <DataGraphic id="sessionHours" title={displays.sessionHours.title}     
                                        description={displays.sessionHours.description}
-                                       scaffoldData={displays.sessionHours.scaffoldData}
                                        xAxisLabel={displays.sessionHours.xAxisLabel}
                                        xAccessor='x'
                             yAccessor='y' />

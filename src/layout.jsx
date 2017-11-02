@@ -119,7 +119,6 @@ class DataGraphic extends React.Component {
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-            console.log(this.props.data)
             MG.data_graphic({
                 target: '#' + this.state.id,
                 data: this.props.data,
@@ -131,6 +130,7 @@ class DataGraphic extends React.Component {
                 area: false,
                 width: this.props.width,
                 right: 30,
+                left:30,
                 height: 250,
                 bottom:20,
                 description: this.props.description,
@@ -171,7 +171,7 @@ class GraphicContainer extends React.Component {
     render() {
         // this is where we clone the children and also get the container siblingCount.
         // this lets us set the width.
-        var containerWidth = 1200 / this.props.totalSiblings - 20
+        var containerWidth = 1200 / this.props.totalSiblings - 60
         
         if (this.state.loaded) {
             var children = React.Children.map(this.props.children, (child)=>{

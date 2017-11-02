@@ -1048,30 +1048,27 @@ TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     null,
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        null,
+        { scaffoldData: displays.uptake.scaffoldData },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'uptake', title: displays.uptake.title,
             description: displays.uptake.description,
-            scaffoldData: displays.uptake.scaffoldData,
             xAxisLabel: displays.uptake.xAxisLabel,
             xAccessor: 'x',
             yAccessor: 'y' })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        { apiURI: displays.newUsers.apiURI, formatData: displays.newUsers.formatData },
+        { apiURI: displays.newUsers.apiURI, formatData: displays.newUsers.formatData, scaffoldData: displays.newUsers.scaffoldData },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'newUsers', title: displays.newUsers.title,
             description: displays.newUsers.description,
-            scaffoldData: displays.newUsers.scaffoldData,
             xAxisLabel: displays.newUsers.xAxisLabel,
             xAccessor: displays.newUsers.xAccessor,
             yAccessor: displays.newUsers.yAccessor })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        null,
+        { scaffoldData: displays.dau.scaffoldData },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'dau', title: displays.dau.title,
             description: displays.dau.description,
-            scaffoldData: displays.dau.scaffoldData,
             xAxisLabel: displays.dau.xAxisLabel,
             xAccessor: 'x',
             yAccessor: 'y'
@@ -1106,20 +1103,19 @@ TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        null,
+        { scaffoldData: displays.pagesVisited.scaffoldData },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'pagesVisited', title: displays.pagesVisited.title,
             description: displays.pagesVisited.description,
-            scaffoldData: displays.pagesVisited.scaffoldData,
+
             xAxisLabel: displays.pagesVisited.xAxisLabel,
             xAccessor: 'x',
             yAccessor: 'y' })
     ),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["c" /* GraphicContainer */],
-        null,
+        { scaffoldData: displays.sessionHours.scaffoldData },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["a" /* DataGraphic */], { id: 'sessionHours', title: displays.sessionHours.title,
             description: displays.sessionHours.description,
-            scaffoldData: displays.sessionHours.scaffoldData,
             xAxisLabel: displays.sessionHours.xAxisLabel,
             xAccessor: 'x',
             yAccessor: 'y' })
@@ -21513,7 +21509,6 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-            console.log(this.props.data);
             MG.data_graphic({
                 target: '#' + this.state.id,
                 data: this.props.data,
@@ -21525,6 +21520,7 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 area: false,
                 width: this.props.width,
                 right: 30,
+                left: 30,
                 height: 250,
                 bottom: 20,
                 description: this.props.description,
@@ -21568,7 +21564,7 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
     render() {
         // this is where we clone the children and also get the container siblingCount.
         // this lets us set the width.
-        var containerWidth = 1200 / this.props.totalSiblings - 20;
+        var containerWidth = 1200 / this.props.totalSiblings - 60;
 
         if (this.state.loaded) {
             var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, child => {
