@@ -27,17 +27,16 @@ function updateData() {
 setInterval(updateData, 5 * 60 * 1000);
 updateData();
 
-app.use(express.static('static'));
+app.use('/static', express.static('static'));
 
 app.get('/', function(request, response) {
-  response.sendFile(path.join(__dirname, 'index.html'));
+  response.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 app.get('/data', function(request, response) {
   response.json(data);
 });
 
-// listen for requests :)
 var listener = app.listen(process.env.PORT, function() {
   console.log(`app is listening on port ${listener.address().port}.`);
 });
