@@ -149,4 +149,4 @@ var dataSources = {
     }
 }
 
-export {dataSources, DATA_FORMAT}
+export {dataSources}

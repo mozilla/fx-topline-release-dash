@@ -12,6 +12,7 @@ var config = {
   },
   devtool: 'source-map',
   module : {
+    
     loaders : [
       {
         test : /\.jsx?/,
