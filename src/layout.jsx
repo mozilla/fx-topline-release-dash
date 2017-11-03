@@ -302,14 +302,16 @@ class GraphicContainer extends React.Component {
             </div>
         )
 
-        componentDidUpdate() {
-            if (this.props.showTooltip !== undefined) {
-                if (this.props.showTooltip===true) this.refs.tooltip.show()
-                else this.refs.tooltip.hide()
-            }
-        }
+
     }
 
+    componentDidUpdate() {
+        if (this.props.hasOwnProperty('showTooltip')) {
+            if (this.props.showTooltip===true) this.refs.tooltip.show()
+            else this.refs.tooltip.hide()
+        }
+    }
+    
     componentDidMount() {
         if (this.props.hasOwnProperty('id')) {
             
