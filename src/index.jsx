@@ -1,18 +1,18 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {GraphicDisplayStyle, 
-    GraphicDisplay, 
-    DisplayRow, 
-    Header, 
-    DataGraphic, 
-    Divider, 
-    MainDisclaimer, 
+import {GraphicDisplayStyle,
+    GraphicDisplay,
+    DisplayRow,
+    Header,
+    DataGraphic,
+    Divider,
+    MainDisclaimer,
     GraphicContainer,
-    GraphicHeader, 
-    GraphicDisclaimer, 
-    SingleNumber, 
-    ToplineRow , 
-    ToplineElement, 
+    GraphicHeader,
+    GraphicDisclaimer,
+    SingleNumber,
+    ToplineRow ,
+    ToplineElement,
     Footer} from './layout.jsx'
 
 const WHICH_VERSION = 'release'
@@ -54,7 +54,7 @@ var displays = {
                 obj[d.day][d.succeeded] = d.instances
                 return obj
             }, {})
-            
+
             var out = Object.keys(tmp).reduce((arr,d)=> {
                 var di = tmp[d]
                 var True = di[true] || 0
@@ -216,8 +216,8 @@ TwoByFour.RowTwo = (
 
 function mainDisclaimer() {
     return (<MainDisclaimer>
-                This is a very rough proof of concept. 
-        The overall design is not solidified, the data is fake, and all the interactions are nonexistent. 
+                This is a very rough proof of concept.
+        The overall design is not solidified, the data is fake, and all the interactions are nonexistent.
         Keep that in mind for now.
         </MainDisclaimer>)
 }
@@ -225,7 +225,7 @@ function mainDisclaimer() {
 
 render(
     <GraphicDisplay>
-        <Header title='Firefox Quantum' subtitle='release metrics'  img='static/ff-quantum.png' />
+        <Header title='Firefox Quantum' subtitle='release metrics'  img='ff-quantum.png' />
         <ToplineRow>
             <ToplineElement value={(()=>{
                 var msPerDay = 8.64e7;
@@ -240,8 +240,8 @@ render(
         {TwoByFour.RowOne}
         {TwoByFour.RowTwo}
         <Footer>
-            <div>Data Pipeline + Product Management + Strategy &amp; Insights</div> 
-            <div>inquiries re: data <a href='mailto:datapipeline@mozilla.com'>datapipeline@mozilla.com</a></div> 
+            <div>Data Pipeline + Product Management + Strategy &amp; Insights</div>
+            <div>inquiries re: data <a href='mailto:datapipeline@mozilla.com'>datapipeline@mozilla.com</a></div>
             <div>inquiries re: dashboard - <a href='mailto:strategyandinsights@mozilla.com'>strategyandinsights@mozilla.com</a></div>
         </Footer>
     </ GraphicDisplay>, document.getElementById('page'))
