@@ -8635,13 +8635,13 @@ var displays = {
         source: 'https://sql.telemetry.mozilla.org/queries/48558/source',
         formatData: data => {
             data = MG.convert.date(data, 'date', '%Y%m%d');
-            data = MG.convert.number(data, 'ahrsAll');
-            data = MG.convert.number(data, 'ahrs56');
+            data = MG.convert.number(data, 'thrsAll');
+            data = MG.convert.number(data, 'thrs56');
             console.log(data);
             return data;
         },
         xAccessor: 'date',
-        yAccessor: ['ahrs56', 'ahrsAll'],
+        yAccessor: ['thrs56', 'thrsAll'],
         plotArgs: { 'legend': ['Quantum', 'All'] }
     }
 };
