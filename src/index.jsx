@@ -35,8 +35,6 @@ function qv(variable) {
     return out
 }
 
-
-
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
@@ -91,7 +89,6 @@ render(
                 x1.setHours(12,0,0);
                     return Math.abs(Math.round( (x1 - x0) / msPerDay ))
                 })() + ' days'} label={new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release'} />
-            <ToplineElement label='Total Firefox Quantum Downloads' value='43,543,254' />
         </ToplineRow>
         {TwoByFour.RowOne}
         {TwoByFour.RowTwo}

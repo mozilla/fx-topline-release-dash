@@ -8572,8 +8572,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
                 x0.setHours(12, 0, 0);
                 x1.setHours(12, 0, 0);
                 return Math.abs(Math.round((x1 - x0) / msPerDay));
-            })() + ' days', label: new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release' }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], { label: 'Total Firefox Quantum Downloads', value: '43,543,254' })
+            })() + ' days', label: new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release' })
     ),
     TwoByFour.RowOne,
     TwoByFour.RowTwo,
