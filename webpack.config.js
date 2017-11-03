@@ -1,14 +1,14 @@
 var webpack = require('webpack');
 var path = require('path');
 
-var BUILD_DIR = path.resolve(__dirname, 'js/');
+var BUILD_DIR = path.resolve(__dirname, 'static/');
 var APP_DIR = path.resolve(__dirname, 'src/');
 
 var config = {
   entry: APP_DIR + '/index.jsx',
   output: {
     path: BUILD_DIR,
-    filename: '57-display.js'
+    filename: 'release-display.js'
   },
   devtool: 'source-map',
   module : {
