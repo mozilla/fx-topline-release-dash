@@ -21095,18 +21095,17 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
                 onMouseOut: this.handleHover,
                 'data-tip': this.props.description,
                 className: 'gd-graphic-container', style: { width: containerWidth } },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_tooltip___default.a, { ref: elem => {
-                    this.refs.tooltip = elem;
-                }, effect: 'solid' }),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_tooltip___default.a, { effect: 'solid' }),
             children
         );
     }
 
-    componentDidUpdate() {
-        if (this.props.hasOwnProperty('showTooltip')) {
-            if (this.props.showTooltip === true) this.refs.tooltip.show();else this.refs.tooltip.hide();
-        }
-    }
+    // componentDidUpdate() {
+    //     if (this.props.hasOwnProperty('showTooltip')) {
+    //         if (this.props.showTooltip===true) this.refs.tooltip.show()
+    //         else this.refs.tooltip.hide()
+    //     }
+    // }
 
     componentDidMount() {
         if (this.props.hasOwnProperty('id')) {

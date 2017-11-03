@@ -297,21 +297,19 @@ class GraphicContainer extends React.Component {
                 onMouseOut={this.handleHover} 
                 data-tip={this.props.description}
                 className='gd-graphic-container' style={{width: containerWidth}}>
-                <ReactTooltip ref={(elem)=>{this.refs.tooltip = elem}} effect='solid' />
+                <ReactTooltip  effect='solid' />
                 {children}
             </div>
         )
-
-
     }
 
-    componentDidUpdate() {
-        if (this.props.hasOwnProperty('showTooltip')) {
-            if (this.props.showTooltip===true) this.refs.tooltip.show()
-            else this.refs.tooltip.hide()
-        }
-    }
-    
+    // componentDidUpdate() {
+    //     if (this.props.hasOwnProperty('showTooltip')) {
+    //         if (this.props.showTooltip===true) this.refs.tooltip.show()
+    //         else this.refs.tooltip.hide()
+    //     }
+    // }
+
     componentDidMount() {
         if (this.props.hasOwnProperty('id')) {
             
