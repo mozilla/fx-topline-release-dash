@@ -14,8 +14,8 @@
     "express": "^4.16.2",
     "material-ui": "^0.19.4",
     "react": "^16.0.0",
-    "react-bootstrap": "^0.31.5",
     "react-dom": "^16.0.0",
+    "react-tooltip": "^3.4.0",
     "request": "^2.83.0"
   },
   "devDependencies": {

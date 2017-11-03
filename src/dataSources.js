@@ -42,7 +42,7 @@ var dataSources = {
         title: 'Uptake',
         id: "uptake",
         plotArgs: {format: 'Percentage'},
-        description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
+        description: 'the percentage of our Daily Active Users (DAUs) coming from Quantum profiles',
         polling: ()=>{},
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
         format: DATA_FORMAT,

@@ -1,6 +1,5 @@
 import React from 'react'
 import {render} from 'react-dom'
-
 import {dataSources as displays} from './dataSources.js'
 
 import {GraphicDisplayStyle,
@@ -38,8 +37,8 @@ function qv(variable) {
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer id={args.id} title={args.title} format={args.format} preprocessor={args.preprocessor} source={args.source}>
-            <GraphicHeader title={args.title} description={args.description} />
+        <GraphicContainer id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+            <GraphicHeader title={args.title} />
             <DataGraphic 
                 title={args.title}
                 description={args.description}
@@ -47,6 +46,7 @@ function dataGraphicCell(args) {
                 yAccessor={args.yAccessor}
                 plotArgs={args.plotArgs || {}}
              />
+
         </GraphicContainer>
     )
 }

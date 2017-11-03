@@ -1,6 +1,6 @@
 
 import React from 'react'
-import {Overlay, Popover}  from 'react-bootstrap'
+import ReactTooltip from 'react-tooltip'
 var defaults = {}
 defaults.FORMAT = 'web'
 
@@ -161,26 +161,18 @@ class ToplineRow extends React.Component {
 class GraphicHeader extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {isHovered: false, target: undefined}
-        this.handleHover = this.handleHover.bind(this)
+        this.state = {isHovered: false}
     }
 
     handleHover(e) {
         var isHovered = !this.state.isHovered
-        this.setState({isHovered, target: e.target})
-        //this.setState({isHovered})
+        this.setState({isHovered})
     }
 
     render() {
-        var r = 'r'+parseInt(Math.random() * 10000000)
         return (
-            <div 
-                onMouseOver={this.handleHover} 
-                onMouseOut={this.handleHover} 
-                className={'gd-graphic-header ' + (this.state.isHovered ? 'show-tooltip' : '')}
-                id={r}
-            >
-              <div className="gd-graphic-header-title">{this.props.title}</div>
+            <div className='gd-graphic-header'>
+                <div className="gd-graphic-header-title">{this.props.title}</div>
                 <div className='gd-graphic-header-download hide-on-monitor-display'>
                     <a style={{display: this.props.source !== undefined ? 'block' : 'none'}} href={this.props.source} target='_blank'>
                         <i className="fa fa-table" aria-hidden="true"></i>
@@ -272,7 +264,13 @@ class SingleNumber extends React.Component {
 class GraphicContainer extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {loaded: false}
+        this.state = {loaded: false, isHovered: false}
+        this.handleHover = this.handleHover.bind(this)
+    }
+
+    handleHover(e) {
+        var isHovered = !this.state.isHovered
+        this.setState({isHovered})
     }
 
     render() {
@@ -285,7 +283,8 @@ class GraphicContainer extends React.Component {
                     data: this.state.data,
                     id: this.props.id,
                     source: this.props.source || undefined,
-                    onLastUpdateData: this.props.OnLastUpdateData
+                    onLastUpdateData: this.props.OnLastUpdateData,
+                    isHovered: this.state.isHovered
                 })
             })
         } else {
@@ -293,7 +292,12 @@ class GraphicContainer extends React.Component {
         }
         
         return (
-            <div className='gd-graphic-container' style={{width: containerWidth}}>
+            <div 
+                onMouseOver={this.handleHover} 
+                onMouseOut={this.handleHover} 
+                data-tip={this.props.description}
+                className='gd-graphic-container' style={{width: containerWidth}}>
+                <ReactTooltip effect='solid' />
                 {children}
             </div>
         )
