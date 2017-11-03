@@ -19,8 +19,6 @@ const WHICH_VERSION = 'release'
 const RELEASE_DATE = new Date('2017-11-14')
 const DATA_FORMAT = 'json'
 
-console.log(`https://sql.telemetry.mozilla.org/api/queries/3648/results.${DATA_FORMAT}?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs`)
-
 function qv(variable) {
     var query = window.location.search.substring(1)
     var vars = query.split('&')
@@ -227,7 +225,7 @@ function mainDisclaimer() {
 
 render(
     <GraphicDisplay>
-        <Header title='Firefox Quantum' subtitle='release metrics' secondText='last updated: 8 minutes ago' img='ff-57.png' />
+        <Header title='Firefox Quantum' subtitle='release metrics'  img='ff-57.png' />
         <ToplineRow>
             <ToplineElement value={(()=>{
                 var msPerDay = 8.64e7;

@@ -8489,8 +8489,6 @@ const WHICH_VERSION = 'release';
 const RELEASE_DATE = new Date('2017-11-14');
 const DATA_FORMAT = 'json';
 
-console.log(`https://sql.telemetry.mozilla.org/api/queries/3648/results.${DATA_FORMAT}?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs`);
-
 function qv(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split('&');
@@ -8709,7 +8707,7 @@ function mainDisclaimer() {
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["f" /* GraphicDisplay */],
     null,
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* Header */], { title: 'Firefox Quantum', subtitle: 'release metrics', secondText: 'last updated: 8 minutes ago', img: 'ff-57.png' }),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_2__layout_jsx__["h" /* Header */], { title: 'Firefox Quantum', subtitle: 'release metrics', img: 'ff-57.png' }),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_2__layout_jsx__["k" /* ToplineRow */],
         null,
@@ -28901,6 +28899,26 @@ module.exports = function() {
 
 var defaults = {};
 defaults.FORMAT = 'web';
+
+/*
+ * JavaScript Pretty Date
+ * Copyright (c) 2011 John Resig (ejohn.org)
+ * Licensed under the MIT and GPL licenses.
+ */
+
+// Takes an ISO time and returns a string representing how
+// long ago the date represents.
+
+function prettyDate(time) {
+    var date = time;
+    //var date = new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," ")),
+    var diff = (new Date().getTime() - date.getTime()) / 1000,
+        day_diff = Math.floor(diff / 86400);
+
+    if (isNaN(day_diff) || day_diff < 0 || day_diff >= 31) return;
+    return day_diff == 0 && (diff < 60 && "just now" || diff < 120 && "1 minute ago" || diff < 3600 && Math.floor(diff / 60) + " minutes ago" || diff < 7200 && "1 hour ago" || diff < 86400 && Math.floor(diff / 3600) + " hours ago") || day_diff == 1 && "Yesterday" || day_diff < 7 && day_diff + " days ago" || day_diff < 31 && Math.ceil(day_diff / 7) + " weeks ago";
+}
+
 function fakeIt(length, otherFcn) {
     if (otherFcn === undefined) otherFcn = d => Math.random() * 10;
     var arr = [];
@@ -28934,16 +28952,30 @@ class GraphicDisplayStyle extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.
 class GraphicDisplay extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
+        this.state = { lastUpdated: {} };
+        this.handleLastUpdatedData = this.handleLastUpdatedData.bind(this);
+    }
+
+    handleLastUpdatedData(time, source) {
+        var lastUpdated = this.state.lastUpdated;
+        lastUpdated[source] = time;
+        this.setState({ lastUpdated });
     }
 
     render() {
+
+        var lastUpdatedElement = Object.values(this.state.lastUpdated);
+        if (lastUpdatedElement.length) lastUpdatedElement = Math.max(...lastUpdatedElement);else lastUpdatedElement = undefined;
+        var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, c => {
+            return __WEBPACK_IMPORTED_MODULE_0_react___default.a.cloneElement(c, { onLastUpdateData: this.handleLastUpdatedData, lastUpdatedElement });
+        });
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-page' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'graphic-display' },
-                this.props.children
+                children
             )
         );
     }
@@ -28971,12 +29003,13 @@ class Header extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
             subtitle,
             ' '
         );
-        var rightText = this.props.hasOwnProperty('secondText') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        //var rightText = this.props.hasOwnProperty('secondText') ? <div className='gd-header-second-text'>{this.props.secondText}</div> : undefined
+        var rightText = this.props.lastUpdatedElement !== undefined ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-header-second-text' },
-            this.props.secondText
+            'last updated: ',
+            prettyDate(new Date(this.props.lastUpdatedElement))
         ) : undefined;
-
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-header' },
@@ -29167,8 +29200,6 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
     }
 
     render() {
-        // this is where we clone the children and also get the container siblingCount.
-        // this lets us set the width.
         var containerWidth = 1200 / this.props.totalSiblings - 60;
 
         if (this.state.loaded) {
@@ -29176,7 +29207,8 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.cloneElement(child, {
                     width: containerWidth,
                     data: this.state.data,
-                    source: this.props.source || undefined
+                    source: this.props.source || undefined,
+                    onLastUpdateData: this.props.OnLastUpdateData
                 });
             });
         } else {
@@ -29199,6 +29231,7 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
 
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv;
             getTheData(this.props.apiURI, data => {
+                if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title);
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data);
                 this.setState({ loaded: true, data });
             });
@@ -29243,7 +29276,8 @@ class DisplayRow extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component
     render() {
         var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, child => {
             return __WEBPACK_IMPORTED_MODULE_0_react___default.a.cloneElement(child, {
-                totalSiblings: this.props.children.length
+                totalSiblings: this.props.children.length,
+                onLastUpdateData: this.props.onLastUpdateData
             });
         });
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
