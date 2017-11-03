@@ -256,8 +256,10 @@ class GraphicContainer extends React.Component {
 
     componentDidMount() {
         if (this.props.hasOwnProperty('apiURI')) {
-            d3.csv(this.props.apiURI, (data)=> {
-                if (this.props.formatData !== undefined) data = this.props.formatData(data)
+            
+            var getTheData = this.props.format == 'json' ? d3.json : d3.csv
+            getTheData(this.props.apiURI, (data)=> {
+                if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
                 this.setState({loaded:true, data})  
             })
         } else {
