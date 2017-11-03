@@ -123,7 +123,7 @@ var displays = {
             return data
         },
         xAccessor: 'date',
-        yAccessor: 'smooth56'
+        yAccessor: 'smooth_dau'
     },
 
     stability: {
@@ -151,15 +151,15 @@ var displays = {
         id: "pagesVisited",
         description: "Total number of URIs visited",
         format: DATA_FORMAT,
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48561/results.${DATA_FORMAT}?api_key=VhhFFQa8sFzCK9Y96KMoOSXGtSivXFyUIpOVBEPe`,
-        source: 'https://sql.telemetry.mozilla.org/queries/48561/source',
+        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48587/results.${DATA_FORMAT}?api_key=OuKxbk1VK8xWdb54MtLMfTfAbRa4sOlQU4mt38Cv`,
+        source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
         preprocessor: (data) => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
             return data
         },
         xAccessor: 'date',
-        yAccessor: ['uri56', 'uriAll'],
+        yAccessor: ['avg_uri_new', 'avg_uri_all'],
         plotArgs: {legend: ['Quantum', 'All']}
     },
 
@@ -167,8 +167,8 @@ var displays = {
         title: "Total Session Hours",
         id: "sessionHours",
         description: "Total number of hours logged by Firefox 57 profiles",
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48558/results.${DATA_FORMAT}?api_key=dlqKmwx4TP8oiF2aOiSAfwDCFVTbrCUmOOw7gWwq`,
-        source: 'https://sql.telemetry.mozilla.org/queries/48558/source',
+        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48583/results.${DATA_FORMAT}?api_key=UTF3SaBOqusUa5fP4BstQ5M9YhlLIejS0RSCyIQB`,
+        source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data)
@@ -176,7 +176,7 @@ var displays = {
             return data
         },
         xAccessor: 'date',
-        yAccessor: ['thrs56', 'thrsAll'],
+        yAccessor: ['avg_subsess_hours_new', 'avg_subsess_hours_all'],
         plotArgs: {'legend': ['Quantum', 'All']}
     }
 }
