@@ -283,6 +283,7 @@ class GraphicContainer extends React.Component {
                 return React.cloneElement(child, {
                     width: containerWidth,
                     data: this.state.data,
+                    id: this.props.id,
                     source: this.props.source || undefined,
                     onLastUpdateData: this.props.OnLastUpdateData
                 })
@@ -299,10 +300,10 @@ class GraphicContainer extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.hasOwnProperty('apiURI')) {
+        if (this.props.hasOwnProperty('id')) {
             
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv
-            getTheData(this.props.apiURI, (data)=> {
+            getTheData(`/data/${this.props.id}.json`, (data)=> {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
                 this.setState({loaded:true, data})

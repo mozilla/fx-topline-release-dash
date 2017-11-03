@@ -5,7 +5,6 @@ const path = require('path');
 
 const DATA_FORMAT = 'json';
 const API_KEY = process.env.API_KEY;
-
 const dataSources = require('../src/dataURIs.json');
 const urls = Object.keys(dataSources);
 

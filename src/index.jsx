@@ -40,9 +40,9 @@ function qv(variable) {
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer title={args.title} format={args.format} apiURI={args.apiURI} preprocessor={args.preprocessor} source={args.source}>
+        <GraphicContainer id={args.id} title={args.title} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader title={args.title} description={args.description} />
-            <DataGraphic id={args.id}
+            <DataGraphic 
                 title={args.title}
                 description={args.description}
                 xAccessor={args.xAccessor}

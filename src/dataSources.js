@@ -12,7 +12,6 @@ var dataSources = {
         description: "the percentage of attempted installs that are successful",
         plotArgs: {format: 'Percentage'},
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/3648/results.${DATA_FORMAT}?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs`,
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data)
@@ -46,7 +45,6 @@ var dataSources = {
         description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
         polling: ()=>{},
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48552/results.${DATA_FORMAT}?api_key=OjrW1fBixUDsqinC00X3P6JPGTk7A9iNjwYeRd8h`,
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data)
@@ -74,7 +72,6 @@ var dataSources = {
         },
         xAccessor: 'submission',
         yAccessor: 'new_profiles',
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48504/results.${DATA_FORMAT}?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt`,
         source: "https://sql.telemetry.mozilla.org/queries/48504/source#130999"
     },
 
@@ -82,7 +79,6 @@ var dataSources = {
         title: "Daily Active Users (DAUs)",
         id: 'dau',
         description: "Daily Active Users (DAU), smoothed over the previous 7 days",
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48553/results.${DATA_FORMAT}?api_key=EBSmbDQLOUxuqqTXIjax1ARNUYRcqn9y7UiHca3r`,
         source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
         preprocessor: (data) => {
@@ -111,7 +107,6 @@ var dataSources = {
             data = data.filter(d=>d.channel === WHICH_VERSION && d.build_version=='57.0' && d.date > new Date('2017-10-01'))
             return data
         },
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/1092/results.${DATA_FORMAT}?api_key=f7dac61893e040ca59c76fd616f082479e2a1c85`
     },
 
     pagesVisited: {
@@ -119,7 +114,6 @@ var dataSources = {
         id: "pagesVisited",
         description: "Total number of URIs visited",
         format: DATA_FORMAT,
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48587/results.${DATA_FORMAT}?api_key=OuKxbk1VK8xWdb54MtLMfTfAbRa4sOlQU4mt38Cv`,
         source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
         preprocessor: (data) => {
             data = handleFormat(data)
@@ -135,7 +129,6 @@ var dataSources = {
         title: "Total Session Hours",
         id: "sessionHours",
         description: "Total number of hours logged by Firefox 57 profiles",
-        apiURI: `https://sql.telemetry.mozilla.org/api/queries/48583/results.${DATA_FORMAT}?api_key=UTF3SaBOqusUa5fP4BstQ5M9YhlLIejS0RSCyIQB`,
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
         format: DATA_FORMAT,
         preprocessor: data => {
