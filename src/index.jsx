@@ -1,9 +1,36 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {GraphicDisplay, DisplayRow, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow , ToplineElement, Footer} from './layout.jsx'
+import {GraphicDisplayStyle, 
+    GraphicDisplay, 
+    DisplayRow, 
+    Header, 
+    DataGraphic, 
+    Divider, 
+    MainDisclaimer, 
+    GraphicContainer,
+    GraphicHeader, 
+    GraphicDisclaimer, 
+    SingleNumber, 
+    ToplineRow , 
+    ToplineElement, 
+    Footer} from './layout.jsx'
 
-const WHICH_VERSION = 'beta'
+const WHICH_VERSION = 'release'
 const RELEASE_DATE = new Date('2017-11-14')
+
+function qv(variable) {
+    var query = window.location.search.substring(1)
+    var vars = query.split('&')
+    var out
+    vars.forEach(pair=>{
+        pair = pair.split('=')
+        console.log(variable, decodeURIComponent(pair[0]) == variable)
+        if (decodeURIComponent(pair[0]) == variable) {
+            out = decodeURIComponent(pair[1])
+        }
+    })
+    return out
+}
 
 var displays = {
     successfulInstalls: {
@@ -11,6 +38,7 @@ var displays = {
         title: "Successful Installs",
         description: "the percentage of attempted installs that are successful",
         plotArgs: {format: 'Percentage'},
+        source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/3648/results.csv?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs',
         formatData: data => {
             
@@ -43,6 +71,7 @@ var displays = {
         plotArgs: {format: 'Percentage'},
         description: 'the percentage of our Daily Active Users (DAUs) coming from Firefox 57 profiles',
         polling: ()=>{},
+        source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48552/results.csv?api_key=OjrW1fBixUDsqinC00X3P6JPGTk7A9iNjwYeRd8h',
         formatData: data => {
             data = MG.convert.date(data, 'd', '%Y%m%d')
@@ -71,7 +100,8 @@ var displays = {
         },
         xAccessor: 'submission',
         yAccessor: 'new_profiles',
-        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48504/results.csv?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt'
+        apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48504/results.csv?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt',
+        source: "https://sql.telemetry.mozilla.org/queries/48504/source#130999"
     },
 
     dau: {
@@ -79,6 +109,7 @@ var displays = {
         id: 'dau',
         description: "Daily Active Users (DAU), smoothed over the previous 7 days",
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48553/results.csv?api_key=EBSmbDQLOUxuqqTXIjax1ARNUYRcqn9y7UiHca3r',
+        source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         formatData: (data) => {
             data = MG.convert.date(data, 'date', '%Y%m%d')
             data = MG.convert.number(data, 'smooth56')
@@ -114,6 +145,7 @@ var displays = {
         id: "pagesVisited",
         description: "Total number of URIs visited",
         apiURI: "https://sql.telemetry.mozilla.org/api/queries/48561/results.csv?api_key=VhhFFQa8sFzCK9Y96KMoOSXGtSivXFyUIpOVBEPe",
+        source: 'https://sql.telemetry.mozilla.org/queries/48561/source',
         formatData: (data) => {
             data = MG.convert.date(data, 'date', '%Y%m%d')
             data = MG.convert.number(data, 'uriAll')
@@ -130,6 +162,7 @@ var displays = {
         id: "sessionHours",
         description: "Total number of hours logged by Firefox 57 profiles",
         apiURI: 'https://sql.telemetry.mozilla.org/api/queries/48558/results.csv?api_key=dlqKmwx4TP8oiF2aOiSAfwDCFVTbrCUmOOw7gWwq',
+        source: 'https://sql.telemetry.mozilla.org/queries/48558/source',
         formatData: data => {
             data = MG.convert.date(data, 'date', '%Y%m%d')
             data = MG.convert.number(data, 'ahrsAll')
@@ -143,27 +176,11 @@ var displays = {
     }
 }
 
-
-/*
-
-    <GraphicContainer>
-        <div style={{height: '60px'}}></div>
-        <SingleNumber value={'5,543,105'} label={'Total Downloads'} />
-        <SingleNumber value={(()=>{
-            var msPerDay = 8.64e7;
-            var x0 = RELEASE_DATE;
-            var x1 = new Date();
-            x0.setHours(12,0,0);
-            x1.setHours(12,0,0);
-                return Math.abs(Math.round( (x1 - x0) / msPerDay ))
-            })() + ' days'} label={new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release'} />
-    </ GraphicContainer>
-*/
-
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer apiURI={args.apiURI} formatData={args.formatData}>
+        <GraphicContainer apiURI={args.apiURI} formatData={args.formatData} source={args.source}>
+            <GraphicHeader title={args.title} description={args.description} />
             <DataGraphic id={args.id}
                 title={args.title}
                 description={args.description}
@@ -187,14 +204,10 @@ TwoByFour.RowOne = (
 
 TwoByFour.RowTwo = (
 <DisplayRow>
-
     {dataGraphicCell(displays.successfulInstalls)}
     {dataGraphicCell(displays.pagesVisited)}
-        {dataGraphicCell(displays.sessionHours)}
-
-
-    </DisplayRow>
-
+    {dataGraphicCell(displays.sessionHours)}
+</DisplayRow>
 )
 
 function mainDisclaimer() {
@@ -207,19 +220,24 @@ function mainDisclaimer() {
 
 
 render(
-<GraphicDisplay>
-    <Header title='Firefox Quantum' subtitle='release metrics' secondText='last updated: 8 minutes ago' img='ff-57.png' />
-    <ToplineRow>
-        <ToplineElement value={(()=>{
-            var msPerDay = 8.64e7;
-            var x0 = RELEASE_DATE;
-            var x1 = new Date();
-            x0.setHours(12,0,0);
-            x1.setHours(12,0,0);
-                return Math.abs(Math.round( (x1 - x0) / msPerDay ))
-            })() + ' days'} label={new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release'} />
-        <ToplineElement label='Total Firefox Quantum Downloads' value='43,543,254' />
-    </ToplineRow>
-    {TwoByFour.RowOne}
-    {TwoByFour.RowTwo}
-</ GraphicDisplay>, document.getElementById('page'))
+    <GraphicDisplay>
+        <Header title='Firefox Quantum' subtitle='release metrics' secondText='last updated: 8 minutes ago' img='ff-57.png' />
+        <ToplineRow>
+            <ToplineElement value={(()=>{
+                var msPerDay = 8.64e7;
+                var x0 = RELEASE_DATE;
+                var x1 = new Date();
+                x0.setHours(12,0,0);
+                x1.setHours(12,0,0);
+                    return Math.abs(Math.round( (x1 - x0) / msPerDay ))
+                })() + ' days'} label={new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release'} />
+            <ToplineElement label='Total Firefox Quantum Downloads' value='43,543,254' />
+        </ToplineRow>
+        {TwoByFour.RowOne}
+        {TwoByFour.RowTwo}
+        <Footer>
+            <div>Data Pipeline + Product Management + Strategy &amp; Insights</div> 
+            <div>inquiries re: data <a href='mailto:datapipeline@mozilla.com'>datapipeline@mozilla.com</a></div> 
+            <div>inquiries re: dashboard - <a href='mailto:strategyandinsights@mozilla.com'>strategyandinsights@mozilla.com</a></div>
+        </Footer>
+    </ GraphicDisplay>, document.getElementById('page'))

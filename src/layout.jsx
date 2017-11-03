@@ -1,6 +1,8 @@
 
 import React from 'react'
-
+import {Overlay, Popover}  from 'react-bootstrap'
+var defaults = {}
+defaults.FORMAT = 'web'
 function fakeIt(length, otherFcn) {
     if (otherFcn === undefined) otherFcn=(d)=>Math.random()*10
     var arr = []
@@ -13,6 +15,24 @@ function fakeIt(length, otherFcn) {
     return arr
 }
 
+class GraphicDisplayStyle extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        var children = React.Children.map(this.props.children, c=>{
+            return React.cloneElement(c, {format: this.props.format})
+        })
+        var format = this.props.hasOwnProperty('format') ? this.props.format : defaults.FORMAT
+        return (
+            <div className={'gd-format-'+ format}>
+                {children}
+                </div>
+        )
+    }
+}
+
 class GraphicDisplay extends React.Component {
     constructor(props) {
         super(props)
@@ -20,8 +40,10 @@ class GraphicDisplay extends React.Component {
 
     render() {
         return (
-            <div className='graphic-display'>
-                {this.props.children}
+            <div className='gd-page'>
+                <div className='graphic-display'>
+                    {this.props.children}
+                </div>
             </div>
         )
     }
@@ -33,7 +55,7 @@ class Header extends React.Component {
     }
 
     render() {
-        var icon = this.props.hasOwnProperty('img') ? <img src={this.props.img} width={60} /> : undefined
+        var icon = this.props.hasOwnProperty('img') ? <img src={this.props.img} className='gd-header-img' /> : undefined
         var subtitle = this.props.hasOwnProperty('subtitle') ? <span className='gd-header-subtitle'>{this.props.subtitle}</span> : undefined
         var mainText = <div className='gd-header-text'>{icon} {this.props.title} {subtitle} </div>
         var rightText = this.props.hasOwnProperty('secondText') ? <div className='gd-header-second-text'>{this.props.secondText}</div> : undefined
@@ -91,6 +113,40 @@ class ToplineRow extends React.Component {
     }
 }
 
+class GraphicHeader extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {isHovered: false, target: undefined}
+        this.handleHover = this.handleHover.bind(this)
+    }
+
+    handleHover(e) {
+        var isHovered = !this.state.isHovered
+        this.setState({isHovered, target: e.target})
+        //this.setState({isHovered})
+    }
+
+    render() {
+        var r = 'r'+parseInt(Math.random() * 10000000)
+        return (
+            <div 
+                onMouseOver={this.handleHover} 
+                onMouseOut={this.handleHover} 
+                className={'gd-graphic-header ' + (this.state.isHovered ? 'show-tooltip' : '')}
+                id={r}
+            >
+              <div className="gd-graphic-header-title">{this.props.title}</div>
+                <div className='gd-graphic-header-download hide-on-monitor-display'>
+                    <a style={{display: this.props.source !== undefined ? 'block' : 'none'}} href={this.props.source} target='_blank'>
+                        <i className="fa fa-table" aria-hidden="true"></i>
+                    </a>
+                </div>
+                    
+            </div>
+        )
+    }
+}
+
 class DataGraphic extends React.Component {
     constructor(props) {
         super(props)
@@ -126,7 +182,7 @@ class DataGraphic extends React.Component {
                 data: this.props.data,
                 x_accessor: this.props.xAccessor,
                 y_accessor: this.props.yAccessor,
-                legend: plotArgs !== undefined ? this.props.plotArgs.legend || ['Quantum'] : ['Quantum'],
+                legend: plotArgs !== undefined ? plotArgs.legend || ['Quantum'] : ['Quantum'],
                 markers: [{label: '57', date: new Date('2017-11-14')}],
                 area: false,
                 interpolate:  d3.curveMonotoneX,
@@ -136,7 +192,8 @@ class DataGraphic extends React.Component {
                 height: 250,
                 bottom:20,
                 description: this.props.description,
-                title: this.props.title
+                //title: this.props.title
+                top:25
             }
             mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
             MG.data_graphic(mgArgs)
@@ -182,7 +239,8 @@ class GraphicContainer extends React.Component {
             var children = React.Children.map(this.props.children, (child)=>{
                 return React.cloneElement(child, {
                     width: containerWidth,
-                    data: this.state.data
+                    data: this.state.data,
+                    source: this.props.source || undefined
                 })
             })
         } else {
@@ -264,13 +322,13 @@ class Footer extends React.Component {
     }
 
     render() {
-        var children = React.Children.map(this.props.children, c=><div>{c}</div>)
+        //var children = React.Children.map(this.props.children, c=><div>{c}</div>)
         return (
             <div className='gd-footer'>
-                {children}
+                {this.props.children}
             </div>
         )
     }
 }
 
-export { DisplayRow, GraphicDisplay, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow, ToplineElement, Footer }
+export { DisplayRow, GraphicDisplayStyle, GraphicDisplay, GraphicHeader, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow, ToplineElement, Footer }
