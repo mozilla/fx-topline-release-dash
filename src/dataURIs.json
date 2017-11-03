@@ -1,8 +1,8 @@
 {
-    "successfulInstalls":"https://sql.telemetry.mozilla.org/api/queries/3648/results.json?api_key=NNEptnmnH7Wt7XbXkzMwVEEdKOCkwUZkOIuA1hcs",
-    "uptake":"https://sql.telemetry.mozilla.org/api/queries/48552/results.json?api_key=OjrW1fBixUDsqinC00X3P6JPGTk7A9iNjwYeRd8h",
-    "newUsers":"https://sql.telemetry.mozilla.org/api/queries/48504/results.json?api_key=xPo352uOKROX3xktCOU8t38wgTSDkOdWZWLRamSt",
-    "dau":"https://sql.telemetry.mozilla.org/api/queries/48553/results.json?api_key=EBSmbDQLOUxuqqTXIjax1ARNUYRcqn9y7UiHca3r",
-    "pagesVisited":"https://sql.telemetry.mozilla.org/api/queries/48587/results.json?api_key=OuKxbk1VK8xWdb54MtLMfTfAbRa4sOlQU4mt38Cv",
-    "sessionHours":"https://sql.telemetry.mozilla.org/api/queries/48583/results.json?api_key=UTF3SaBOqusUa5fP4BstQ5M9YhlLIejS0RSCyIQB"
+    "successfulInstalls":"https://sql.telemetry.mozilla.org/api/queries/3648/results.json?api_key=${API_KEY}",
+    "uptake":"https://sql.telemetry.mozilla.org/api/queries/48552/results.json?api_key=${API_KEY}",
+    "newUsers":"https://sql.telemetry.mozilla.org/api/queries/48504/results.json?api_key=${API_KEY}",
+    "dau":"https://sql.telemetry.mozilla.org/api/queries/48553/results.json?api_key=${API_KEY}",
+    "pagesVisited":"https://sql.telemetry.mozilla.org/api/queries/48587/results.json?api_key=${API_KEY}",
+    "sessionHours":"https://sql.telemetry.mozilla.org/api/queries/48583/results.json?api_key=${API_KEY}"
 }
