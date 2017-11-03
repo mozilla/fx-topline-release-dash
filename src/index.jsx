@@ -81,7 +81,7 @@ function mainDisclaimer() {
 
 render(
     <GraphicDisplay>
-        <Header title='Firefox Quantum' subtitle='release metrics'  img='ff-quantum.png' />
+        <Header title='Firefox Quantum' subtitle='release metrics'  img='static/ff-quantum.png' />
         <ToplineRow>
             <ToplineElement value={(()=>{
                 var msPerDay = 8.64e7;
