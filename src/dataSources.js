@@ -42,7 +42,7 @@ var dataSources = {
         title: 'Uptake',
         id: "uptake",
         plotArgs: {format: 'Percentage'},
-        description: 'the percentage of our Daily Active Users (DAUs) coming from Quantum profiles',
+        description: 'the percentage of total Daily Active Users (DAUs) coming from Quantum profiles',
         polling: ()=>{},
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
         format: DATA_FORMAT,
@@ -63,7 +63,7 @@ var dataSources = {
     newUsers: {
         title: "New Users",
         id: "newUsers",
-        description: "The number of new Firefox 57 profiles",
+        description: "the number of new Firefox Quantum profiles",
         format: DATA_FORMAT,
         preprocessor: (data) => {
             data = handleFormat(data)
@@ -78,7 +78,7 @@ var dataSources = {
     dau: {
         title: "Daily Active Users (DAUs)",
         id: 'dau',
-        description: "Daily Active Users (DAU), smoothed over the previous 7 days",
+        description: "the total Firefox Quantum Daily Active Users (DAU), smoothed over the previous 7 days",
         source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
         preprocessor: (data) => {
@@ -92,7 +92,7 @@ var dataSources = {
 
     stability: {
         title: "Crash Rate",
-        description: "(Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
+        description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
         xAccessor: 'activity_date',
         yAccessor: 'crash_rate',
@@ -112,7 +112,7 @@ var dataSources = {
     pagesVisited: {
         title: "Total Pages Visited",
         id: "pagesVisited",
-        description: "Total number of URIs visited",
+        description: "the total number of URIs visited by Firefox Quantum users, compared to all other Firefox Users",
         format: DATA_FORMAT,
         source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
         preprocessor: (data) => {
@@ -128,7 +128,7 @@ var dataSources = {
     sessionHours: {
         title: "Total Session Hours",
         id: "sessionHours",
-        description: "Total number of hours logged by Firefox 57 profiles",
+        description: "the total number of hours logged by Firefox Quantum profiles",
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
         format: DATA_FORMAT,
         preprocessor: data => {
