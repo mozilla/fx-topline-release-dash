@@ -271,7 +271,7 @@ div.gd-tooltip:after {
     }
 
     div.graphic-display {
-        width:1500px;
+        width:1600px;
         min-height:calc( 100vh - 50px );
         box-shadow: 0px 0px 30px rgba(0,0,0,.15);
     }
@@ -353,7 +353,7 @@ div.gd-tooltip:after {
         font-weight:900;
         padding-right:10px;
         color:darkslategray;
-        font-size:21px;
+        font-size:23px;
     }
 
     .mg-main-line {
