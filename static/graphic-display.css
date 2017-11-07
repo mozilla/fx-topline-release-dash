@@ -19,6 +19,7 @@ div.gd-header-text {
 }
 
 span.gd-header-subtitle {
+    padding-left:8px;
     font-weight:300;
     text-transform: none;
 }
@@ -121,7 +122,8 @@ div.data-graphic {
 
 div.data-graphic svg {
     margin:auto;
-    display: block
+    display: block;
+
 }
 
 div.gd-graphic-disclaimer {
@@ -285,7 +287,7 @@ div.gd-tooltip:after {
     div.gd-header-text {
         font-weight:900;
         text-transform: uppercase;
-        font-size:30px;
+        font-size:35px;
         width:70%;
     }
     
@@ -344,13 +346,14 @@ div.gd-tooltip:after {
     div.gd-graphic-header-title {
         width:100%;
         text-align:left;
+        font-size:21px;
     }
 
     div.gd-graphic-header-second-text {
         font-weight:900;
         padding-right:10px;
         color:darkslategray;
-        font-size:20px;
+        font-size:21px;
     }
 
     .mg-main-line {
@@ -364,10 +367,12 @@ div.gd-tooltip:after {
     g.mg-y-axis text {
         font-size: 14px
     }
-    
+
+
+
     g.mg-line-legend text {
         font-size:12px !important;
-        font-weight: normal
+        font-weight: normal;
     }
 
   }
