@@ -38,7 +38,7 @@ function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
         <GraphicContainer id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
-            <GraphicHeader title={args.title} />
+            <GraphicHeader title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
             <DataGraphic 
                 title={args.title}
                 description={args.description}
@@ -54,8 +54,8 @@ function dataGraphicCell(args) {
 var TwoByFour={}
 TwoByFour.RowOne = (
     <DisplayRow>
-        {dataGraphicCell(displays.uptake)}
         {dataGraphicCell(displays.newUsers)}
+        {dataGraphicCell(displays.uptake)}
         {dataGraphicCell(displays.dau)}
     </DisplayRow>
 )

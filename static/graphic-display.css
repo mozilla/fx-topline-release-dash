@@ -231,6 +231,12 @@ div.gd-tooltip:after {
 /* MEDIA QUERIES */
 
 
+@media all and (max-width:1600px) {
+    .hide-on-smaller-display {
+        display:none
+    }
+}
+
 @media all and (min-width: 1600px) {
     div.gd-page {
         display:flex;

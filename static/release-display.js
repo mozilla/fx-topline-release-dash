@@ -1103,7 +1103,9 @@ function dataGraphicCell(args) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
         { id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { title: args.title }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { title: args.title, secondText: function () {
+                return this.props.lastDatum[args.yAccessor];
+            } }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["a" /* DataGraphic */], {
             title: args.title,
             description: args.description,
@@ -1118,8 +1120,8 @@ var TwoByFour = {};
 TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["b" /* DisplayRow */],
     null,
-    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].uptake),
     dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].newUsers),
+    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].uptake),
     dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].dau)
 );
 
@@ -21327,6 +21329,7 @@ var dataSources = {
         plotArgs: { format: 'Percentage' },
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         format: DATA_FORMAT,
+        dataType: 'percentage',
         preprocessor: data => {
             data = handleFormat(data);
 
@@ -21358,6 +21361,7 @@ var dataSources = {
         plotArgs: { format: 'Percentage' },
         description: 'the percentage of total Daily Active Users (DAUs) coming from Quantum profiles',
         polling: () => {},
+        dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
         format: DATA_FORMAT,
         preprocessor: data => {
@@ -21392,6 +21396,7 @@ var dataSources = {
     dau: {
         title: "Daily Active Users (DAUs)",
         id: 'dau',
+        dataType: 'volume',
         description: "the total Firefox Quantum Daily Active Users (DAU), smoothed over the previous 7 days",
         source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
@@ -21408,6 +21413,7 @@ var dataSources = {
         title: "Crash Rate",
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
+        dataType: 'rate',
         xAccessor: 'activity_date',
         yAccessor: 'crash_rate',
         preprocessor: data => {
@@ -21426,6 +21432,7 @@ var dataSources = {
     pagesVisited: {
         title: "Total Pages Visited",
         id: "pagesVisited",
+        dataType: 'volume',
         description: "the total number of URIs visited by Firefox Quantum users, compared to all other Firefox Users",
         format: DATA_FORMAT,
         source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
@@ -21481,7 +21488,6 @@ var dataSources = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_tooltip__);
-
 
 
 var defaults = {};
@@ -21559,6 +21565,7 @@ class GraphicDisplay extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compo
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-page' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_tooltip___default.a, { effect: 'solid' }),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'graphic-display' },
@@ -21671,6 +21678,9 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
     }
 
     render() {
+        //console.log(this.props.secondText.bind(this)(), this.props.title)
+        //<div className='gd-graphic-header-number hide-on-smaller-display'>{typeof this.props.secondText === 'function' ? this.props.secondText.bind(this)() : this.props.secondText}</div>
+
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-graphic-header' },
@@ -21775,7 +21785,7 @@ class SingleNumber extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
-        this.state = { loaded: false, isHovered: false };
+        this.state = { loaded: false, isHovered: false, lastDatum: undefined };
         this.handleHover = this.handleHover.bind(this);
     }
 
@@ -21786,16 +21796,17 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
 
     render() {
         var containerWidth = 1200 / this.props.totalSiblings - 60;
-
         if (this.state.loaded) {
-            var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, child => {
+            var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, (child, i) => {
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.cloneElement(child, {
                     width: containerWidth,
                     data: this.state.data,
                     id: this.props.id,
                     source: this.props.source || undefined,
                     onLastUpdateData: this.props.OnLastUpdateData,
-                    isHovered: this.state.isHovered
+                    isHovered: this.state.isHovered,
+                    order: i,
+                    lastDatum: this.state.lastDatum
                 });
             });
         } else {
@@ -21812,27 +21823,27 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
                 onMouseOver: this.handleHover,
                 onMouseOut: this.handleHover,
                 'data-tip': this.props.description,
-                className: 'gd-graphic-container', style: { width: containerWidth } },
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_1_react_tooltip___default.a, { effect: 'solid' }),
+                ref: 'graphicContainer',
+                className: 'gd-graphic-container',
+                style: { width: containerWidth } },
             children
         );
     }
 
-    // componentDidUpdate() {
-    //     if (this.props.hasOwnProperty('showTooltip')) {
-    //         if (this.props.showTooltip===true) this.refs.tooltip.show()
-    //         else this.refs.tooltip.hide()
-    //     }
-    // }
+    componentDidUpdate() {
+        if (this.props.hasOwnProperty('showTooltip')) {
+            __WEBPACK_IMPORTED_MODULE_1_react_tooltip___default.a.show(this.refs.graphicContainer);
+        }
+    }
 
     componentDidMount() {
         if (this.props.hasOwnProperty('id')) {
 
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv;
-            getTheData(`/data/${this.props.id}.json`, data => {
+            getTheData(`data/${this.props.id}.json`, data => {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title);
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data);
-                this.setState({ loaded: true, data });
+                this.setState({ loaded: true, data, lastDatum: data[data.length - 1] });
             });
         } else {
             var args = [100];

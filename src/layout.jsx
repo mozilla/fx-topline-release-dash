@@ -1,4 +1,3 @@
-
 import React from 'react'
 import ReactTooltip from 'react-tooltip'
 var defaults = {}
@@ -86,6 +85,8 @@ class GraphicDisplay extends React.Component {
         })
         return (
             <div className='gd-page'>
+                                <ReactTooltip  effect='solid' />
+
                 <div className='graphic-display'>
                     {children}
                 </div>
@@ -170,6 +171,9 @@ class GraphicHeader extends React.Component {
     }
 
     render() {
+        //console.log(this.props.secondText.bind(this)(), this.props.title)
+        //<div className='gd-graphic-header-number hide-on-smaller-display'>{typeof this.props.secondText === 'function' ? this.props.secondText.bind(this)() : this.props.secondText}</div>
+        
         return (
             <div className='gd-graphic-header'>
                 <div className="gd-graphic-header-title">{this.props.title}</div>
@@ -264,7 +268,7 @@ class SingleNumber extends React.Component {
 class GraphicContainer extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {loaded: false, isHovered: false}
+        this.state = {loaded: false, isHovered: false, lastDatum: undefined}
         this.handleHover = this.handleHover.bind(this)
     }
 
@@ -275,16 +279,17 @@ class GraphicContainer extends React.Component {
 
     render() {
         var containerWidth = 1200 / this.props.totalSiblings - 60
-        
         if (this.state.loaded) {
-            var children = React.Children.map(this.props.children, (child)=>{
+            var children = React.Children.map(this.props.children, (child,i)=>{
                 return React.cloneElement(child, {
                     width: containerWidth,
                     data: this.state.data,
                     id: this.props.id,
                     source: this.props.source || undefined,
                     onLastUpdateData: this.props.OnLastUpdateData,
-                    isHovered: this.state.isHovered
+                    isHovered: this.state.isHovered,
+                    order: i,
+                    lastDatum: this.state.lastDatum
                 })
             })
         } else {
@@ -296,28 +301,28 @@ class GraphicContainer extends React.Component {
                 onMouseOver={this.handleHover} 
                 onMouseOut={this.handleHover} 
                 data-tip={this.props.description}
-                className='gd-graphic-container' style={{width: containerWidth}}>
-                <ReactTooltip  effect='solid' />
+                ref='graphicContainer'
+                className='gd-graphic-container' 
+                style={{width: containerWidth}}>
                 {children}
             </div>
         )
     }
 
-    // componentDidUpdate() {
-    //     if (this.props.hasOwnProperty('showTooltip')) {
-    //         if (this.props.showTooltip===true) this.refs.tooltip.show()
-    //         else this.refs.tooltip.hide()
-    //     }
-    // }
+    componentDidUpdate() {
+        if (this.props.hasOwnProperty('showTooltip')) {
+            ReactTooltip.show(this.refs.graphicContainer)
+        }
+    }
 
     componentDidMount() {
         if (this.props.hasOwnProperty('id')) {
             
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv
-            getTheData(`/data/${this.props.id}.json`, (data)=> {
+            getTheData(`data/${this.props.id}.json`, (data)=> {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
-                this.setState({loaded:true, data})
+                this.setState({loaded:true, data, lastDatum: data[data.length-1]})
             })
         } else {
             var args =[100]

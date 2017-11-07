@@ -13,6 +13,7 @@ var dataSources = {
         plotArgs: {format: 'Percentage'},
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         format: DATA_FORMAT,
+        dataType: 'percentage',
         preprocessor: data => {
             data = handleFormat(data)
 
@@ -44,6 +45,7 @@ var dataSources = {
         plotArgs: {format: 'Percentage'},
         description: 'the percentage of total Daily Active Users (DAUs) coming from Quantum profiles',
         polling: ()=>{},
+        dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
         format: DATA_FORMAT,
         preprocessor: data => {
@@ -78,6 +80,7 @@ var dataSources = {
     dau: {
         title: "Daily Active Users (DAUs)",
         id: 'dau',
+        dataType: 'volume',
         description: "the total Firefox Quantum Daily Active Users (DAU), smoothed over the previous 7 days",
         source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
@@ -94,6 +97,7 @@ var dataSources = {
         title: "Crash Rate",
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
+        dataType: 'rate',
         xAccessor: 'activity_date',
         yAccessor: 'crash_rate',
         preprocessor: (data) => {
@@ -112,6 +116,7 @@ var dataSources = {
     pagesVisited: {
         title: "Total Pages Visited",
         id: "pagesVisited",
+        dataType: 'volume',
         description: "the total number of URIs visited by Firefox Quantum users, compared to all other Firefox Users",
         format: DATA_FORMAT,
         source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
