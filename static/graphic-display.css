@@ -262,6 +262,7 @@ div.gd-tooltip:after {
     }
 }
 
+
 @media all and (min-width: 1600px) {
     div.gd-page {
         display:flex;
@@ -273,7 +274,7 @@ div.gd-tooltip:after {
 
     div.graphic-display {
         width:1600px;
-        min-height:calc( 100vh - 50px );
+        min-height:calc( 100vh - 100px );
         box-shadow: 0px 0px 30px rgba(0,0,0,.15);
     }
 
@@ -363,11 +364,11 @@ div.gd-tooltip:after {
     }
 
     g.mg-x-axis text {
-        font-size: 14px
+        font-size: 15px
     }
     
     g.mg-y-axis text {
-        font-size: 14px
+        font-size: 15px
     }
 
 
@@ -378,3 +379,26 @@ div.gd-tooltip:after {
     }
 
   }
+
+/* the infernal monitors */
+  @media all and (min-height:1199px) and (min-width:1600px) {
+
+    div.gd-header {
+        align-items:center;
+        height:100px;
+        padding-left:30px;
+    }
+
+    div.gd-graphic-display: {
+        height: calc(100% - 200px)
+    }
+
+    div.gd-topline-row {
+        margin-bottom:60px;
+    }
+
+    div.gd-footer {
+        height:80px;
+        align-items: center;
+    }
+}
