@@ -236,13 +236,15 @@ class DataGraphic extends React.Component {
                 area: false,
                 interpolate:  d3.curveMonotoneX,
                 width: this.props.width,
-                right: 40,
+                right: 55,
                 left:40,
                 height: 250,
                 bottom:20,
                 description: this.props.description,
                 //title: this.props.title
-                top:25
+                top:25,
+                min_x: new Date('2017-10-15'),
+                xax_count: 4
             }
             mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
             MG.data_graphic(mgArgs)

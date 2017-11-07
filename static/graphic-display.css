@@ -61,7 +61,11 @@ text.mg-active-datapoint {
 }
 
 g.mg-x-axis text {
-    font-size: 12px
+    font-size: 13px
+}
+
+g.mg-y-axis text {
+    font-size: 13px
 }
 /* g.mg-y-axis text {
     font-size: 12px
@@ -237,6 +241,12 @@ div.gd-tooltip:after {
     line-height: 0;
 } */
 
+
+
+g.mg-line-legend text {
+    font-size:12px !important
+}
+
 /* MEDIA QUERIES */
 
 
@@ -336,7 +346,8 @@ div.gd-tooltip:after {
     div.gd-graphic-header-second-text {
         font-weight:900;
         padding-right:10px;
-        font-size:20px
+        color:darkslategray;
+        font-size:20px;
     }
 
   }
