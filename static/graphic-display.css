@@ -29,7 +29,7 @@ div.gd-header-second-text {
     font-style:italic;
     width:30%;
     color:gray;
-    font-size:26px;
+    font-size:22px;
     margin-right:20px;
 }
 
@@ -67,6 +67,8 @@ g.mg-x-axis text {
 g.mg-y-axis text {
     font-size: 13px
 }
+
+
 /* g.mg-y-axis text {
     font-size: 12px
 } */
@@ -184,7 +186,6 @@ div.gd-graphic-header {
 div.gd-graphic-header-title {
     padding-left:45px;
     font-size:20px;
-    font-weight:300;
     min-width:250px;
     
 }
