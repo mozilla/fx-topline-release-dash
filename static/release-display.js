@@ -21757,7 +21757,7 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 interpolate: d3.curveMonotoneX,
                 width: this.props.width,
                 right: 55,
-                left: 40,
+                left: 45,
                 height: 250,
                 bottom: 20,
                 description: this.props.description,
