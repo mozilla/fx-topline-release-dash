@@ -352,7 +352,7 @@ div.gd-tooltip:after {
     }
 
     div.gd-graphic-header-second-text {
-        font-weight:900;
+        font-weight:bold;
         padding-right:10px;
         color:darkslategray;
         font-size:23px;
