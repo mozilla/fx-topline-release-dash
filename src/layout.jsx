@@ -159,6 +159,11 @@ class ToplineRow extends React.Component {
     }
 }
 
+var dataFormats = {}
+dataFormats.percentage = (d)=>d3.format('.1%')(d)
+dataFormats.volume = (d)=>d3.format(',.0f')(d)
+dataFormats.rate = (d)=>d3.format(',.2f')(d)
+
 class GraphicHeader extends React.Component {
     constructor(props) {
         super(props)
@@ -173,10 +178,13 @@ class GraphicHeader extends React.Component {
     render() {
         //console.log(this.props.secondText.bind(this)(), this.props.title)
         //<div className='gd-graphic-header-number hide-on-smaller-display'>{typeof this.props.secondText === 'function' ? this.props.secondText.bind(this)() : this.props.secondText}</div>
-        
+        var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor
+        var singleNumber = dataFormats[this.props.dataType](this.props.lastDatum[yAccessor])
+        console.log(dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]), yAccessor, this.props.lastDatum[yAccessor])
         return (
             <div className='gd-graphic-header'>
                 <div className="gd-graphic-header-title">{this.props.title}</div>
+                <div className="gd-graphic-header-second-text">{singleNumber}</div>
                 <div className='gd-graphic-header-download hide-on-monitor-display'>
                     <a style={{display: this.props.source !== undefined ? 'block' : 'none'}} href={this.props.source} target='_blank'>
                         <i className="fa fa-table" aria-hidden="true"></i>
@@ -289,7 +297,9 @@ class GraphicContainer extends React.Component {
                     onLastUpdateData: this.props.OnLastUpdateData,
                     isHovered: this.state.isHovered,
                     order: i,
-                    lastDatum: this.state.lastDatum
+                    lastDatum: this.state.lastDatum,
+                    dataType: this.props.dataType,
+                    yAccessor: this.props.yAccessor
                 })
             })
         } else {

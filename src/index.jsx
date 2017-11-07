@@ -34,10 +34,12 @@ function qv(variable) {
     return out
 }
 
+
+
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+        <GraphicContainer yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
             <DataGraphic 
                 title={args.title}
@@ -93,8 +95,8 @@ render(
         {TwoByFour.RowOne}
         {TwoByFour.RowTwo}
         <Footer>
-            <div>Data Pipeline + Product Management + Strategy &amp; Insights</div>
-            <div>inquiries re: data <a href='mailto:datapipeline@mozilla.com'>datapipeline@mozilla.com</a></div>
+            <div>Data Pipeline + Data Science + Strategy &amp; Insights</div>
+            <div>inquiries re: data - <a href='mailto:datapipeline@mozilla.com'>datapipeline@mozilla.com</a></div>
             <div>inquiries re: dashboard - <a href='mailto:strategyandinsights@mozilla.com'>strategyandinsights@mozilla.com</a></div>
         </Footer>
     </ GraphicDisplay>, document.getElementById('page'))

@@ -29,8 +29,10 @@ div.gd-header-second-text {
     font-style:italic;
     width:30%;
     color:gray;
-    font-size:20px
+    font-size:26px;
+    margin-right:20px;
 }
+
 
 img.gd-header-img {
     width:40px
@@ -172,7 +174,6 @@ div.gd-footer {
 div.gd-graphic-header {
     display:flex;
     justify-content: space-between;
-    
     align-items: baseline;
 }
 
@@ -180,6 +181,14 @@ div.gd-graphic-header-title {
     padding-left:45px;
     font-size:20px;
     font-weight:300;
+    min-width:250px;
+    
+}
+
+div.gd-graphic-header-second-text {
+    font-weight:900;
+    padding-right:10px;
+    
 }
 
 div.gd-graphic-header-download a {
@@ -271,7 +280,7 @@ div.gd-tooltip:after {
         font-weight:300;
         text-transform: none;
     }
-    
+/*     
     div.gd-header-second-text {
         font-weight:300;
         text-align:right;
@@ -279,7 +288,7 @@ div.gd-tooltip:after {
         width:30%;
         color:gray;
         font-size:20px
-    }
+    } */
 
     img.gd-header-img {
         width:60px
@@ -306,12 +315,12 @@ div.gd-tooltip:after {
     }
     
     div.gd-single-number-label {
-        font-size:14px;
+        font-size:20px;
         margin-bottom:-5px
     }
     
     div.gd-single-number-value {
-        font-size:32px;
+        font-size:34px;
         font-weight:bold;
     }
 
@@ -321,8 +330,13 @@ div.gd-tooltip:after {
 
     div.gd-graphic-header-title {
         width:100%;
-        padding:0px;
-        text-align:center;
+        text-align:left;
+    }
+
+    div.gd-graphic-header-second-text {
+        font-weight:900;
+        padding-right:10px;
+        font-size:20px
     }
 
   }

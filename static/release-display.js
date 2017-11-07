@@ -1102,7 +1102,7 @@ function dataGraphicCell(args) {
     ) : '';
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
-        { id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
+        { yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { title: args.title, secondText: function () {
                 return this.props.lastDatum[args.yAccessor];
             } }),
@@ -1165,12 +1165,12 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
-            'Data Pipeline + Product Management + Strategy & Insights'
+            'Data Pipeline + Data Science + Strategy & Insights'
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
-            'inquiries re: data ',
+            'inquiries re: data - ',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'a',
                 { href: 'mailto:datapipeline@mozilla.com' },
@@ -21359,7 +21359,7 @@ var dataSources = {
         title: 'Uptake',
         id: "uptake",
         plotArgs: { format: 'Percentage' },
-        description: 'the percentage of total Daily Active Users (DAUs) coming from Quantum profiles',
+        description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: () => {},
         dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
@@ -21379,9 +21379,10 @@ var dataSources = {
     },
 
     newUsers: {
-        title: "New Users",
+        title: "New User Count",
         id: "newUsers",
-        description: "the number of new Firefox Quantum profiles",
+        description: "new profile counts, Firefox Quantum",
+        dataType: 'volume',
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data);
@@ -21394,10 +21395,10 @@ var dataSources = {
     },
 
     dau: {
-        title: "Daily Active Users (DAUs)",
+        title: "Daily Active Users",
         id: 'dau',
         dataType: 'volume',
-        description: "the total Firefox Quantum Daily Active Users (DAU), smoothed over the previous 7 days",
+        description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
         source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
         preprocessor: data => {
@@ -21430,10 +21431,10 @@ var dataSources = {
     },
 
     pagesVisited: {
-        title: "Total Pages Visited",
+        title: "Avg. Pages Visited",
         id: "pagesVisited",
         dataType: 'volume',
-        description: "the total number of URIs visited by Firefox Quantum users, compared to all other Firefox Users",
+        description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
         format: DATA_FORMAT,
         source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
         preprocessor: data => {
@@ -21447,9 +21448,10 @@ var dataSources = {
     },
 
     sessionHours: {
-        title: "Total Session Hours",
+        title: "Avg. Session Hours",
         id: "sessionHours",
-        description: "the total number of hours logged by Firefox Quantum profiles",
+        dataType: 'rate',
+        description: "average number of hours spent in browser per user, Firefox Quantum vs all",
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
         format: DATA_FORMAT,
         preprocessor: data => {
@@ -21666,6 +21668,11 @@ class ToplineRow extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component
     }
 }
 
+var dataFormats = {};
+dataFormats.percentage = d => d3.format('.1%')(d);
+dataFormats.volume = d => d3.format(',.0f')(d);
+dataFormats.rate = d => d3.format(',.2f')(d);
+
 class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
@@ -21680,7 +21687,9 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
     render() {
         //console.log(this.props.secondText.bind(this)(), this.props.title)
         //<div className='gd-graphic-header-number hide-on-smaller-display'>{typeof this.props.secondText === 'function' ? this.props.secondText.bind(this)() : this.props.secondText}</div>
-
+        var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor;
+        var singleNumber = dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]);
+        console.log(dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]), yAccessor, this.props.lastDatum[yAccessor]);
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-graphic-header' },
@@ -21688,6 +21697,11 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
                 'div',
                 { className: 'gd-graphic-header-title' },
                 this.props.title
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'gd-graphic-header-second-text' },
+                singleNumber
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
@@ -21806,7 +21820,9 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
                     onLastUpdateData: this.props.OnLastUpdateData,
                     isHovered: this.state.isHovered,
                     order: i,
-                    lastDatum: this.state.lastDatum
+                    lastDatum: this.state.lastDatum,
+                    dataType: this.props.dataType,
+                    yAccessor: this.props.yAccessor
                 });
             });
         } else {

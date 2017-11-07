@@ -43,7 +43,7 @@ var dataSources = {
         title: 'Uptake',
         id: "uptake",
         plotArgs: {format: 'Percentage'},
-        description: 'the percentage of total Daily Active Users (DAUs) coming from Quantum profiles',
+        description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
         dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
@@ -63,9 +63,10 @@ var dataSources = {
     },
 
     newUsers: {
-        title: "New Users",
+        title: "New User Count",
         id: "newUsers",
-        description: "the number of new Firefox Quantum profiles",
+        description: "new profile counts, Firefox Quantum",
+        dataType: 'volume',
         format: DATA_FORMAT,
         preprocessor: (data) => {
             data = handleFormat(data)
@@ -78,10 +79,10 @@ var dataSources = {
     },
 
     dau: {
-        title: "Daily Active Users (DAUs)",
+        title: "Daily Active Users",
         id: 'dau',
         dataType: 'volume',
-        description: "the total Firefox Quantum Daily Active Users (DAU), smoothed over the previous 7 days",
+        description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
         source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
         preprocessor: (data) => {
@@ -114,10 +115,10 @@ var dataSources = {
     },
 
     pagesVisited: {
-        title: "Total Pages Visited",
+        title: "Avg. Pages Visited",
         id: "pagesVisited",
         dataType: 'volume',
-        description: "the total number of URIs visited by Firefox Quantum users, compared to all other Firefox Users",
+        description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
         format: DATA_FORMAT,
         source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
         preprocessor: (data) => {
@@ -131,9 +132,10 @@ var dataSources = {
     },
 
     sessionHours: {
-        title: "Total Session Hours",
+        title: "Avg. Session Hours",
         id: "sessionHours",
-        description: "the total number of hours logged by Firefox Quantum profiles",
+        dataType: 'rate',
+        description: "average number of hours spent in browser per user, Firefox Quantum vs all",
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
         format: DATA_FORMAT,
         preprocessor: data => {
