@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var path = require('path');
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 var BUILD_DIR = path.resolve(__dirname, 'static/');
 var APP_DIR = path.resolve(__dirname, 'src/');
@@ -11,6 +12,9 @@ var config = {
     filename: 'release-display.js'
   },
   devtool: 'source-map',
+  plugins: [
+    new MinifyPlugin()
+  ],
   module : {
     
     loaders : [

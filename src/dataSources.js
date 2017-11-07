@@ -77,7 +77,6 @@ var dataSources = {
         yAccessor: 'new_profiles',
         source: "https://sql.telemetry.mozilla.org/queries/48504/source#130999"
     },
-
     dau: {
         title: "Daily Active Users",
         id: 'dau',
