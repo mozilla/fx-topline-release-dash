@@ -176,11 +176,8 @@ class GraphicHeader extends React.Component {
     }
 
     render() {
-        //console.log(this.props.secondText.bind(this)(), this.props.title)
-        //<div className='gd-graphic-header-number hide-on-smaller-display'>{typeof this.props.secondText === 'function' ? this.props.secondText.bind(this)() : this.props.secondText}</div>
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor
         var singleNumber = dataFormats[this.props.dataType](this.props.lastDatum[yAccessor])
-        console.log(dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]), yAccessor, this.props.lastDatum[yAccessor])
         return (
             <div className='gd-graphic-header'>
                 <div className="gd-graphic-header-title">{this.props.title}</div>
@@ -225,7 +222,10 @@ class DataGraphic extends React.Component {
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
+
+
             var plotArgs = this.props.plotArgs
+
             var mgArgs = {
                 target: '#' + this.state.id,
                 data: this.props.data,
