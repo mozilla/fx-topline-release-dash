@@ -227,6 +227,7 @@ class DataGraphic extends React.Component {
             var plotArgs = this.props.plotArgs
 
             var mgArgs = {
+                mouseover_align:'left',
                 target: '#' + this.state.id,
                 data: this.props.data,
                 x_accessor: this.props.xAccessor,

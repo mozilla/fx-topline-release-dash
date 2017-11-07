@@ -153,8 +153,8 @@ div.gd-topline-row {
     margin-top:10px;
     margin-bottom:25px;
     text-align:center;
-    padding-top:15px;
-    padding-bottom:15px;
+    padding-top:10px;
+    padding-bottom:10px;
     display: flex;
 }
 
@@ -191,16 +191,17 @@ div.gd-graphic-header {
 }
 
 div.gd-graphic-header-title {
-    padding-left:45px;
+    padding-left:50px;
     font-size:20px;
-    min-width:250px;
+    min-width:200px;
+    font-weight:300;
     
 }
 
 div.gd-graphic-header-second-text {
     font-weight:900;
     padding-right:10px;
-    
+    font-size:18px;
 }
 
 div.gd-graphic-header-download a {
@@ -344,9 +345,10 @@ div.gd-tooltip:after {
     }
 
     div.gd-graphic-header-title {
-        width:100%;
+        padding-left:50px;
         text-align:left;
         font-size:21px;
+        font-weight:normal;
     }
 
     div.gd-graphic-header-second-text {
