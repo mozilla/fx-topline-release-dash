@@ -1072,6 +1072,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 const WHICH_VERSION = 'release';
 const RELEASE_DATE = new Date('2017-11-14');
+const NOW = new Date();
 
 function qv(variable) {
     var query = window.location.search.substring(1);
@@ -1084,6 +1085,15 @@ function qv(variable) {
         }
     });
     return out;
+}
+
+function showDisplay(args) {
+    //if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW) {
+    if (false) {
+        return dataGraphicPlaceholder(args);
+    } else {
+        return dataGraphicCell(args);
+    }
 }
 
 function dataGraphicCell(args) {
@@ -1103,7 +1113,7 @@ function dataGraphicCell(args) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
         { yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { title: args.title, secondText: function () {
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { subtitle: args.subtitle, title: args.title, secondText: function () {
                 return this.props.lastDatum[args.yAccessor];
             } }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["a" /* DataGraphic */], {
@@ -1116,38 +1126,45 @@ function dataGraphicCell(args) {
     );
 }
 
+function dataGraphicPlaceholder(args) {
+    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
+        { yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { subtitle: args.subtitle, title: args.title, secondText: function () {
+                return this.props.lastDatum[args.yAccessor];
+            } }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["h" /* GraphicPlaceholder */], { aboveText: 'first datapoint available', belowText: args.firstAvailableData })
+    );
+}
+
 var TwoByFour = {};
 TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["b" /* DisplayRow */],
     null,
-    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].newUsers),
-    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].uptake),
-    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].kiloUsageHours)
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].newUsers),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].uptake),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].kiloUsageHours)
 );
 
 TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["b" /* DisplayRow */],
     null,
-    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].successfulInstalls),
-    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].pagesVisited),
-    dataGraphicCell(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].sessionHours)
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].successfulInstalls),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].pagesVisited),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].sessionHours)
 );
-
-function mainDisclaimer() {
-    return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-        __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["i" /* MainDisclaimer */],
-        null,
-        'This is a very rough proof of concept. The overall design is not solidified, the data is fake, and all the interactions are nonexistent. Keep that in mind for now.'
-    );
-}
 
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["f" /* GraphicDisplay */],
     null,
-    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["h" /* Header */], { title: 'Firefox Quantum', subtitle: 'release metrics', img: 'static/ff-quantum.png' }),
+    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["i" /* Header */], { title: 'Firefox Quantum', subtitle: 'impact metrics', img: 'static/ff-quantum.png' }),
     __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["k" /* ToplineRow */],
         null,
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
+            label: 'Current Firefox Version',
+            value: '57'
+        }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], { value: (() => {
                 var msPerDay = 8.64e7;
                 var x0 = RELEASE_DATE;
@@ -1164,27 +1181,36 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            null,
+            { style: { fontWeight: 900, textTransform: 'uppercase' } },
             'Data Pipeline + Data Science + Strategy & Insights'
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
-            'inquiries re: data - ',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'a',
-                { href: 'mailto:datapipeline@mozilla.com' },
-                'datapipeline@mozilla.com'
+                { href: '#' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-area-chart', 'aria-hidden': 'true' }),
+                ' inquiries re: dashboard or data'
             )
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             null,
-            'inquiries re: dashboard - ',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'a',
-                { href: 'mailto:strategyandinsights@mozilla.com' },
-                'strategyandinsights@mozilla.com'
+                { href: 'https://docs.google.com/document/d/1Ngzs59lS4r4YDaFB5FGxRz8YqAqHY_H6FEO_V0wwvr4/edit#heading=h.9k8kzhyhajfp' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-book', 'aria-hidden': 'true' }),
+                ' metrics dictionary'
+            )
+        ),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            null,
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'a',
+                { className: 'big-dashboard-link', href: 'https://mzl.la/dashboard', target: '_blank' },
+                'mzl.la/dashboard'
             )
         )
     )
@@ -21317,8 +21343,6 @@ module.exports = function() {
 const DATA_FORMAT = 'json';
 
 const TIME_HORIZON = 'daily';
-const PROTO_HOUR = 12;
-const PROTO_MINUTE = 0;
 
 function handleFormat(data) {
     var out = DATA_FORMAT === 'json' ? data.query_result.data.rows : data;
@@ -21327,36 +21351,37 @@ function handleFormat(data) {
 
 var dataSources = {
     kiloUsageHours: {
-        id: 'kiloUsageHours',
-        title: "Total Kilo-Usage Hours",
+        id: TIME_HORIZON === 'daily' ? 'kiloUsageHours_daily' : 'kiloUsageHours_hourly',
+        title: "Total Usage",
+        subtitle: "1000s of hrs.",
+        hourlySource: "kiloUsageHours_hourly",
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
         source: "https://sql.telemetry.mozilla.org/queries/48763/source#131460",
         format: DATA_FORMAT,
         dataType: 'rate',
+        //plotArgs: {y_label: '1000 hrs.'},
         preprocessor: data => {
             data = handleFormat(data);
+
             data = data.map(d => {
                 d.activity_time = new Date(d.activity_time);
                 return d;
             });
-
-            if (TIME_HORIZON === 'daily') {
-                data = data.filter(d => {
-                    return d.activity_time.getHours() === PROTO_HOUR && d.activity_time.getMinutes() === PROTO_MINUTE;
-                });
+            if (TIME_HORIZON == 'daily') {
+                data = MG.convert.number(data, 'kuh_weekly_smoothed');
+            } else {
+                data = MG.convert.number(data, 'kuh_daily_smoothed');
             }
-
-            data = MG.convert.number(data, 'kuh_daily_smoothed');
-            data = MG.convert.number(data, 'kuh_hourly_smoothed');
             return data;
         },
         xAccessor: 'activity_time',
-        yAccessor: `kuh_${TIME_HORIZON}_smoothed`
+        yAccessor: TIME_HORIZON === 'daily' ? 'kuh_weekly_smoothed' : 'kuh_daily_smoothed'
     },
 
     successfulInstalls: {
         id: "successfulInstalls",
         title: "Install Success Rate",
+        firstAvailableData: new Date('2017-11-15'),
         description: "the percentage of attempted installs that are successful",
         plotArgs: { format: 'Percentage' },
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
@@ -21390,6 +21415,7 @@ var dataSources = {
     uptake: {
         title: 'Uptake',
         id: "uptake",
+        firstAvailableData: new Date('2017-11-15'),
         plotArgs: { format: 'Percentage' },
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: () => {},
@@ -21399,7 +21425,6 @@ var dataSources = {
         preprocessor: data => {
             data = handleFormat(data);
             data = MG.convert.date(data, 'd', '%Y%m%d');
-            //data = MG.convert.number(data, 'uptake')
             data = data.map(d => {
                 d.uptake = d.uptake / 100;
                 return d;
@@ -21412,25 +21437,33 @@ var dataSources = {
 
     newUsers: {
         title: "New User Count",
-        id: "newUsers",
+        id: TIME_HORIZON === 'daily' ? "newUsers_daily" : "newUsers_hourly",
         description: "new profile counts, Firefox Quantum",
         dataType: 'volume',
         format: DATA_FORMAT,
         preprocessor: data => {
+            var xAccessor = TIME_HORIZON === 'daily' ? 'submission' : 'hour_interval';
+            var xFormat = TIME_HORIZON === 'daily' ? '%Y%m%d' : "%Y-%m-%dT%H:%M:%S";
             data = handleFormat(data);
-            data = MG.convert.date(data, 'submission', '%Y%m%d');
+            var params = [data, xAccessor, xFormat];
+
+            data = MG.convert.date(...params);
+            data.sort((a, b) => {
+                return a[xAccessor] > b[xAccessor] ? 1 : -1;
+            });
             return data;
         },
-        xAccessor: 'submission',
-        yAccessor: 'new_profiles',
+        xAccessor: TIME_HORIZON === 'daily' ? 'submission' : 'hour_interval',
+        yAccessor: TIME_HORIZON === 'daily' ? 'new_profiles' : 'hourly_new_profiles_smooth',
         source: "https://sql.telemetry.mozilla.org/queries/48504/source#130999"
     },
     dau: {
         title: "Daily Active Users",
         id: 'dau',
         dataType: 'volume',
+        hasHourlySource: false,
+        firstAvailableData: new Date('2017-11-15'),
         description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
-        source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data);
@@ -21443,6 +21476,7 @@ var dataSources = {
 
     stability: {
         title: "Crash Rate",
+        hasHourlySource: false,
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
         dataType: 'rate',
@@ -21463,6 +21497,8 @@ var dataSources = {
 
     pagesVisited: {
         title: "Avg. Pages Visited",
+        hasHourlySource: false,
+        firstAvailableData: new Date('2017-11-15'),
         id: "pagesVisited",
         dataType: 'volume',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
@@ -21481,6 +21517,8 @@ var dataSources = {
     sessionHours: {
         title: "Avg. Session Hours",
         id: "sessionHours",
+        hasHourlySource: false,
+        firstAvailableData: new Date('2017-11-15'),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
@@ -21504,13 +21542,14 @@ var dataSources = {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return DisplayRow; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return GraphicPlaceholder; });
 /* unused harmony export GraphicDisplayStyle */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return GraphicDisplay; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return GraphicHeader; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return Header; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return Header; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DataGraphic; });
 /* unused harmony export Divider */
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return MainDisclaimer; });
+/* unused harmony export MainDisclaimer */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return GraphicContainer; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return GraphicDisclaimer; });
 /* unused harmony export SingleNumber */
@@ -21630,7 +21669,6 @@ class Header extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
             subtitle,
             ' '
         );
-        //var rightText = this.props.hasOwnProperty('secondText') ? <div className='gd-header-second-text'>{this.props.secondText}</div> : undefined
         var rightText = this.props.lastUpdatedElement !== undefined ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-header-second-text' },
@@ -21717,14 +21755,20 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
 
     render() {
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor;
-        var singleNumber = dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]);
+        var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined;
+        var subtitle = this.props.hasOwnProperty('subtitle') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-graphic-header-subtitle' },
+            this.props.subtitle
+        ) : undefined;
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-graphic-header' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'gd-graphic-header-title' },
-                this.props.title
+                this.props.title,
+                subtitle
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
@@ -21801,6 +21845,29 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
             mgArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
             MG.data_graphic(mgArgs);
         }
+    }
+}
+
+class GraphicPlaceholder extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'gd-graphic-placeholder' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'gd-graphic-placeholder-above' },
+                this.props.aboveText
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'gd-graphic-placeholder-below' },
+                this.props.belowText
+            )
+        );
     }
 }
 

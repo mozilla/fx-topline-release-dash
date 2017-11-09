@@ -11,6 +11,7 @@ import {GraphicDisplayStyle,
     MainDisclaimer,
     GraphicContainer,
     GraphicHeader,
+    GraphicPlaceholder,
     GraphicDisclaimer,
     SingleNumber,
     ToplineRow ,
@@ -19,7 +20,7 @@ import {GraphicDisplayStyle,
 
 const WHICH_VERSION = 'release'
 const RELEASE_DATE = new Date('2017-11-14')
-
+const NOW = new Date()
 
 function qv(variable) {
     var query = window.location.search.substring(1)
@@ -34,13 +35,20 @@ function qv(variable) {
     return out
 }
 
-
+function showDisplay(args) {
+    //if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW) {
+    if (false) {
+        return dataGraphicPlaceholder(args)
+    } else {
+        return dataGraphicCell(args)
+    }
+}
 
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
-            <GraphicHeader title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
+        <GraphicContainer  yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+            <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
             <DataGraphic 
                 title={args.title}
                 description={args.description}
@@ -53,36 +61,41 @@ function dataGraphicCell(args) {
     )
 }
 
+function dataGraphicPlaceholder(args) {
+    return (
+        <GraphicContainer  yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+            <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
+            <GraphicPlaceholder aboveText='first datapoint available' belowText={args.firstAvailableData} />
+        </GraphicContainer>
+    )
+}
+
 var TwoByFour={}
 TwoByFour.RowOne = (
     <DisplayRow>
-        {dataGraphicCell(displays.newUsers)}
-        {dataGraphicCell(displays.uptake)}
-        {dataGraphicCell(displays.kiloUsageHours)}
+        {showDisplay(displays.newUsers)}
+        {showDisplay(displays.uptake)}
+        {showDisplay(displays.kiloUsageHours)}
     </DisplayRow>
 )
 
 TwoByFour.RowTwo = (
 <DisplayRow>
-    {dataGraphicCell(displays.successfulInstalls)}
-    {dataGraphicCell(displays.pagesVisited)}
-    {dataGraphicCell(displays.sessionHours)}
+    {showDisplay(displays.successfulInstalls)}
+    {showDisplay(displays.pagesVisited)}
+    {showDisplay(displays.sessionHours)}
 </DisplayRow>
 )
-
-function mainDisclaimer() {
-    return (<MainDisclaimer>
-                This is a very rough proof of concept.
-        The overall design is not solidified, the data is fake, and all the interactions are nonexistent.
-        Keep that in mind for now.
-        </MainDisclaimer>)
-}
 
 
 render(
     <GraphicDisplay>
-        <Header title='Firefox Quantum' subtitle='release metrics'  img='static/ff-quantum.png' />
+        <Header title='Firefox Quantum' subtitle='impact metrics'  img='static/ff-quantum.png' />
         <ToplineRow>
+        <ToplineElement 
+                label='Current Firefox Version'
+                value='57'
+            />
             <ToplineElement value={(()=>{
                 var msPerDay = 8.64e7;
                 var x0 = RELEASE_DATE;
@@ -95,8 +108,9 @@ render(
         {TwoByFour.RowOne}
         {TwoByFour.RowTwo}
         <Footer>
-            <div>Data Pipeline + Data Science + Strategy &amp; Insights</div>
-            <div>inquiries re: data - <a href='mailto:datapipeline@mozilla.com'>datapipeline@mozilla.com</a></div>
-            <div>inquiries re: dashboard - <a href='mailto:strategyandinsights@mozilla.com'>strategyandinsights@mozilla.com</a></div>
+            <div style={{fontWeight:900, textTransform:'uppercase'}}>Data Pipeline + Data Science + Strategy &amp; Insights</div>
+            <div><a href='#'><i className="fa fa-area-chart" aria-hidden="true"></i> inquiries re: dashboard or data</a></div>
+            <div><a href='https://docs.google.com/document/d/1Ngzs59lS4r4YDaFB5FGxRz8YqAqHY_H6FEO_V0wwvr4/edit#heading=h.9k8kzhyhajfp'><i className="fa fa-book" aria-hidden="true"></i> metrics dictionary</a></div>
+            <div><a className='big-dashboard-link' href='https://mzl.la/dashboard' target='_blank'>mzl.la/dashboard</a></div>
         </Footer>
     </ GraphicDisplay>, document.getElementById('page'))

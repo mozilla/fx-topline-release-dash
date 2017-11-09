@@ -104,7 +104,6 @@ class Header extends React.Component {
         var icon = this.props.hasOwnProperty('img') ? <img src={this.props.img} className='gd-header-img' /> : undefined
         var subtitle = this.props.hasOwnProperty('subtitle') ? <span className='gd-header-subtitle'>{this.props.subtitle}</span> : undefined
         var mainText = <div className='gd-header-text'>{icon} {this.props.title} {subtitle} </div>
-        //var rightText = this.props.hasOwnProperty('secondText') ? <div className='gd-header-second-text'>{this.props.secondText}</div> : undefined
         var rightText = this.props.lastUpdatedElement !== undefined ? <div className='gd-header-second-text'>last updated: {prettyDate(new Date(this.props.lastUpdatedElement))}</div> : undefined
         return (
             <div className='gd-header'>
@@ -177,10 +176,11 @@ class GraphicHeader extends React.Component {
 
     render() {
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor
-        var singleNumber = dataFormats[this.props.dataType](this.props.lastDatum[yAccessor])
+        var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined
+        var subtitle = this.props.hasOwnProperty('subtitle') ? <div className='gd-graphic-header-subtitle'>{this.props.subtitle}</div> : undefined
         return (
             <div className='gd-graphic-header'>
-                <div className="gd-graphic-header-title">{this.props.title}</div>
+                <div className="gd-graphic-header-title">{this.props.title}{subtitle}</div>
                 <div className="gd-graphic-header-second-text">{singleNumber}</div>
                 <div className='gd-graphic-header-download hide-on-monitor-display'>
                     <a style={{display: this.props.source !== undefined ? 'block' : 'none'}} href={this.props.source} target='_blank'>
@@ -250,6 +250,25 @@ class DataGraphic extends React.Component {
             mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
             MG.data_graphic(mgArgs)
         }
+    }
+}
+
+class GraphicPlaceholder extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <div className='gd-graphic-placeholder'>
+                <div className='gd-graphic-placeholder-above'>
+                    {this.props.aboveText}
+                </div>
+                <div className='gd-graphic-placeholder-below'>
+                    {this.props.belowText}
+                </div>
+            </div>
+        )
     }
 }
 
@@ -409,4 +428,4 @@ class Footer extends React.Component {
     }
 }
 
-export { DisplayRow, GraphicDisplayStyle, GraphicDisplay, GraphicHeader, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow, ToplineElement, Footer }
+export { DisplayRow, GraphicPlaceholder, GraphicDisplayStyle, GraphicDisplay, GraphicHeader, Header, DataGraphic, Divider, MainDisclaimer, GraphicContainer, GraphicDisclaimer, SingleNumber, ToplineRow, ToplineElement, Footer }

@@ -1,8 +1,6 @@
 const DATA_FORMAT = 'json'
 
 const TIME_HORIZON = 'daily'
-const PROTO_HOUR = 12
-const PROTO_MINUTE = 0
 
 function handleFormat(data) {
     var out = DATA_FORMAT === 'json' ? data.query_result.data.rows : data
@@ -11,37 +9,37 @@ function handleFormat(data) {
 
 var dataSources = {
     kiloUsageHours: {
-        id: 'kiloUsageHours',
-        title: "Total Kilo-Usage Hours",
+        id: TIME_HORIZON === 'daily' ? 'kiloUsageHours_daily' : 'kiloUsageHours_hourly',
+        title: "Total Usage",
+        subtitle: "1000s of hrs.",
+        hourlySource: "kiloUsageHours_hourly",
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
         source: "https://sql.telemetry.mozilla.org/queries/48763/source#131460",
         format: DATA_FORMAT,
         dataType: 'rate',
+        //plotArgs: {y_label: '1000 hrs.'},
         preprocessor: data => {
             data = handleFormat(data)
+            
             data = data.map(d=>{
                 d.activity_time = new Date(d.activity_time)
                 return d
             })
-
-            if (TIME_HORIZON === 'daily') {
-                data = data.filter(d=>{
-                    return d.activity_time.getHours() === PROTO_HOUR && d.activity_time.getMinutes() === PROTO_MINUTE
-                })  
+            if (TIME_HORIZON == 'daily') {
+                data = MG.convert.number(data,'kuh_weekly_smoothed')    
+            } else {
+                data = MG.convert.number(data,'kuh_daily_smoothed')
             }
-
-
-            data = MG.convert.number(data,'kuh_daily_smoothed')
-            data = MG.convert.number(data,'kuh_hourly_smoothed')
             return data
         },
         xAccessor: 'activity_time',
-        yAccessor: `kuh_${TIME_HORIZON}_smoothed`
+        yAccessor: TIME_HORIZON === 'daily' ? 'kuh_weekly_smoothed' : 'kuh_daily_smoothed'
     },
 
     successfulInstalls: {
         id: "successfulInstalls",
         title: "Install Success Rate",
+        firstAvailableData: new Date('2017-11-15'),
         description: "the percentage of attempted installs that are successful",
         plotArgs: {format: 'Percentage'},
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
@@ -75,6 +73,7 @@ var dataSources = {
     uptake: {
         title: 'Uptake',
         id: "uptake",
+        firstAvailableData: new Date('2017-11-15'),
         plotArgs: {format: 'Percentage'},
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
@@ -84,7 +83,6 @@ var dataSources = {
         preprocessor: data => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'd', '%Y%m%d')
-            //data = MG.convert.number(data, 'uptake')
             data = data.map(d => {
                 d.uptake = d.uptake / 100
                 return d
@@ -97,25 +95,33 @@ var dataSources = {
 
     newUsers: {
         title: "New User Count",
-        id: "newUsers",
+        id: TIME_HORIZON === 'daily' ? "newUsers_daily" : "newUsers_hourly",
         description: "new profile counts, Firefox Quantum",
         dataType: 'volume',
         format: DATA_FORMAT,
         preprocessor: (data) => {
+            var xAccessor = TIME_HORIZON === 'daily' ? 'submission' : 'hour_interval'
+            var xFormat = TIME_HORIZON === 'daily' ? '%Y%m%d' : "%Y-%m-%dT%H:%M:%S"
             data = handleFormat(data)
-            data = MG.convert.date(data, 'submission', '%Y%m%d')
+            var params = [data, xAccessor, xFormat]
+
+            data = MG.convert.date(...params)
+            data.sort((a,b)=>{
+                return a[xAccessor] > b[xAccessor] ? 1 : -1
+            })
             return data
         },
-        xAccessor: 'submission',
-        yAccessor: 'new_profiles',
+        xAccessor: TIME_HORIZON === 'daily' ? 'submission' : 'hour_interval',
+        yAccessor: TIME_HORIZON === 'daily' ? 'new_profiles' : 'hourly_new_profiles_smooth',
         source: "https://sql.telemetry.mozilla.org/queries/48504/source#130999"
     },
     dau: {
         title: "Daily Active Users",
         id: 'dau',
         dataType: 'volume',
+        hasHourlySource: false,
+        firstAvailableData: new Date('2017-11-15'),
         description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
-        source: "https://sql.telemetry.mozilla.org/queries/48553/source",
         format: DATA_FORMAT,
         preprocessor: (data) => {
             data = handleFormat(data)
@@ -128,6 +134,7 @@ var dataSources = {
 
     stability: {
         title: "Crash Rate",
+        hasHourlySource: false,
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
         dataType: 'rate',
@@ -148,6 +155,8 @@ var dataSources = {
 
     pagesVisited: {
         title: "Avg. Pages Visited",
+        hasHourlySource: false,
+        firstAvailableData: new Date('2017-11-15'),
         id: "pagesVisited",
         dataType: 'volume',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
@@ -166,6 +175,8 @@ var dataSources = {
     sessionHours: {
         title: "Avg. Session Hours",
         id: "sessionHours",
+        hasHourlySource: false,
+        firstAvailableData: new Date('2017-11-15'),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
