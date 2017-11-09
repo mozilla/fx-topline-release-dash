@@ -1,14 +1,47 @@
 const DATA_FORMAT = 'json'
 
+const TIME_HORIZON = 'daily'
+const PROTO_HOUR = 12
+const PROTO_MINUTE = 0
+
 function handleFormat(data) {
     var out = DATA_FORMAT === 'json' ? data.query_result.data.rows : data
     return out
 }
 
 var dataSources = {
+    kiloUsageHours: {
+        id: 'kiloUsageHours',
+        title: "Total Kilo-Usage Hours",
+        description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
+        source: "https://sql.telemetry.mozilla.org/queries/48763/source#131460",
+        format: DATA_FORMAT,
+        dataType: 'rate',
+        preprocessor: data => {
+            data = handleFormat(data)
+            data = data.map(d=>{
+                d.activity_time = new Date(d.activity_time)
+                return d
+            })
+
+            if (TIME_HORIZON === 'daily') {
+                data = data.filter(d=>{
+                    return d.activity_time.getHours() === PROTO_HOUR && d.activity_time.getMinutes() === PROTO_MINUTE
+                })  
+            }
+
+
+            data = MG.convert.number(data,'kuh_daily_smoothed')
+            data = MG.convert.number(data,'kuh_hourly_smoothed')
+            return data
+        },
+        xAccessor: 'activity_time',
+        yAccessor: `kuh_${TIME_HORIZON}_smoothed`
+    },
+
     successfulInstalls: {
         id: "successfulInstalls",
-        title: "Successful Installs",
+        title: "Install Success Rate",
         description: "the percentage of attempted installs that are successful",
         plotArgs: {format: 'Percentage'},
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",

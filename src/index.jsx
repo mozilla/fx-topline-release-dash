@@ -58,7 +58,7 @@ TwoByFour.RowOne = (
     <DisplayRow>
         {dataGraphicCell(displays.newUsers)}
         {dataGraphicCell(displays.uptake)}
-        {dataGraphicCell(displays.dau)}
+        {dataGraphicCell(displays.kiloUsageHours)}
     </DisplayRow>
 )
 

@@ -350,6 +350,7 @@ div.gd-tooltip:after {
         text-align:left;
         font-size:21px;
         font-weight:normal;
+        height:60px;
     }
 
     div.gd-graphic-header-second-text {

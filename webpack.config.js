@@ -12,9 +12,9 @@ var config = {
     filename: 'release-display.js'
   },
   devtool: 'source-map',
-  plugins: [
-    new MinifyPlugin()
-  ],
+  // plugins: [
+  //   new MinifyPlugin()
+  // ],
   module : {
     
     loaders : [
