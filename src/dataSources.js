@@ -47,6 +47,10 @@ if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
     plotArgs.max_x = dt('2017-12-01')
 }
 
+// if (MODE=='preshow') {
+//     plotArgs.markers = [{date: RELEASE_DATE, label:'release'}]
+// }
+
 function simulateRelease(data, xAccessor) {
     //th=day-of, day-after, whatever
     if (CURRENT_SITUATION==='day-of') {
@@ -115,7 +119,7 @@ var dataSources = {
         title: "Install Success Rate",
         firstAvailableData: dt('2017-11-15'),
         description: "the percentage of attempted installs that are successful",
-        plotArgs: Object.assign({}, plotArgs, {format: 'Percentage'}),
+        plotArgs: Object.assign({}, plotArgs, {format: 'Percentage', max_y:1}),
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         format: DATA_FORMAT,
         dataType: 'percentage',
@@ -150,10 +154,9 @@ var dataSources = {
         title: 'Uptake',
         id: "uptake",
         firstAvailableData: dt('2017-11-15'),
-        plotArgs,
+        plotArgs: Object.assign({}, plotArgs, {format: 'Percentage'}),
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
-
         dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
         format: DATA_FORMAT,
@@ -246,7 +249,8 @@ var dataSources = {
     },
 
     pagesVisited: {
-        title: "Avg. Pages Visited",
+        title: "Pages Visited",
+        subtitle: "avg. per user",
         hasHourlySource: false,
         firstAvailableData: dt('2017-11-15'),  
         id: "pagesVisited",
@@ -267,7 +271,8 @@ var dataSources = {
     },
 
     sessionHours: {
-        title: "Avg. Session Hours",
+        title: "Session Hours",
+        subtitle: "avg. per user",
         id: "sessionHours",
         hasHourlySource: false,
         firstAvailableData: dt('2017-11-15'),
