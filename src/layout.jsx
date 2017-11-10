@@ -12,6 +12,8 @@ defaults.FORMAT = 'web'
 // Takes an ISO time and returns a string representing how
 // long ago the date represents.
 
+
+
 function prettyDate(time){
     var date = time
 	//var date = new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," ")),
@@ -180,9 +182,9 @@ class GraphicHeader extends React.Component {
         var subtitle = this.props.hasOwnProperty('subtitle') ? <div className='gd-graphic-header-subtitle'>{this.props.subtitle}</div> : undefined
         return (
             <div className='gd-graphic-header'>
-                <div className="gd-graphic-header-title">{this.props.title}{subtitle}</div>
+                <div className={"gd-graphic-header-title " +(this.props.isActive ? "" : 'inactive-data-source')}>{this.props.title}{subtitle}</div>
                 <div className="gd-graphic-header-second-text">{singleNumber}</div>
-                <div className='gd-graphic-header-download hide-on-monitor-display'>
+                <div className={'gd-graphic-header-download hide-on-monitor-display ' + (this.props.isActive ? "" : 'inactive-data-source')}>
                     <a style={{display: this.props.source !== undefined ? 'block' : 'none'}} href={this.props.source} target='_blank'>
                         <i className="fa fa-table" aria-hidden="true"></i>
                     </a>
@@ -233,19 +235,21 @@ class DataGraphic extends React.Component {
                 x_accessor: this.props.xAccessor,
                 y_accessor: this.props.yAccessor,
                 legend: plotArgs !== undefined ? plotArgs.legend || ['Quantum'] : ['Quantum'],
-                markers: [{label: '57', date: new Date('2017-11-14')}],
                 area: false,
                 interpolate:  d3.curveMonotoneX,
                 width: this.props.width,
                 right: 55,
                 left:45,
                 height: 250,
-                bottom:20,
+                bottom:40,
                 description: this.props.description,
-                //title: this.props.title
                 top:25,
-                min_x: new Date('2017-10-15'),
                 xax_count: 4
+            }
+            if (this.props.resolution === 'hourly') {
+                mgArgs.max_x = new Date(Math.max(...this.props.data.map(d=>d[this.props.xAccessor])))
+                mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
+                mgArgs.max_x.setHours(0,0,0,0)
             }
             mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
             MG.data_graphic(mgArgs)
@@ -261,11 +265,13 @@ class GraphicPlaceholder extends React.Component {
     render() {
         return (
             <div className='gd-graphic-placeholder'>
-                <div className='gd-graphic-placeholder-above'>
-                    {this.props.aboveText}
-                </div>
-                <div className='gd-graphic-placeholder-below'>
-                    {this.props.belowText}
+                <div>
+                    <div className='gd-graphic-placeholder-above'>
+                        {this.props.aboveText}
+                    </div>
+                    <div className='gd-graphic-placeholder-below'>
+                        {this.props.belowText}
+                    </div>
                 </div>
             </div>
         )
@@ -321,7 +327,9 @@ class GraphicContainer extends React.Component {
                     order: i,
                     lastDatum: this.state.lastDatum,
                     dataType: this.props.dataType,
-                    yAccessor: this.props.yAccessor
+                    yAccessor: this.props.yAccessor,
+                    isActive: this.props.isActive,
+                    resolution: this.props.resolution
                 })
             })
         } else {
@@ -348,8 +356,7 @@ class GraphicContainer extends React.Component {
     }
 
     componentDidMount() {
-        if (this.props.hasOwnProperty('id')) {
-            
+        if (this.props.hasOwnProperty('id') && this.props.isActive) {
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv
             getTheData(`data/${this.props.id}.json`, (data)=> {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)

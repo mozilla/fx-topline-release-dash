@@ -220,6 +220,17 @@ div.gd-graphic-header {
     align-items: baseline;
 }
 
+div.gd-graphic-header-title.inactive-data-source {
+    text-align:center !important;
+    color:gray;
+    min-width:100%;
+    padding:0px;
+}
+
+div.gd-graphic-header-download.inactive-data-source {
+    display:none
+}
+
 div.gd-graphic-header-title {
     padding-left:52px;
     font-size:20px;
@@ -257,6 +268,41 @@ div.gd-graphic-header-download a:hover {
     padding:4px;
     background: rgb(230,230,230);
     box-shadow: 0px 0px 5px rgba(0,0,0,.3);
+}
+
+div.gd-graphic-placeholder {
+    display:flex;
+    flex-direction:row;
+    height:250px;    
+    align-content: center;
+    align-items: center;
+    color: darkgray;
+    border: 2px dashed lightgray;
+    border-radius: 10px;
+}
+
+div.gd-graphic-placeholder div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    align-content: center;
+    width:100%;
+}
+
+div.gd-graphic-placeholder-above {
+    text-align:center;
+    width:100%;
+    font-weight:300;
+    font-size:18px;
+    
+}
+
+div.gd-graphic-placeholder-below {
+    text-align:center;
+    width:100%;
+    font-weight:900;
+    font-size:16px;
+    height:25px;
 }
 
 div.gd-tooltip:after {
@@ -383,6 +429,11 @@ div.gd-tooltip:after {
         display:none
     }
 
+    div.gd-graphic-header-title.inactive-data-source {
+        text-align:center !important;
+        color:gray
+    }
+
     div.gd-graphic-header-title {
         text-align:left;
         font-size:21px;
@@ -401,11 +452,11 @@ div.gd-tooltip:after {
     }
 
     g.mg-x-axis text {
-        font-size: 15px
+        font-size: 13px
     }
     
     g.mg-y-axis text {
-        font-size: 15px
+        font-size: 14px
     }
 
 
@@ -421,9 +472,6 @@ div.gd-tooltip:after {
     }
 
   }
-
-
-    
 
 /* the infernal monitors */
   @media all and (min-height:1199px) and (min-width:1600px) {
@@ -445,6 +493,10 @@ div.gd-tooltip:after {
     div.gd-footer {
         height:80px;
         align-items: center;
+    }
+
+    g.mg-year-marker text {
+        font-size:10px !important;
     }
 
 }

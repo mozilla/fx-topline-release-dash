@@ -1070,10 +1070,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-const WHICH_VERSION = 'release';
-const RELEASE_DATE = new Date('2017-11-14');
-const NOW = new Date();
-
 function qv(variable) {
     var query = window.location.search.substring(1);
     var vars = query.split('&');
@@ -1088,8 +1084,8 @@ function qv(variable) {
 }
 
 function showDisplay(args) {
-    //if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW) {
-    if (false) {
+    if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["b" /* NOW */] && __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* MODE */] != 'preshow') {
+        //if (false) {
         return dataGraphicPlaceholder(args);
     } else {
         return dataGraphicCell(args);
@@ -1112,7 +1108,7 @@ function dataGraphicCell(args) {
     ) : '';
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
-        { yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
+        { resolution: __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* RESOLUTION */], isActive: true, yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { subtitle: args.subtitle, title: args.title, secondText: function () {
                 return this.props.lastDatum[args.yAccessor];
             } }),
@@ -1129,11 +1125,11 @@ function dataGraphicCell(args) {
 function dataGraphicPlaceholder(args) {
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
-        { yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
+        { isActive: false, yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { subtitle: args.subtitle, title: args.title, secondText: function () {
                 return this.props.lastDatum[args.yAccessor];
             } }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["h" /* GraphicPlaceholder */], { aboveText: 'first datapoint available', belowText: args.firstAvailableData })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["h" /* GraphicPlaceholder */], { aboveText: 'first datapoint available', belowText: d3.timeFormat('%Y/%m/%d')(args.firstAvailableData) })
     );
 }
 
@@ -1141,18 +1137,37 @@ var TwoByFour = {};
 TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["b" /* DisplayRow */],
     null,
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].newUsers),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].uptake),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].kiloUsageHours)
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].newUsers),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].uptake),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].kiloUsageHours)
 );
 
 TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["b" /* DisplayRow */],
     null,
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].successfulInstalls),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].pagesVisited),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* dataSources */].sessionHours)
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].successfulInstalls),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].pagesVisited),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].sessionHours)
 );
+
+var daysSinceRelease;
+
+var msPerDay = 8.64e7;
+var x0 = __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["c" /* RELEASE_DATE */];
+var x1 = __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["b" /* NOW */];
+x0.setHours(12, 0, 0);
+x1.setHours(12, 0, 0);
+
+daysSinceRelease = Math.abs(Math.round((x1 - x0) / msPerDay));
+daysSinceRelease = daysSinceRelease + (daysSinceRelease === 1 ? ' day' : ' days');
+
+var nowish = d3.timeFormat('%Y-%m-%d')(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["b" /* NOW */]);
+var releaseish = d3.timeFormat('%Y-%m-%d')(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["c" /* RELEASE_DATE */]);
+var releaseTxt = nowish < releaseish ? 'Days Until Release' : nowish > releaseish ? 'Days Since Release' : 'Release Day';
+if (releaseTxt == 'Release Day') {
+    releaseTxt = 'What Day Is It?';
+    daysSinceRelease = 'Release Day';
+}
 
 Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["f" /* GraphicDisplay */],
@@ -1165,14 +1180,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
             label: 'Current Firefox Version',
             value: '57'
         }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], { value: (() => {
-                var msPerDay = 8.64e7;
-                var x0 = RELEASE_DATE;
-                var x1 = new Date();
-                x0.setHours(12, 0, 0);
-                x1.setHours(12, 0, 0);
-                return Math.abs(Math.round((x1 - x0) / msPerDay));
-            })() + ' days', label: new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release' })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], { value: daysSinceRelease, label: releaseTxt })
     ),
     TwoByFour.RowOne,
     TwoByFour.RowTwo,
@@ -21339,19 +21347,93 @@ module.exports = function() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return dataSources; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return dataSources; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return RESOLUTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return NOW; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return RELEASE_DATE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MODE; });
 const DATA_FORMAT = 'json';
+const LETS_SIMULATE = false;
+const TRUNCATE_CURRENT_DATA_FOR_NOW = true;
+const TRUNCATE_VAL = 60;
 
-const TIME_HORIZON = 'daily';
+function dt(d) {
+    return d3.timeParse('%Y-%m-%d')(d);
+}
+
+var RELEASE_DATE = dt('2017-11-14');
+//var NOW = dt('2017-11-14')
+var NOW = new Date();
+var RESOLUTION = 'daily';
+
+var MODE = 'preshow';
+
+const CURRENT_SITUATION = 'couple-weeks-after';
+
+if (CURRENT_SITUATION == 'day-of') {
+    var RESOLUTION = 'hourly';
+}
+
+if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
+    var NOW = dt('2017-11-15');
+}
+
+if (CURRENT_SITUATION == 'couple-days-after' && LETS_SIMULATE) {
+    var NOW = dt('2017-11-17');
+}
+
+if (CURRENT_SITUATION == 'couple-weeks-after' && LETS_SIMULATE) {
+    var NOW = dt('2017-12-09');
+}
 
 function handleFormat(data) {
     var out = DATA_FORMAT === 'json' ? data.query_result.data.rows : data;
     return out;
 }
 
+var plotArgs = {
+    show_rollover_text: CURRENT_SITUATION == 'day-after' ? false : true,
+    x_mouseover: RESOLUTION == 'daily' ? '%b %d, %Y ' : '%I:%M %p  '
+};
+
+if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
+    plotArgs.max_x = dt('2017-12-01');
+}
+
+function simulateRelease(data, xAccessor) {
+    //th=day-of, day-after, whatever
+    if (CURRENT_SITUATION === 'day-of') {
+        data = data.slice(0, 9);
+        data.forEach((d, i) => {
+            d[xAccessor] = dt('2017-11-14');
+            d[xAccessor].setHours(i + 1, 0, 0, 0);
+        });
+    } else if (CURRENT_SITUATION == 'day-after') {
+        //if (RESOLUTION !=='daily') RESOLUTION='daily'
+        data.forEach((d, i) => {
+            d[xAccessor] = dt('2017-11-14');
+            d[xAccessor].setHours(i + 1, 0, 0, 0);
+        });
+        data = data.slice(0, 1);
+    } else if (CURRENT_SITUATION == 'couple-days-after') {
+        data.forEach((d, i) => {
+            d[xAccessor] = dt('2017-11-14');
+            d[xAccessor].setDate(d[xAccessor].getDate() + i);
+        });
+        data = data.slice(0, 3);
+    } else if (CURRENT_SITUATION == 'couple-weeks-after') {
+        data.forEach((d, i) => {
+            d[xAccessor] = dt('2017-11-14');
+            d[xAccessor].setDate(d[xAccessor].getDate() + i);
+        });
+        data = data.slice(0, 21);
+    }
+    return data;
+}
+
 var dataSources = {
     kiloUsageHours: {
-        id: TIME_HORIZON === 'daily' ? 'kiloUsageHours_daily' : 'kiloUsageHours_hourly',
+        id: RESOLUTION === 'daily' ? 'kiloUsageHours_daily' : 'kiloUsageHours_hourly',
         title: "Total Usage",
         subtitle: "1000s of hrs.",
         hourlySource: "kiloUsageHours_hourly",
@@ -21359,37 +21441,39 @@ var dataSources = {
         source: "https://sql.telemetry.mozilla.org/queries/48763/source#131460",
         format: DATA_FORMAT,
         dataType: 'rate',
-        //plotArgs: {y_label: '1000 hrs.'},
+        plotArgs: plotArgs,
         preprocessor: data => {
             data = handleFormat(data);
-
             data = data.map(d => {
                 d.activity_time = new Date(d.activity_time);
                 return d;
             });
-            if (TIME_HORIZON == 'daily') {
+            if (RESOLUTION == 'daily') {
                 data = MG.convert.number(data, 'kuh_weekly_smoothed');
             } else {
                 data = MG.convert.number(data, 'kuh_daily_smoothed');
             }
+
+            if (LETS_SIMULATE) data = simulateRelease(data, 'activity_time');
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
+
             return data;
         },
         xAccessor: 'activity_time',
-        yAccessor: TIME_HORIZON === 'daily' ? 'kuh_weekly_smoothed' : 'kuh_daily_smoothed'
+        yAccessor: RESOLUTION === 'daily' ? 'kuh_weekly_smoothed' : 'kuh_daily_smoothed'
     },
 
     successfulInstalls: {
         id: "successfulInstalls",
         title: "Install Success Rate",
-        firstAvailableData: new Date('2017-11-15'),
+        firstAvailableData: dt('2017-11-15'),
         description: "the percentage of attempted installs that are successful",
-        plotArgs: { format: 'Percentage' },
+        plotArgs: Object.assign({}, plotArgs, { format: 'Percentage' }),
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         format: DATA_FORMAT,
         dataType: 'percentage',
         preprocessor: data => {
             data = handleFormat(data);
-
             var tmp = data.reduce((obj, d) => {
                 if (!obj.hasOwnProperty(d.day)) obj[d.day] = {};
                 obj[d.day][d.succeeded] = d.instances;
@@ -21406,6 +21490,9 @@ var dataSources = {
 
             out = MG.convert.date(out, 'day');
 
+            if (LETS_SIMULATE) out = simulateRelease(out, 'day');
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
+
             return out;
         },
         xAccessor: 'day',
@@ -21415,10 +21502,11 @@ var dataSources = {
     uptake: {
         title: 'Uptake',
         id: "uptake",
-        firstAvailableData: new Date('2017-11-15'),
-        plotArgs: { format: 'Percentage' },
+        firstAvailableData: dt('2017-11-15'),
+        plotArgs,
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: () => {},
+
         dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
         format: DATA_FORMAT,
@@ -21429,6 +21517,9 @@ var dataSources = {
                 d.uptake = d.uptake / 100;
                 return d;
             });
+
+            if (LETS_SIMULATE) data = simulateRelease(data, 'd');
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
             return data;
         },
         xAccessor: 'd',
@@ -21437,24 +21528,29 @@ var dataSources = {
 
     newUsers: {
         title: "New User Count",
-        id: TIME_HORIZON === 'daily' ? "newUsers_daily" : "newUsers_hourly",
+        id: RESOLUTION === 'daily' ? "newUsers_daily" : "newUsers_hourly",
         description: "new profile counts, Firefox Quantum",
         dataType: 'volume',
+        plotArgs,
         format: DATA_FORMAT,
         preprocessor: data => {
-            var xAccessor = TIME_HORIZON === 'daily' ? 'submission' : 'hour_interval';
-            var xFormat = TIME_HORIZON === 'daily' ? '%Y%m%d' : "%Y-%m-%dT%H:%M:%S";
+            var xAccessor = RESOLUTION === 'daily' ? 'submission' : 'hour_interval';
+            var xFormat = RESOLUTION === 'daily' ? '%Y%m%d' : "%Y-%m-%dT%H:%M:%S";
             data = handleFormat(data);
+
             var params = [data, xAccessor, xFormat];
 
             data = MG.convert.date(...params);
             data.sort((a, b) => {
                 return a[xAccessor] > b[xAccessor] ? 1 : -1;
             });
+
+            if (LETS_SIMULATE) data = simulateRelease(data, xAccessor);
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, 30);
             return data;
         },
-        xAccessor: TIME_HORIZON === 'daily' ? 'submission' : 'hour_interval',
-        yAccessor: TIME_HORIZON === 'daily' ? 'new_profiles' : 'hourly_new_profiles_smooth',
+        xAccessor: RESOLUTION === 'daily' ? 'submission' : 'hour_interval',
+        yAccessor: RESOLUTION === 'daily' ? 'new_profiles' : 'hourly_new_profiles_smooth',
         source: "https://sql.telemetry.mozilla.org/queries/48504/source#130999"
     },
     dau: {
@@ -21463,11 +21559,14 @@ var dataSources = {
         dataType: 'volume',
         hasHourlySource: false,
         firstAvailableData: new Date('2017-11-15'),
+        plotArgs,
         description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data);
             data = MG.convert.date(data, 'date', '%Y%m%d');
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
+            if (LETS_SIMULATE) data = simulateRelease(data, 'date');
             return data;
         },
         xAccessor: 'date',
@@ -21479,6 +21578,7 @@ var dataSources = {
         hasHourlySource: false,
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
+        plotArgs,
         dataType: 'rate',
         xAccessor: 'activity_date',
         yAccessor: 'crash_rate',
@@ -21491,6 +21591,8 @@ var dataSources = {
                 return d;
             });
             data = data.filter(d => d.channel === WHICH_VERSION && d.build_version == '57.0' && d.date > new Date('2017-10-01'));
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
+            if (LETS_SIMULATE) data = simulateRelease(data, 'activity_date');
             return data;
         }
     },
@@ -21498,27 +21600,30 @@ var dataSources = {
     pagesVisited: {
         title: "Avg. Pages Visited",
         hasHourlySource: false,
-        firstAvailableData: new Date('2017-11-15'),
+        firstAvailableData: dt('2017-11-15'),
         id: "pagesVisited",
-        dataType: 'volume',
+        dataType: 'rate',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
         format: DATA_FORMAT,
         source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
         preprocessor: data => {
             data = handleFormat(data);
             data = MG.convert.date(data, 'date', '%Y%m%d');
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, 30);
+            if (LETS_SIMULATE) data = simulateRelease(data, 'date');
             return data;
         },
         xAccessor: 'date',
         yAccessor: ['avg_uri_new', 'avg_uri_all'],
-        plotArgs: { legend: ['Quantum', 'All'] }
+        plotArgs: Object.assign({}, plotArgs, { 'legend': ['Quantum', 'All'] })
     },
 
     sessionHours: {
         title: "Avg. Session Hours",
         id: "sessionHours",
         hasHourlySource: false,
-        firstAvailableData: new Date('2017-11-15'),
+        firstAvailableData: dt('2017-11-15'),
+        plotArgs: Object.assign({}, plotArgs, { 'legend': ['Quantum', 'All'] }),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
@@ -21526,11 +21631,12 @@ var dataSources = {
         preprocessor: data => {
             data = handleFormat(data);
             data = MG.convert.date(data, 'date', '%Y%m%d');
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
+            if (LETS_SIMULATE) data = simulateRelease(data, 'date');
             return data;
         },
         xAccessor: 'date',
-        yAccessor: ['avg_subsess_hours_new', 'avg_subsess_hours_all'],
-        plotArgs: { 'legend': ['Quantum', 'All'] }
+        yAccessor: ['avg_subsess_hours_new', 'avg_subsess_hours_all']
     }
 };
 
@@ -21573,6 +21679,7 @@ defaults.FORMAT = 'web';
 
 // Takes an ISO time and returns a string representing how
 // long ago the date represents.
+
 
 function prettyDate(time) {
     var date = time;
@@ -21766,7 +21873,7 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
             { className: 'gd-graphic-header' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'gd-graphic-header-title' },
+                { className: "gd-graphic-header-title " + (this.props.isActive ? "" : 'inactive-data-source') },
                 this.props.title,
                 subtitle
             ),
@@ -21777,7 +21884,7 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'gd-graphic-header-download hide-on-monitor-display' },
+                { className: 'gd-graphic-header-download hide-on-monitor-display ' + (this.props.isActive ? "" : 'inactive-data-source') },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'a',
                     { style: { display: this.props.source !== undefined ? 'block' : 'none' }, href: this.props.source, target: '_blank' },
@@ -21828,20 +21935,22 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 x_accessor: this.props.xAccessor,
                 y_accessor: this.props.yAccessor,
                 legend: plotArgs !== undefined ? plotArgs.legend || ['Quantum'] : ['Quantum'],
-                markers: [{ label: '57', date: new Date('2017-11-14') }],
                 area: false,
                 interpolate: d3.curveMonotoneX,
                 width: this.props.width,
                 right: 55,
                 left: 45,
                 height: 250,
-                bottom: 20,
+                bottom: 40,
                 description: this.props.description,
-                //title: this.props.title
                 top: 25,
-                min_x: new Date('2017-10-15'),
                 xax_count: 4
             };
+            if (this.props.resolution === 'hourly') {
+                mgArgs.max_x = new Date(Math.max(...this.props.data.map(d => d[this.props.xAccessor])));
+                mgArgs.max_x.setDate(mgArgs.max_x.getDate() + 1);
+                mgArgs.max_x.setHours(0, 0, 0, 0);
+            }
             mgArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
             MG.data_graphic(mgArgs);
         }
@@ -21859,13 +21968,17 @@ class GraphicPlaceholder extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.C
             { className: 'gd-graphic-placeholder' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'gd-graphic-placeholder-above' },
-                this.props.aboveText
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'gd-graphic-placeholder-below' },
-                this.props.belowText
+                null,
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'gd-graphic-placeholder-above' },
+                    this.props.aboveText
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'div',
+                    { className: 'gd-graphic-placeholder-below' },
+                    this.props.belowText
+                )
             )
         );
     }
@@ -21922,7 +22035,9 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
                     order: i,
                     lastDatum: this.state.lastDatum,
                     dataType: this.props.dataType,
-                    yAccessor: this.props.yAccessor
+                    yAccessor: this.props.yAccessor,
+                    isActive: this.props.isActive,
+                    resolution: this.props.resolution
                 });
             });
         } else {
@@ -21953,8 +22068,7 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
     }
 
     componentDidMount() {
-        if (this.props.hasOwnProperty('id')) {
-
+        if (this.props.hasOwnProperty('id') && this.props.isActive) {
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv;
             getTheData(`data/${this.props.id}.json`, data => {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title);

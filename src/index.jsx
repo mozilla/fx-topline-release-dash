@@ -1,6 +1,6 @@
 import React from 'react'
 import {render} from 'react-dom'
-import {dataSources as displays} from './dataSources.js'
+import {dataSources as displays, RELEASE_DATE, NOW, RESOLUTION, MODE} from './dataSources.js'
 
 import {GraphicDisplayStyle,
     GraphicDisplay,
@@ -18,9 +18,7 @@ import {GraphicDisplayStyle,
     ToplineElement,
     Footer} from './layout.jsx'
 
-const WHICH_VERSION = 'release'
-const RELEASE_DATE = new Date('2017-11-14')
-const NOW = new Date()
+
 
 function qv(variable) {
     var query = window.location.search.substring(1)
@@ -36,8 +34,8 @@ function qv(variable) {
 }
 
 function showDisplay(args) {
-    //if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW) {
-    if (false) {
+    if ((args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW) && MODE!='preshow') {
+        //if (false) {
         return dataGraphicPlaceholder(args)
     } else {
         return dataGraphicCell(args)
@@ -47,7 +45,7 @@ function showDisplay(args) {
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer  yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+        <GraphicContainer resolution={RESOLUTION} isActive={true} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
             <DataGraphic 
                 title={args.title}
@@ -63,9 +61,9 @@ function dataGraphicCell(args) {
 
 function dataGraphicPlaceholder(args) {
     return (
-        <GraphicContainer  yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+        <GraphicContainer isActive={false} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
-            <GraphicPlaceholder aboveText='first datapoint available' belowText={args.firstAvailableData} />
+            <GraphicPlaceholder aboveText='first datapoint available' belowText={d3.timeFormat('%Y/%m/%d')(args.firstAvailableData)} />
         </GraphicContainer>
     )
 }
@@ -87,6 +85,24 @@ TwoByFour.RowTwo = (
 </DisplayRow>
 )
 
+var daysSinceRelease
+
+var msPerDay = 8.64e7;
+var x0 = RELEASE_DATE;
+var x1 = NOW;
+x0.setHours(12,0,0);
+x1.setHours(12,0,0);
+
+daysSinceRelease = Math.abs(Math.round( (x1 - x0) / msPerDay ))
+daysSinceRelease = daysSinceRelease + (daysSinceRelease === 1 ? ' day': ' days')
+
+var nowish = d3.timeFormat('%Y-%m-%d')(NOW)
+var releaseish = d3.timeFormat('%Y-%m-%d')(RELEASE_DATE)
+var releaseTxt = nowish < releaseish ? 'Days Until Release' : (nowish > releaseish ? 'Days Since Release' : 'Release Day')
+if (releaseTxt == 'Release Day') {
+    releaseTxt = 'What Day Is It?'
+    daysSinceRelease = 'Release Day'
+}
 
 render(
     <GraphicDisplay>
@@ -96,14 +112,7 @@ render(
                 label='Current Firefox Version'
                 value='57'
             />
-            <ToplineElement value={(()=>{
-                var msPerDay = 8.64e7;
-                var x0 = RELEASE_DATE;
-                var x1 = new Date();
-                x0.setHours(12,0,0);
-                x1.setHours(12,0,0);
-                    return Math.abs(Math.round( (x1 - x0) / msPerDay ))
-                })() + ' days'} label={new Date() < RELEASE_DATE ? 'Days Until Release' : 'Days Since Release'} />
+            <ToplineElement value={daysSinceRelease} label={releaseTxt} />
         </ToplineRow>
         {TwoByFour.RowOne}
         {TwoByFour.RowTwo}
