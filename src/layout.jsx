@@ -85,7 +85,7 @@ class GraphicDisplayStyle extends React.Component {
 class GraphicDisplay extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {lastUpdated: {}}
+        this.state = {lastUpdated: {}, hasData: undefined}
         this.handleLastUpdatedData = this.handleLastUpdatedData.bind(this)
     }
 
@@ -186,27 +186,31 @@ dataFormats.rate = (d)=>d3.format(',.2f')(d)
 class GraphicHeader extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {isHovered: false}
+        this.state = {isHovered: false, hasData: undefined}
+        this.handleNoData = this.handleNoData.bind(this)
     }
 
-    handleHover(e) {
-        var isHovered = !this.state.isHovered
-        this.setState({isHovered})
-    }
 
+    handleNoData(hasData) {
+        this.setState({hasData})
+    }
     render() {
+        
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor
         var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined
         var subtitle = this.props.hasOwnProperty('subtitle') ? <div className='gd-graphic-header-subtitle'>{this.props.subtitle}</div> : undefined
         return (
             <div className='gd-graphic-header'>
-                <div className={"gd-graphic-header-title " +(this.props.isActive ? "" : 'inactive-data-source')}>{this.props.title}{subtitle}</div>
-                <div className="gd-graphic-header-second-text">{singleNumber}</div>
-                <div className={'gd-graphic-header-download ' + (this.props.isActive ? "" : 'inactive-data-source ') + (IS_OFFICE_TV ? 'hide-on-monitor-display ' : '')}>
-                    <a style={{display: this.props.source !== undefined ? 'block' : 'none'}} href={this.props.source} target='_blank'>
+                <div className={'gd-graphic-header-download'}>
+                    <a 
+                        className={(this.props.isActive ? "" : 'inactive-data-source ') + ((IS_OFFICE_TV) ? 'hide-on-monitor-display ' : '')}
+
+                         href={this.props.source} target='_blank'>
                         <i className="fa fa-table" aria-hidden="true"></i>
                     </a>
                 </div>
+                <div className={"gd-graphic-header-title " +(this.props.isActive ? "" : 'inactive-data-source')}>{this.props.title}{subtitle}</div>
+                <div className="gd-graphic-header-second-text">{singleNumber}</div>
                     
             </div>
         )
@@ -278,7 +282,8 @@ class DataGraphic extends React.Component {
                     area: false,
                     interpolate:  d3.curveMonotoneX,
                     width: this.props.width,
-                    right: 55,
+                    //right: 55,
+                    right:20,
                     left:45,
                     height: 250,
                     bottom:40,
@@ -353,7 +358,7 @@ class SingleNumber extends React.Component {
 class GraphicContainer extends React.Component {
     constructor(props) {
         super(props)
-        this.state = {loaded: false, isHovered: false, lastDatum: undefined}
+        this.state = {loaded: false, isHovered: false, lastDatum: undefined, hasData: undefined}
         this.handleHover = this.handleHover.bind(this)
     }
 
@@ -378,7 +383,8 @@ class GraphicContainer extends React.Component {
                     dataType: this.props.dataType,
                     yAccessor: this.props.yAccessor,
                     isActive: this.props.isActive,
-                    resolution: this.props.resolution
+                    resolution: this.props.resolution,
+                    hasData: this.state.hasData
                 })
             })
         } else {
@@ -410,7 +416,7 @@ class GraphicContainer extends React.Component {
             getTheData(`data/${this.props.id}.json`, (data)=> {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
-                this.setState({loaded:true, data, lastDatum: data[data.length-1]})
+                this.setState({loaded:true, data, lastDatum: data[data.length-1], hasData: data.length})
             })
         } else {
             var args =[100]

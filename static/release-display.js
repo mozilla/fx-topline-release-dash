@@ -21354,27 +21354,30 @@ function dt(d) {
     return d3.timeParse('%Y-%m-%d')(d);
 }
 
+function parseLocalTime(d) {
+    return d;
+}
+
+/* please don't touch this stuff unless you know what you're doing, yeah? */
+
 var RELEASE_DATE = dt('2017-11-14');
 var DAY_AFTER = dt('2017-11-15');
 //var NOW = dt('2017-11-15')
+//var NOW = dt('2017-11-14')
+//NOW.setHours(8,0,0,0)
 var NOW = new Date();
-var RESOLUTION = 'daily';
 
 var MODE = 'game-time';
-//var CURRENT_SITUATION = 'rest-of-release'
-var CURRENT_SITUATION = 'day-of';
-//const CURRENT_SITUATION ='couple-weeks-after'
 
-if (NOW < DAY_AFTER) CURRENT_SITUATION = 'day-of';else {
-    CURRENT_SITUATION = 'daily';
-}
+var CURRENT_SITUATION;
+var RESOLUTION;
 
-if (CURRENT_SITUATION == 'day-of') {
+if (NOW <= DAY_AFTER) {
     RESOLUTION = 'hourly';
-}
-
-if (CURRENT_SITUATION == 'rest-of-release') {
+    CURRENT_SITUATION = 'day-of';
+} else {
     RESOLUTION = 'daily';
+    CURRENT_SITUATION = 'rest-of-release';
 }
 
 // if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
@@ -21761,7 +21764,7 @@ class GraphicDisplayStyle extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.
 class GraphicDisplay extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
-        this.state = { lastUpdated: {} };
+        this.state = { lastUpdated: {}, hasData: undefined };
         this.handleLastUpdatedData = this.handleLastUpdatedData.bind(this);
     }
 
@@ -21889,15 +21892,15 @@ dataFormats.rate = d => d3.format(',.2f')(d);
 class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
-        this.state = { isHovered: false };
+        this.state = { isHovered: false, hasData: undefined };
+        this.handleNoData = this.handleNoData.bind(this);
     }
 
-    handleHover(e) {
-        var isHovered = !this.state.isHovered;
-        this.setState({ isHovered });
+    handleNoData(hasData) {
+        this.setState({ hasData });
     }
-
     render() {
+
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor;
         var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined;
         var subtitle = this.props.hasOwnProperty('subtitle') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -21910,6 +21913,18 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
             { className: 'gd-graphic-header' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
+                { className: 'gd-graphic-header-download' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                    'a',
+                    {
+                        className: (this.props.isActive ? "" : 'inactive-data-source ') + (IS_OFFICE_TV ? 'hide-on-monitor-display ' : ''),
+
+                        href: this.props.source, target: '_blank' },
+                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-table', 'aria-hidden': 'true' })
+                )
+            ),
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
                 { className: "gd-graphic-header-title " + (this.props.isActive ? "" : 'inactive-data-source') },
                 this.props.title,
                 subtitle
@@ -21918,15 +21933,6 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
                 'div',
                 { className: 'gd-graphic-header-second-text' },
                 singleNumber
-            ),
-            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                'div',
-                { className: 'gd-graphic-header-download ' + (this.props.isActive ? "" : 'inactive-data-source ') + (IS_OFFICE_TV ? 'hide-on-monitor-display ' : '') },
-                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-                    'a',
-                    { style: { display: this.props.source !== undefined ? 'block' : 'none' }, href: this.props.source, target: '_blank' },
-                    __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-table', 'aria-hidden': 'true' })
-                )
             )
         );
     }
@@ -21999,7 +22005,8 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                     area: false,
                     interpolate: d3.curveMonotoneX,
                     width: this.props.width,
-                    right: 55,
+                    //right: 55,
+                    right: 20,
                     left: 45,
                     height: 250,
                     bottom: 40,
@@ -22079,7 +22086,7 @@ class SingleNumber extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compone
 class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
-        this.state = { loaded: false, isHovered: false, lastDatum: undefined };
+        this.state = { loaded: false, isHovered: false, lastDatum: undefined, hasData: undefined };
         this.handleHover = this.handleHover.bind(this);
     }
 
@@ -22104,7 +22111,8 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
                     dataType: this.props.dataType,
                     yAccessor: this.props.yAccessor,
                     isActive: this.props.isActive,
-                    resolution: this.props.resolution
+                    resolution: this.props.resolution,
+                    hasData: this.state.hasData
                 });
             });
         } else {
@@ -22140,7 +22148,7 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
             getTheData(`data/${this.props.id}.json`, data => {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title);
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data);
-                this.setState({ loaded: true, data, lastDatum: data[data.length - 1] });
+                this.setState({ loaded: true, data, lastDatum: data[data.length - 1], hasData: data.length });
             });
         } else {
             var args = [100];

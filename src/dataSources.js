@@ -7,29 +7,33 @@ function dt(d){
     return d3.timeParse('%Y-%m-%d')(d)
 }
 
+function parseLocalTime(d) {
+    return d
+}
+
+/* please don't touch this stuff unless you know what you're doing, yeah? */
+
 var RELEASE_DATE = dt('2017-11-14')
 var DAY_AFTER = dt('2017-11-15')
 //var NOW = dt('2017-11-15')
+//var NOW = dt('2017-11-14')
+//NOW.setHours(8,0,0,0)
 var NOW = new Date()
-var RESOLUTION = 'daily'
 
 var MODE = 'game-time'
-//var CURRENT_SITUATION = 'rest-of-release'
-var CURRENT_SITUATION = 'day-of'
-//const CURRENT_SITUATION ='couple-weeks-after'
 
-if (NOW < DAY_AFTER) CURRENT_SITUATION='day-of'
-else {
-    CURRENT_SITUATION = 'daily'
-}
+var CURRENT_SITUATION
+var RESOLUTION
 
-if (CURRENT_SITUATION == 'day-of') {
+if (NOW <= DAY_AFTER) {
     RESOLUTION = 'hourly'
+    CURRENT_SITUATION='day-of'
+    
+} else {
+    RESOLUTION = 'daily'
+    CURRENT_SITUATION = 'rest-of-release'
 }
 
-if (CURRENT_SITUATION == 'rest-of-release') {
-    RESOLUTION = 'daily'
-}
 
 
 // if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
