@@ -123,7 +123,7 @@ var dataSources = {
         subtitle: "1000s of hrs.",
         hourlySource: "kiloUsageHours_hourly",
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
-        source: "https://sql.telemetry.mozilla.org/queries/48763/source#131460",
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48763/source#131460" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
         format: DATA_FORMAT,
         dataType: 'rate',
         plotArgs: plotArgs,
@@ -245,7 +245,7 @@ var dataSources = {
         },
         xAccessor: RESOLUTION === 'daily' ? 'submission' : 'hour_interval',
         yAccessor: RESOLUTION === 'daily' ? 'new_profiles' : 'hourly_new_profiles_smooth',
-        source: "https://sql.telemetry.mozilla.org/queries/48504/source#130999"
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48504/source#130999" : "https://sql.telemetry.mozilla.org/queries/48509/source#131004"
     },
     dau: {
         title: "Daily Active Users",
