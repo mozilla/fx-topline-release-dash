@@ -21354,9 +21354,7 @@ function dt(d) {
     return d3.timeParse('%Y-%m-%d')(d);
 }
 
-function parseLocalTime(d) {
-    return d;
-}
+function parseLocalTime(d) {}
 
 /* please don't touch this stuff unless you know what you're doing, yeah? */
 
@@ -21452,6 +21450,12 @@ function simulateRelease(data, xAccessor) {
     return data;
 }
 
+function parseISOLocal(s) {
+    var b = s.split(/\D/);
+    var now = new Date();
+    return new Date(b[0], b[1] - 1, b[2], b[3] - now.getTimezoneOffset() / 60, b[4], b[5]);
+}
+
 var dataSources = {
     kiloUsageHours: {
         id: RESOLUTION === 'daily' ? 'kiloUsageHours_daily' : 'kiloUsageHours_hourly',
@@ -21466,7 +21470,7 @@ var dataSources = {
         preprocessor: data => {
             data = handleFormat(data);
             data = data.map(d => {
-                d.activity_time = new Date(d.activity_time);
+                d.activity_time = parseISOLocal(d.activity_time); //(new Date(Date.parse(d.activity_time)).toUniversalTime())
                 return d;
             });
             if (RESOLUTION == 'daily') {
@@ -21560,7 +21564,16 @@ var dataSources = {
 
             var params = [data, xAccessor, xFormat];
 
-            data = MG.convert.date(...params);
+            //data = MG.convert.date(...params)
+            if (RESOLUTION === 'hourly') {
+                data = data.map(d => {
+                    d[xAccessor] = parseISOLocal(d[xAccessor]); //(new Date(Date.parse(d.activity_time)).toUniversalTime())
+                    return d;
+                });
+            } else {
+                data = MG.convert.date(data, ...params);
+            }
+
             data.sort((a, b) => {
                 return a[xAccessor] > b[xAccessor] ? 1 : -1;
             });
@@ -21693,12 +21706,6 @@ var dataSources = {
 var defaults = {};
 defaults.FORMAT = 'web';
 
-/*
- * JavaScript Pretty Date
- * Copyright (c) 2011 John Resig (ejohn.org)
- * Licensed under the MIT and GPL licenses.
- */
-
 // Takes an ISO time and returns a string representing how
 // long ago the date represents.
 
@@ -21720,6 +21727,12 @@ function qv(v) {
 }
 
 const IS_OFFICE_TV = qv('office-tv');
+
+/*
+ * JavaScript Pretty Date
+ * Copyright (c) 2011 John Resig (ejohn.org)
+ * Licensed under the MIT and GPL licenses.
+ */
 
 function prettyDate(time) {
     var date = time;

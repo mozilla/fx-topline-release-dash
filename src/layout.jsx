@@ -3,11 +3,6 @@ import ReactTooltip from 'react-tooltip'
 var defaults = {}
 defaults.FORMAT = 'web'
 
-/*
- * JavaScript Pretty Date
- * Copyright (c) 2011 John Resig (ejohn.org)
- * Licensed under the MIT and GPL licenses.
- */
 
 // Takes an ISO time and returns a string representing how
 // long ago the date represents.
@@ -31,6 +26,12 @@ function qv(v) {
 
 const IS_OFFICE_TV = qv('office-tv')
 
+
+/*
+ * JavaScript Pretty Date
+ * Copyright (c) 2011 John Resig (ejohn.org)
+ * Licensed under the MIT and GPL licenses.
+ */
 
 function prettyDate(time){
     var date = time
