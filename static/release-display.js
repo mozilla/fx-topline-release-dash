@@ -1200,7 +1200,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
             null,
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'a',
-                { href: 'https://docs.google.com/document/d/1Ngzs59lS4r4YDaFB5FGxRz8YqAqHY_H6FEO_V0wwvr4/edit#heading=h.9k8kzhyhajfp' },
+                { href: 'https://docs.google.com/document/d/1Ngzs59lS4r4YDaFB5FGxRz8YqAqHY_H6FEO_V0wwvr4/edit#heading=h.9k8kzhyhajfp', target: '_blank' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-book', 'aria-hidden': 'true' }),
                 ' metrics dictionary'
             )
