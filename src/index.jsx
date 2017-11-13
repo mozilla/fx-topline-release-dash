@@ -52,7 +52,7 @@ function dataGraphicPlaceholder(args) {
     return (
         <GraphicContainer isActive={false} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
-            <GraphicPlaceholder aboveText='first datapoint available' belowText={d3.timeFormat('%Y/%m/%d')(args.firstAvailableData)} />
+            <GraphicPlaceholder aboveText='first datapoint available on' belowText={d3.timeFormat('%Y/%m/%d')(args.firstAvailableData)} />
         </GraphicContainer>
     )
 }

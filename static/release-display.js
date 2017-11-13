@@ -1116,7 +1116,7 @@ function dataGraphicPlaceholder(args) {
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { subtitle: args.subtitle, title: args.title, secondText: function () {
                 return this.props.lastDatum[args.yAccessor];
             } }),
-        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["h" /* GraphicPlaceholder */], { aboveText: 'first datapoint available', belowText: d3.timeFormat('%Y/%m/%d')(args.firstAvailableData) })
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["h" /* GraphicPlaceholder */], { aboveText: 'first datapoint available on', belowText: d3.timeFormat('%Y/%m/%d')(args.firstAvailableData) })
     );
 }
 
@@ -21492,7 +21492,7 @@ var dataSources = {
         id: "successfulInstalls",
         title: "Install Success Rate",
         firstAvailableData: dt('2017-11-15'),
-        description: "percentage of attempted installs that are successful",
+        description: "percentage of attempted Firefox Quantum installs that are successful",
         plotArgs: Object.assign({}, plotArgs, { format: 'Percentage', max_y: 1 }),
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         format: DATA_FORMAT,

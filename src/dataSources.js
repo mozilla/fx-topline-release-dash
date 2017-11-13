@@ -152,7 +152,7 @@ var dataSources = {
         id: "successfulInstalls",
         title: "Install Success Rate",
         firstAvailableData: dt('2017-11-15'),
-        description: "percentage of attempted installs that are successful",
+        description: "percentage of attempted Firefox Quantum installs that are successful",
         plotArgs: Object.assign({}, plotArgs, {format: 'Percentage', max_y:1}),
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         format: DATA_FORMAT,
