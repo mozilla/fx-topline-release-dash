@@ -287,8 +287,9 @@ div.gd-graphic-header-download a:hover {
 div.gd-graphic-placeholder {
     display:flex;
     flex-direction:row;
-    height:240px;
+    height:calc( 240px - 40px );
     margin-top:10px;
+    margin-bottom:40px;
     align-content: center;
     align-items: center;
     color: darkgray;
