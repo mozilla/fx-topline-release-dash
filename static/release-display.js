@@ -1190,7 +1190,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
             null,
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'a',
-                { href: 'https://groups.google.com/a/mozilla.com/forum/#!forum/quantum-impact-metrics' },
+                { href: 'mailto:quantum-impact-metrics@mozilla.com' },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-area-chart', 'aria-hidden': 'true' }),
                 ' inquiries re: dashboard or data'
             )
