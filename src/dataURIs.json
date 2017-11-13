@@ -1,6 +1,6 @@
 {
     "successfulInstalls":"https://sql.telemetry.mozilla.org/api/queries/3648/results.json?api_key=${API_KEY}",
-    "uptake":"https://sql.telemetry.mozilla.org/api/queries/48552/results.json?api_key=${API_KEY}",
+    "uptake":"https://sql.telemetry.mozilla.org/api/queries/48512/results.json?api_key=${API_KEY}",
     "newUsers_daily":"https://sql.telemetry.mozilla.org/api/queries/48504/results.json?api_key=${API_KEY}",
     "newUsers_hourly": "https://sql.telemetry.mozilla.org/api/queries/48509/results.json?api_key=${API_KEY}",
     "pagesVisited":"https://sql.telemetry.mozilla.org/api/queries/48587/results.json?api_key=${API_KEY}",
