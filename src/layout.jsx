@@ -12,6 +12,24 @@ defaults.FORMAT = 'web'
 // Takes an ISO time and returns a string representing how
 // long ago the date represents.
 
+// function qv(variable) {
+//     var query = window.location.search.substring(1)
+//     var vars = query.split('&')
+//     var out
+//     vars.forEach(pair=>{
+//         pair = pair.split('=')
+//         if (decodeURIComponent(pair[0]) == variable) {
+//             out = decodeURIComponent(pair[1])
+//         }
+//     })
+//     return out
+// }
+
+function qv(v) {
+    return window.location.search.substring(1).includes(v)
+}
+
+const IS_OFFICE_TV = qv('office-tv')
 
 
 function prettyDate(time){
@@ -184,7 +202,7 @@ class GraphicHeader extends React.Component {
             <div className='gd-graphic-header'>
                 <div className={"gd-graphic-header-title " +(this.props.isActive ? "" : 'inactive-data-source')}>{this.props.title}{subtitle}</div>
                 <div className="gd-graphic-header-second-text">{singleNumber}</div>
-                <div className={'gd-graphic-header-download hide-on-monitor-display ' + (this.props.isActive ? "" : 'inactive-data-source')}>
+                <div className={'gd-graphic-header-download ' + (this.props.isActive ? "" : 'inactive-data-source ') + (IS_OFFICE_TV ? 'hide-on-monitor-display ' : '')}>
                     <a style={{display: this.props.source !== undefined ? 'block' : 'none'}} href={this.props.source} target='_blank'>
                         <i className="fa fa-table" aria-hidden="true"></i>
                     </a>
@@ -195,12 +213,25 @@ class GraphicHeader extends React.Component {
     }
 }
 
+class NoDataPlaceholder extends React.Component {
+    constructor(props) {
+        super(props)
+    }
+
+    render() {
+        return (
+            <GraphicPlaceholder className='gd-no-data-available' aboveText="no data available" />
+        )
+    }
+}
+
 class DataGraphic extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             id: props.id || Math.floor(Math.random()*100000),
-            loaded: false
+            loaded: false,
+            hasData: true
         }
         this.showToolTip = this.showToolTip.bind(this)
         this.hideToolTip = this.hideToolTip.bind(this)
@@ -216,8 +247,17 @@ class DataGraphic extends React.Component {
 
     render() {
         var loadingIcon = !this.state.loaded ? <div className='gd-loading-graphic'><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div> : undefined
+        if (this.state.loaded) {
+            var inner
+            if (!this.state.hasData) {
+                inner = <NoDataPlaceholder />
+            } else {
+                inner = undefined
+            }
+        }
         return (
             <div ref='display' className='data-graphic' id={this.state.id}>
+                {inner}
             </div>
         )
     }
@@ -225,34 +265,40 @@ class DataGraphic extends React.Component {
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
 
-
-            var plotArgs = this.props.plotArgs
-
-            var mgArgs = {
-                mouseover_align:'left',
-                target: '#' + this.state.id,
-                data: this.props.data,
-                x_accessor: this.props.xAccessor,
-                y_accessor: this.props.yAccessor,
-                legend: plotArgs !== undefined ? plotArgs.legend || ['Quantum'] : ['Quantum'],
-                area: false,
-                interpolate:  d3.curveMonotoneX,
-                width: this.props.width,
-                right: 55,
-                left:45,
-                height: 250,
-                bottom:40,
-                description: this.props.description,
-                top:25,
-                xax_count: 4
+            if (this.props.data.length) {
+                var plotArgs = this.props.plotArgs
+                
+                var mgArgs = {
+                    mouseover_align:'left',
+                    target: '#' + this.state.id,
+                    data: this.props.data,
+                    x_accessor: this.props.xAccessor,
+                    y_accessor: this.props.yAccessor,
+                    legend: plotArgs !== undefined ? plotArgs.legend || ['Quantum'] : ['Quantum'],
+                    area: false,
+                    interpolate:  d3.curveMonotoneX,
+                    width: this.props.width,
+                    right: 55,
+                    left:45,
+                    height: 250,
+                    bottom:40,
+                    description: this.props.description,
+                    top:25,
+                    xax_count: 4
+                }
+                if (this.props.resolution === 'hourly') {
+                    mgArgs.max_x = new Date(Math.max(...this.props.data.map(d=>d[this.props.xAccessor])))
+                    mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
+                    mgArgs.max_x.setHours(0,0,0,0)
+                }
+                mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
+                this.setState({loaded:true, hasData:true})
+                MG.data_graphic(mgArgs)
+            } else {
+                this.setState({loaded:true, hasData:false})
             }
-            if (this.props.resolution === 'hourly') {
-                mgArgs.max_x = new Date(Math.max(...this.props.data.map(d=>d[this.props.xAccessor])))
-                mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
-                mgArgs.max_x.setHours(0,0,0,0)
-            }
-            mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
-            MG.data_graphic(mgArgs)
+
+            
         }
     }
 }
@@ -263,8 +309,11 @@ class GraphicPlaceholder extends React.Component {
     }
 
     render() {
+        var addlClass
+        if (this.props.className) addlClass = this.props.className
+        else addlClass = ''
         return (
-            <div className='gd-graphic-placeholder'>
+            <div className={'gd-graphic-placeholder ' + addlClass}>
                 <div>
                     <div className='gd-graphic-placeholder-above'>
                         {this.props.aboveText}

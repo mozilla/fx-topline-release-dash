@@ -1,6 +1,6 @@
 const DATA_FORMAT = 'json'
 const LETS_SIMULATE = false
-const TRUNCATE_CURRENT_DATA_FOR_NOW = true
+const TRUNCATE_CURRENT_DATA_FOR_NOW = false
 const TRUNCATE_VAL = 60
 
 function dt(d){
@@ -8,29 +8,41 @@ function dt(d){
 }
 
 var RELEASE_DATE = dt('2017-11-14')
-//var NOW = dt('2017-11-14')
+var DAY_AFTER = dt('2017-11-15')
+//var NOW = dt('2017-11-15')
 var NOW = new Date()
 var RESOLUTION = 'daily'
 
-var MODE = 'preshow'
+var MODE = 'game-time'
+//var CURRENT_SITUATION = 'rest-of-release'
+var CURRENT_SITUATION = 'day-of'
+//const CURRENT_SITUATION ='couple-weeks-after'
 
-const CURRENT_SITUATION ='couple-weeks-after'
+if (NOW < DAY_AFTER) CURRENT_SITUATION='day-of'
+else {
+    CURRENT_SITUATION = 'daily'
+}
 
 if (CURRENT_SITUATION == 'day-of') {
-    var RESOLUTION = 'hourly'
+    RESOLUTION = 'hourly'
 }
 
-if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
-    var NOW = dt('2017-11-15')
+if (CURRENT_SITUATION == 'rest-of-release') {
+    RESOLUTION = 'daily'
 }
 
-if (CURRENT_SITUATION == 'couple-days-after' && LETS_SIMULATE) {
-    var NOW = dt('2017-11-17')
-}
 
-if (CURRENT_SITUATION == 'couple-weeks-after' && LETS_SIMULATE) {
-    var NOW = dt('2017-12-09')
-}
+// if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
+//     var NOW = dt('2017-11-15')
+// }
+
+// if (CURRENT_SITUATION == 'couple-days-after' && LETS_SIMULATE) {
+//     var NOW = dt('2017-11-17')
+// }
+
+// if (CURRENT_SITUATION == 'couple-weeks-after' && LETS_SIMULATE) {
+//     var NOW = dt('2017-12-09')
+// }
 
 
 function handleFormat(data) {
@@ -38,14 +50,26 @@ function handleFormat(data) {
     return out
 }
 
+
+
 var plotArgs = {
     show_rollover_text: CURRENT_SITUATION == 'day-after' ? false : true,
     x_mouseover: RESOLUTION=='daily' ? '%b %d, %Y ' : '%I:%M %p  '
 }
 
-if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
-    plotArgs.max_x = dt('2017-12-01')
+if (CURRENT_SITUATION == 'day-of') {
+    plotArgs.max_x = dt('2017-11-15')
+    plotArgs.max_x.setHours(6,0,0,0)
+    plotArgs.min_x = dt('2017-11-13')
 }
+
+if (CURRENT_SITUATION == 'rest-of-release') {
+    plotArgs.min_x = dt('2017-11-13')
+}
+
+// if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
+//     plotArgs.max_x = dt('2017-12-01')
+// }
 
 // if (MODE=='preshow') {
 //     plotArgs.markers = [{date: RELEASE_DATE, label:'release'}]
@@ -250,7 +274,7 @@ var dataSources = {
 
     pagesVisited: {
         title: "Pages Visited",
-        subtitle: "avg. per user",
+        subtitle: "avg. per user per hr.",
         hasHourlySource: false,
         firstAvailableData: dt('2017-11-15'),  
         id: "pagesVisited",

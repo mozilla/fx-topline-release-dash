@@ -20,18 +20,7 @@ import {GraphicDisplayStyle,
 
 
 
-function qv(variable) {
-    var query = window.location.search.substring(1)
-    var vars = query.split('&')
-    var out
-    vars.forEach(pair=>{
-        pair = pair.split('=')
-        if (decodeURIComponent(pair[0]) == variable) {
-            out = decodeURIComponent(pair[1])
-        }
-    })
-    return out
-}
+
 
 function showDisplay(args) {
     if ((args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW) && MODE!='preshow') {

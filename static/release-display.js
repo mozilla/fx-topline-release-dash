@@ -1070,19 +1070,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-function qv(variable) {
-    var query = window.location.search.substring(1);
-    var vars = query.split('&');
-    var out;
-    vars.forEach(pair => {
-        pair = pair.split('=');
-        if (decodeURIComponent(pair[0]) == variable) {
-            out = decodeURIComponent(pair[1]);
-        }
-    });
-    return out;
-}
-
 function showDisplay(args) {
     if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["b" /* NOW */] && __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* MODE */] != 'preshow') {
         //if (false) {
@@ -21360,7 +21347,7 @@ module.exports = function() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MODE; });
 const DATA_FORMAT = 'json';
 const LETS_SIMULATE = false;
-const TRUNCATE_CURRENT_DATA_FOR_NOW = true;
+const TRUNCATE_CURRENT_DATA_FOR_NOW = false;
 const TRUNCATE_VAL = 60;
 
 function dt(d) {
@@ -21368,29 +21355,40 @@ function dt(d) {
 }
 
 var RELEASE_DATE = dt('2017-11-14');
-//var NOW = dt('2017-11-14')
+var DAY_AFTER = dt('2017-11-15');
+//var NOW = dt('2017-11-15')
 var NOW = new Date();
 var RESOLUTION = 'daily';
 
-var MODE = 'preshow';
+var MODE = 'game-time';
+//var CURRENT_SITUATION = 'rest-of-release'
+var CURRENT_SITUATION = 'day-of';
+//const CURRENT_SITUATION ='couple-weeks-after'
 
-const CURRENT_SITUATION = 'couple-weeks-after';
+if (NOW < DAY_AFTER) CURRENT_SITUATION = 'day-of';else {
+    CURRENT_SITUATION = 'daily';
+}
 
 if (CURRENT_SITUATION == 'day-of') {
-    var RESOLUTION = 'hourly';
+    RESOLUTION = 'hourly';
 }
 
-if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
-    var NOW = dt('2017-11-15');
+if (CURRENT_SITUATION == 'rest-of-release') {
+    RESOLUTION = 'daily';
 }
 
-if (CURRENT_SITUATION == 'couple-days-after' && LETS_SIMULATE) {
-    var NOW = dt('2017-11-17');
-}
+// if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
+//     var NOW = dt('2017-11-15')
+// }
 
-if (CURRENT_SITUATION == 'couple-weeks-after' && LETS_SIMULATE) {
-    var NOW = dt('2017-12-09');
-}
+// if (CURRENT_SITUATION == 'couple-days-after' && LETS_SIMULATE) {
+//     var NOW = dt('2017-11-17')
+// }
+
+// if (CURRENT_SITUATION == 'couple-weeks-after' && LETS_SIMULATE) {
+//     var NOW = dt('2017-12-09')
+// }
+
 
 function handleFormat(data) {
     var out = DATA_FORMAT === 'json' ? data.query_result.data.rows : data;
@@ -21402,9 +21400,19 @@ var plotArgs = {
     x_mouseover: RESOLUTION == 'daily' ? '%b %d, %Y ' : '%I:%M %p  '
 };
 
-if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
-    plotArgs.max_x = dt('2017-12-01');
+if (CURRENT_SITUATION == 'day-of') {
+    plotArgs.max_x = dt('2017-11-15');
+    plotArgs.max_x.setHours(6, 0, 0, 0);
+    plotArgs.min_x = dt('2017-11-13');
 }
+
+if (CURRENT_SITUATION == 'rest-of-release') {
+    plotArgs.min_x = dt('2017-11-13');
+}
+
+// if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
+//     plotArgs.max_x = dt('2017-12-01')
+// }
 
 // if (MODE=='preshow') {
 //     plotArgs.markers = [{date: RELEASE_DATE, label:'release'}]
@@ -21608,7 +21616,7 @@ var dataSources = {
 
     pagesVisited: {
         title: "Pages Visited",
-        subtitle: "avg. per user",
+        subtitle: "avg. per user per hr.",
         hasHourlySource: false,
         firstAvailableData: dt('2017-11-15'),
         id: "pagesVisited",
@@ -21691,6 +21699,24 @@ defaults.FORMAT = 'web';
 // Takes an ISO time and returns a string representing how
 // long ago the date represents.
 
+// function qv(variable) {
+//     var query = window.location.search.substring(1)
+//     var vars = query.split('&')
+//     var out
+//     vars.forEach(pair=>{
+//         pair = pair.split('=')
+//         if (decodeURIComponent(pair[0]) == variable) {
+//             out = decodeURIComponent(pair[1])
+//         }
+//     })
+//     return out
+// }
+
+function qv(v) {
+    return window.location.search.substring(1).includes(v);
+}
+
+const IS_OFFICE_TV = qv('office-tv');
 
 function prettyDate(time) {
     var date = time;
@@ -21895,7 +21921,7 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
             ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
-                { className: 'gd-graphic-header-download hide-on-monitor-display ' + (this.props.isActive ? "" : 'inactive-data-source') },
+                { className: 'gd-graphic-header-download ' + (this.props.isActive ? "" : 'inactive-data-source ') + (IS_OFFICE_TV ? 'hide-on-monitor-display ' : '') },
                 __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                     'a',
                     { style: { display: this.props.source !== undefined ? 'block' : 'none' }, href: this.props.source, target: '_blank' },
@@ -21906,12 +21932,23 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
     }
 }
 
+class NoDataPlaceholder extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
+    constructor(props) {
+        super(props);
+    }
+
+    render() {
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(GraphicPlaceholder, { className: 'gd-no-data-available', aboveText: 'no data available' });
+    }
+}
+
 class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
         this.state = {
             id: props.id || Math.floor(Math.random() * 100000),
-            loaded: false
+            loaded: false,
+            hasData: true
         };
         this.showToolTip = this.showToolTip.bind(this);
         this.hideToolTip = this.hideToolTip.bind(this);
@@ -21931,39 +21968,56 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
             { className: 'gd-loading-graphic' },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('i', { className: 'fa fa-circle-o-notch fa-spin fa-3x fa-fw' })
         ) : undefined;
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('div', { ref: 'display', className: 'data-graphic', id: this.state.id });
+        if (this.state.loaded) {
+            var inner;
+            if (!this.state.hasData) {
+                inner = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(NoDataPlaceholder, null);
+            } else {
+                inner = undefined;
+            }
+        }
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { ref: 'display', className: 'data-graphic', id: this.state.id },
+            inner
+        );
     }
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
 
-            var plotArgs = this.props.plotArgs;
+            if (this.props.data.length) {
+                var plotArgs = this.props.plotArgs;
 
-            var mgArgs = {
-                mouseover_align: 'left',
-                target: '#' + this.state.id,
-                data: this.props.data,
-                x_accessor: this.props.xAccessor,
-                y_accessor: this.props.yAccessor,
-                legend: plotArgs !== undefined ? plotArgs.legend || ['Quantum'] : ['Quantum'],
-                area: false,
-                interpolate: d3.curveMonotoneX,
-                width: this.props.width,
-                right: 55,
-                left: 45,
-                height: 250,
-                bottom: 40,
-                description: this.props.description,
-                top: 25,
-                xax_count: 4
-            };
-            if (this.props.resolution === 'hourly') {
-                mgArgs.max_x = new Date(Math.max(...this.props.data.map(d => d[this.props.xAccessor])));
-                mgArgs.max_x.setDate(mgArgs.max_x.getDate() + 1);
-                mgArgs.max_x.setHours(0, 0, 0, 0);
+                var mgArgs = {
+                    mouseover_align: 'left',
+                    target: '#' + this.state.id,
+                    data: this.props.data,
+                    x_accessor: this.props.xAccessor,
+                    y_accessor: this.props.yAccessor,
+                    legend: plotArgs !== undefined ? plotArgs.legend || ['Quantum'] : ['Quantum'],
+                    area: false,
+                    interpolate: d3.curveMonotoneX,
+                    width: this.props.width,
+                    right: 55,
+                    left: 45,
+                    height: 250,
+                    bottom: 40,
+                    description: this.props.description,
+                    top: 25,
+                    xax_count: 4
+                };
+                if (this.props.resolution === 'hourly') {
+                    mgArgs.max_x = new Date(Math.max(...this.props.data.map(d => d[this.props.xAccessor])));
+                    mgArgs.max_x.setDate(mgArgs.max_x.getDate() + 1);
+                    mgArgs.max_x.setHours(0, 0, 0, 0);
+                }
+                mgArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
+                this.setState({ loaded: true, hasData: true });
+                MG.data_graphic(mgArgs);
+            } else {
+                this.setState({ loaded: true, hasData: false });
             }
-            mgArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
-            MG.data_graphic(mgArgs);
         }
     }
 }
@@ -21974,9 +22028,11 @@ class GraphicPlaceholder extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.C
     }
 
     render() {
+        var addlClass;
+        if (this.props.className) addlClass = this.props.className;else addlClass = '';
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'gd-graphic-placeholder' },
+            { className: 'gd-graphic-placeholder ' + addlClass },
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 null,
