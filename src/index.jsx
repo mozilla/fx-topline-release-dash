@@ -106,7 +106,7 @@ render(
         {TwoByFour.RowOne}
         {TwoByFour.RowTwo}
         <Footer>
-            <div style={{fontWeight:900, textTransform:'uppercase'}}>Data Platform + Data Science + Strategy <span style={{fontSize:'12px', fontWeight:'normal'}}>&amp;</span> Insights</div>
+            <div style={{fontWeight:900, textTransform:'uppercase'}}>Data Platform <span style={{fontWeight:300}}>+</span> Data Science <span style={{fontWeight:300}}>+</span> Strategy <span style={{fontSize:'12px', fontWeight:'normal'}}>&amp;</span> Insights</div>
             <div><a href='mailto:quantum-impact-metrics@mozilla.com'><i className="fa fa-area-chart" aria-hidden="true"></i> inquiries re: dashboard or data</a></div>
             <div><a href='https://docs.google.com/document/d/1Ngzs59lS4r4YDaFB5FGxRz8YqAqHY_H6FEO_V0wwvr4/edit#heading=h.9k8kzhyhajfp' target='_blank'><i className="fa fa-book" aria-hidden="true"></i> metrics dictionary</a></div>
             <div><a className='big-dashboard-link' href='https://mzl.la/dashboard' target='_blank'>mzl.la/dashboard</a></div>

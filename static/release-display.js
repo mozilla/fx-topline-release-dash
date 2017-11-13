@@ -1177,7 +1177,19 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { style: { fontWeight: 900, textTransform: 'uppercase' } },
-            'Data Platform + Data Science + Strategy ',
+            'Data Platform ',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'span',
+                { style: { fontWeight: 300 } },
+                '+'
+            ),
+            ' Data Science ',
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'span',
+                { style: { fontWeight: 300 } },
+                '+'
+            ),
+            ' Strategy ',
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'span',
                 { style: { fontSize: '12px', fontWeight: 'normal' } },
