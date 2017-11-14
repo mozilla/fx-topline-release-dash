@@ -1,5 +1,5 @@
 const DATA_FORMAT = 'json'
-const LETS_SIMULATE = false
+const LETS_SIMULATE = true
 const TRUNCATE_CURRENT_DATA_FOR_NOW = false
 const TRUNCATE_VAL = 60
 
@@ -15,12 +15,18 @@ function parseLocalTime(d) {
 
 var RELEASE_DATE = dt('2017-11-14')
 var DAY_AFTER = dt('2017-11-15')
+
+var FIRST_MAIN_SUMMARY_DATE = '2017-11-14'
 //var NOW = dt('2017-11-15')
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
 var NOW = new Date()
 
-var MODE = 'game-time'
+var PANIC_SIM = true
+
+
+//var MODE = 'game-time'
+var MODE = 'PANIC'
 
 var CURRENT_SITUATION
 var RESOLUTION
@@ -55,7 +61,6 @@ function handleFormat(data) {
 }
 
 
-
 var plotArgs = {
     show_rollover_text: CURRENT_SITUATION == 'day-after' ? false : true,
     x_mouseover: RESOLUTION=='daily' ? '%b %d, %Y ' : '%I:%M %p  '
@@ -79,34 +84,39 @@ if (CURRENT_SITUATION == 'rest-of-release') {
 //     plotArgs.markers = [{date: RELEASE_DATE, label:'release'}]
 // }
 
-function simulateRelease(data, xAccessor) {
+function simulateRelease(data, xAccessor, yAccessor, onlyDaily=false) {
     //th=day-of, day-after, whatever
-    if (CURRENT_SITUATION==='day-of') {
-        data = data.slice(0,9)
-        data.forEach((d,i)=>{
-            d[xAccessor] = dt('2017-11-14')
-            d[xAccessor].setHours(i+1,0,0,0)
-        })
-    } else if (CURRENT_SITUATION=='day-after') {
-        //if (RESOLUTION !=='daily') RESOLUTION='daily'
-        data.forEach((d,i)=>{
-            d[xAccessor] = dt('2017-11-14')
-            d[xAccessor].setHours(i+1,0,0,0)
-        })
-        data = data.slice(0,1)
-    } else if (CURRENT_SITUATION=='couple-days-after') {
-        data.forEach((d,i)=>{
-            d[xAccessor] = dt('2017-11-14')
-            d[xAccessor].setDate(d[xAccessor].getDate()+i)
-        })
-        data = data.slice(0,3)
-    } else if (CURRENT_SITUATION=='couple-weeks-after') {
-        data.forEach((d,i)=>{
-            d[xAccessor] = dt('2017-11-14')
-            d[xAccessor].setDate(d[xAccessor].getDate()+i)
-        })
-        data = data.slice(0,21)
-    }
+    // if (CURRENT_SITUATION==='day-of') {
+    //     data = data.slice(0,9)
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setHours(i+1,0,0,0)
+    //     })
+    // } else if (CURRENT_SITUATION=='day-after') {
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setHours(i+1,0,0,0)
+    //     })
+    //     data = data.slice(0,1)
+    // } else if (CURRENT_SITUATION=='couple-days-after') {
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setDate(d[xAccessor].getDate()+i)
+    //     })
+    //     data = data.slice(0,3)
+    // } else if (CURRENT_SITUATION=='couple-weeks-after') {
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setDate(d[xAccessor].getDate()+i)
+    //     })
+    //     data = data.slice(0,21)
+    // }
+    // if (onlyDaily) {
+    //     var lastPt = Object.assign({}, data[0])
+    //     lastPt[xAccessor].setDate(2017,11,13)
+    //     data.unshift(lastPt)
+    // }
+    
     return data
 }
 
@@ -125,6 +135,8 @@ var dataSources = {
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
         source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48763/source#131460" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
         format: DATA_FORMAT,
+        graphResolution: RESOLUTION,
+        showResolutionLabel: true,
         dataType: 'rate',
         plotArgs: plotArgs,
         preprocessor: data => {
@@ -151,7 +163,9 @@ var dataSources = {
     successfulInstalls: {
         id: "successfulInstalls",
         title: "Install Success Rate",
-        firstAvailableData: dt('2017-11-15'),
+        graphResolution: 'daily',
+        showResolutionLabel: true,
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         description: "percentage of attempted Firefox Quantum installs that are successful",
         plotArgs: Object.assign({}, plotArgs, {format: 'Percentage', max_y:1}),
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
@@ -159,6 +173,9 @@ var dataSources = {
         dataType: 'percentage',
         preprocessor: data => {
             data = handleFormat(data)
+
+            if (LETS_SIMULATE) data = [{day: '2017-11-13', succeeded: false, instances: 20000},{day: '2017-11-13', succeeded: true, instances: 250900}]
+
             var tmp = data.reduce((obj, d) => {
                 if (!obj.hasOwnProperty(d.day)) obj[d.day] = {}
                 obj[d.day][d.succeeded] = d.instances
@@ -187,7 +204,9 @@ var dataSources = {
     uptake: {
         title: 'Uptake',
         id: "uptake",
-        firstAvailableData: dt('2017-11-15'),
+        graphResolution: 'daily',
+        showResolutionLabel: true,
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         plotArgs: Object.assign({}, plotArgs, {format: 'Percentage'}),
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
@@ -196,14 +215,16 @@ var dataSources = {
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data)
+            if (LETS_SIMULATE) data = [{d: '20171113', uptake: .89}]
+
             data = MG.convert.date(data, 'd', '%Y%m%d')
             data = data.map(d => {
                 d.uptake = d.uptake / 100
                 return d
             })
-
-            if (LETS_SIMULATE) data = simulateRelease(data, 'd')
-            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'd')
+            //if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
+            //console.log(data)
             return data
         },
         xAccessor: 'd',
@@ -212,6 +233,8 @@ var dataSources = {
 
     newUsers: {
         title: "New User Count",
+        graphResolution: RESOLUTION,
+        showResolutionLabel: true,
         id: RESOLUTION === 'daily' ? "newUsers_daily" : "newUsers_hourly",
         description: "new profile counts, Firefox Quantum",
         dataType: 'volume',
@@ -225,7 +248,6 @@ var dataSources = {
             
             var params = [data, xAccessor, xFormat]
 
-            //data = MG.convert.date(...params)
             if (RESOLUTION === 'hourly') {
                 data = data.map((d)=>{
                     d[xAccessor] = parseISOLocal(d[xAccessor])//(new Date(Date.parse(d.activity_time)).toUniversalTime())
@@ -250,9 +272,11 @@ var dataSources = {
     dau: {
         title: "Daily Active Users",
         id: 'dau',
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         dataType: 'volume',
         hasHourlySource: false,
-        firstAvailableData: new Date('2017-11-15'),
+        firstAvailableData: new Date(FIRST_MAIN_SUMMARY_DATE),
         plotArgs,
         description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
         format: DATA_FORMAT,
@@ -260,7 +284,8 @@ var dataSources = {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)                        
-            if (LETS_SIMULATE) data = simulateRelease(data, 'date')
+            if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), smooth_dau: 100323043}]
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data
         },
         xAccessor: 'date',
@@ -270,6 +295,8 @@ var dataSources = {
     stability: {
         title: "Crash Rate",
         hasHourlySource: false,
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
         plotArgs,
@@ -286,16 +313,19 @@ var dataSources = {
             })
             data = data.filter(d=>d.channel === WHICH_VERSION && d.build_version=='57.0' && d.date > new Date('2017-10-01'))
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
-            if (LETS_SIMULATE) data = simulateRelease(data, 'activity_date')
+            if (LETS_SIMULATE) data = [{activity_date: dt('2017-11-13'), crash_rate: .1}]
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'activity_date')
             return data
         },
     },
 
     pagesVisited: {
         title: "Pages Visited",
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         subtitle: "avg. per user per hr.",
         hasHourlySource: false,
-        firstAvailableData: dt('2017-11-15'),  
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),  
         id: "pagesVisited",
         dataType: 'rate',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
@@ -304,8 +334,9 @@ var dataSources = {
         preprocessor: (data) => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
-            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,30)            
-            if (LETS_SIMULATE) data = simulateRelease(data, 'date')
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,30)
+            if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), avg_uri_new: 50.4, avg_uri_all: 50.2 }]          
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data
         },
         xAccessor: 'date',
@@ -315,10 +346,12 @@ var dataSources = {
 
     sessionHours: {
         title: "Session Hours",
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         subtitle: "avg. per user",
         id: "sessionHours",
         hasHourlySource: false,
-        firstAvailableData: dt('2017-11-15'),
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         plotArgs: Object.assign({}, plotArgs, {'legend': ['Quantum', 'All']}),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
@@ -327,8 +360,9 @@ var dataSources = {
         preprocessor: data => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
-            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
-            if (LETS_SIMULATE) data = simulateRelease(data, 'date')
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
+            if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), avg_subsess_hours_new: 5.6, avg_subsess_hours_all: 5.2 }]            
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data
         },
         xAccessor: 'date',
@@ -336,4 +370,4 @@ var dataSources = {
     }
 }
 
-export {dataSources, RESOLUTION, NOW, RELEASE_DATE, MODE}
+export {dataSources, RESOLUTION, NOW, RELEASE_DATE, MODE, dt}

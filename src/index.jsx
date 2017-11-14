@@ -23,7 +23,7 @@ import {GraphicDisplayStyle,
 
 
 function showDisplay(args) {
-    if ((args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW) && MODE!='preshow') {
+    if ((args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > NOW)) {
         //if (false) {
         return dataGraphicPlaceholder(args)
     } else {
@@ -34,7 +34,7 @@ function showDisplay(args) {
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer resolution={RESOLUTION} isActive={true} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+        <GraphicContainer showResolutionLabel={args.showResolutionLabel} mode={MODE} resolution={args.graphResolution} isActive={true} xAccessor={args.xAccessor} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
             <DataGraphic 
                 title={args.title}

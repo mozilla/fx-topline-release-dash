@@ -249,6 +249,22 @@ div.gd-graphic-header-second-text {
     min-width:60px;
     flex-grow:2;
     text-align:right;
+    height:50px;
+}
+
+span.gd-graphic-header-label {
+    /* display:block;
+    font-size:12px;
+    padding:2px;
+    background-color:gray;
+    color:white; */
+    position:relative;
+    width:0px;
+    display:inline-block;
+    top:12px;
+    font-weight:normal;
+    text-transform:uppercase;
+    font-size:11px;
 }
 
 div.gd-graphic-header-download {

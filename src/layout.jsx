@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactTooltip from 'react-tooltip'
 var defaults = {}
+
+import {dt} from './dataSources.js'
 defaults.FORMAT = 'web'
 
 
@@ -199,7 +201,12 @@ class GraphicHeader extends React.Component {
         
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor
         var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined
+        var resolutionLabel = this.props.hasOwnProperty('showResolutionLabel') ? (
+            this.props.showResolutionLabel ? <span className='gd-graphic-header-label'>{this.props.resolution}</span> : undefined
+        ) : undefined
+
         var subtitle = this.props.hasOwnProperty('subtitle') ? <div className='gd-graphic-header-subtitle'>{this.props.subtitle}</div> : undefined
+        
         return (
             <div className='gd-graphic-header'>
                 <div className={'gd-graphic-header-download'}>
@@ -211,7 +218,7 @@ class GraphicHeader extends React.Component {
                     </a>
                 </div>
                 <div className={"gd-graphic-header-title " +(this.props.isActive ? "" : 'inactive-data-source')}>{this.props.title}{subtitle}</div>
-                <div className="gd-graphic-header-second-text">{singleNumber}</div>
+                <div className="gd-graphic-header-second-text">{resolutionLabel}{singleNumber}</div>
                     
             </div>
         )
@@ -269,8 +276,11 @@ class DataGraphic extends React.Component {
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-
-            if (this.props.data.length) {
+            var hasData =this.props.data.length > 0
+            // if (!hasData) {
+            //     data = []
+            // }
+            if (hasData) {
                 var plotArgs = this.props.plotArgs
                 
                 var mgArgs = {
@@ -292,12 +302,19 @@ class DataGraphic extends React.Component {
                     top:25,
                     xax_count: 4
                 }
-                if (this.props.resolution === 'hourly') {
-                    mgArgs.max_x = new Date(Math.max(...this.props.data.map(d=>d[this.props.xAccessor])))
-                    mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
-                    mgArgs.max_x.setHours(0,0,0,0)
-                }
                 mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
+                
+                if (mgArgs.data.length === 1) {
+                    // mgArgs.data[0][this.props.xAccessor].setHours(0,0,0,0)
+                    //mgArgs.min_x = dt('2017-11-12')
+                    //mgArgs.min_x.setHours(12,0,0,0)
+                    //mgArgs.min_x.setDate(mgArgs.min_x.getDate()-1)
+                }
+                // if (this.props.resolution === 'hourly') {
+                //     mgArgs.max_x = new Date(Math.max(...this.props.data.map(d=>d[this.props.xAccessor])))
+                //     mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
+                //     mgArgs.max_x.setHours(0,0,0,0)
+                // }
                 this.setState({loaded:true, hasData:true})
                 MG.data_graphic(mgArgs)
             } else {
@@ -385,7 +402,8 @@ class GraphicContainer extends React.Component {
                     yAccessor: this.props.yAccessor,
                     isActive: this.props.isActive,
                     resolution: this.props.resolution,
-                    hasData: this.state.hasData
+                    hasData: this.state.hasData,
+                    showResolutionLabel: this.props.showResolutionLabel
                 })
             })
         } else {
@@ -416,6 +434,7 @@ class GraphicContainer extends React.Component {
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv
             getTheData(`data/${this.props.id}.json`, (data)=> {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)
+
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
                 this.setState({loaded:true, data, lastDatum: data[data.length-1], hasData: data.length})
             })

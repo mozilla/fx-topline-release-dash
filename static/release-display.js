@@ -1071,7 +1071,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 function showDisplay(args) {
-    if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["b" /* NOW */] && __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* MODE */] != 'preshow') {
+    if (args.hasOwnProperty('firstAvailableData') && args.firstAvailableData > __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["b" /* NOW */]) {
         //if (false) {
         return dataGraphicPlaceholder(args);
     } else {
@@ -1095,7 +1095,7 @@ function dataGraphicCell(args) {
     ) : '';
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
-        { resolution: __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* RESOLUTION */], isActive: true, yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
+        { showResolutionLabel: args.showResolutionLabel, mode: __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* MODE */], resolution: args.graphResolution, isActive: true, xAccessor: args.xAccessor, yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { subtitle: args.subtitle, title: args.title, secondText: function () {
                 return this.props.lastDatum[args.yAccessor];
             } }),
@@ -1124,17 +1124,17 @@ var TwoByFour = {};
 TwoByFour.RowOne = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["b" /* DisplayRow */],
     null,
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].newUsers),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].uptake),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].kiloUsageHours)
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].newUsers),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].uptake),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].kiloUsageHours)
 );
 
 TwoByFour.RowTwo = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
     __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["b" /* DisplayRow */],
     null,
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].successfulInstalls),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].pagesVisited),
-    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["e" /* dataSources */].sessionHours)
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].successfulInstalls),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].pagesVisited),
+    showDisplay(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].sessionHours)
 );
 
 var daysSinceRelease;
@@ -21352,13 +21352,14 @@ module.exports = function() {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return dataSources; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return RESOLUTION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return dataSources; });
+/* unused harmony export RESOLUTION */
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return NOW; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return RELEASE_DATE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MODE; });
+/* unused harmony export dt */
 const DATA_FORMAT = 'json';
-const LETS_SIMULATE = false;
+const LETS_SIMULATE = true;
 const TRUNCATE_CURRENT_DATA_FOR_NOW = false;
 const TRUNCATE_VAL = 60;
 
@@ -21372,12 +21373,17 @@ function parseLocalTime(d) {}
 
 var RELEASE_DATE = dt('2017-11-14');
 var DAY_AFTER = dt('2017-11-15');
+
+var FIRST_MAIN_SUMMARY_DATE = '2017-11-14';
 //var NOW = dt('2017-11-15')
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
 var NOW = new Date();
 
-var MODE = 'game-time';
+var PANIC_SIM = true;
+
+//var MODE = 'game-time'
+var MODE = 'PANIC';
 
 var CURRENT_SITUATION;
 var RESOLUTION;
@@ -21431,34 +21437,39 @@ if (CURRENT_SITUATION == 'rest-of-release') {
 //     plotArgs.markers = [{date: RELEASE_DATE, label:'release'}]
 // }
 
-function simulateRelease(data, xAccessor) {
+function simulateRelease(data, xAccessor, yAccessor, onlyDaily = false) {
     //th=day-of, day-after, whatever
-    if (CURRENT_SITUATION === 'day-of') {
-        data = data.slice(0, 9);
-        data.forEach((d, i) => {
-            d[xAccessor] = dt('2017-11-14');
-            d[xAccessor].setHours(i + 1, 0, 0, 0);
-        });
-    } else if (CURRENT_SITUATION == 'day-after') {
-        //if (RESOLUTION !=='daily') RESOLUTION='daily'
-        data.forEach((d, i) => {
-            d[xAccessor] = dt('2017-11-14');
-            d[xAccessor].setHours(i + 1, 0, 0, 0);
-        });
-        data = data.slice(0, 1);
-    } else if (CURRENT_SITUATION == 'couple-days-after') {
-        data.forEach((d, i) => {
-            d[xAccessor] = dt('2017-11-14');
-            d[xAccessor].setDate(d[xAccessor].getDate() + i);
-        });
-        data = data.slice(0, 3);
-    } else if (CURRENT_SITUATION == 'couple-weeks-after') {
-        data.forEach((d, i) => {
-            d[xAccessor] = dt('2017-11-14');
-            d[xAccessor].setDate(d[xAccessor].getDate() + i);
-        });
-        data = data.slice(0, 21);
-    }
+    // if (CURRENT_SITUATION==='day-of') {
+    //     data = data.slice(0,9)
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setHours(i+1,0,0,0)
+    //     })
+    // } else if (CURRENT_SITUATION=='day-after') {
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setHours(i+1,0,0,0)
+    //     })
+    //     data = data.slice(0,1)
+    // } else if (CURRENT_SITUATION=='couple-days-after') {
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setDate(d[xAccessor].getDate()+i)
+    //     })
+    //     data = data.slice(0,3)
+    // } else if (CURRENT_SITUATION=='couple-weeks-after') {
+    //     data.forEach((d,i)=>{
+    //         d[xAccessor] = dt('2017-11-14')
+    //         d[xAccessor].setDate(d[xAccessor].getDate()+i)
+    //     })
+    //     data = data.slice(0,21)
+    // }
+    // if (onlyDaily) {
+    //     var lastPt = Object.assign({}, data[0])
+    //     lastPt[xAccessor].setDate(2017,11,13)
+    //     data.unshift(lastPt)
+    // }
+
     return data;
 }
 
@@ -21477,6 +21488,8 @@ var dataSources = {
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
         source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48763/source#131460" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
         format: DATA_FORMAT,
+        graphResolution: RESOLUTION,
+        showResolutionLabel: true,
         dataType: 'rate',
         plotArgs: plotArgs,
         preprocessor: data => {
@@ -21503,7 +21516,9 @@ var dataSources = {
     successfulInstalls: {
         id: "successfulInstalls",
         title: "Install Success Rate",
-        firstAvailableData: dt('2017-11-15'),
+        graphResolution: 'daily',
+        showResolutionLabel: true,
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         description: "percentage of attempted Firefox Quantum installs that are successful",
         plotArgs: Object.assign({}, plotArgs, { format: 'Percentage', max_y: 1 }),
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
@@ -21511,6 +21526,9 @@ var dataSources = {
         dataType: 'percentage',
         preprocessor: data => {
             data = handleFormat(data);
+
+            if (LETS_SIMULATE) data = [{ day: '2017-11-13', succeeded: false, instances: 20000 }, { day: '2017-11-13', succeeded: true, instances: 250900 }];
+
             var tmp = data.reduce((obj, d) => {
                 if (!obj.hasOwnProperty(d.day)) obj[d.day] = {};
                 obj[d.day][d.succeeded] = d.instances;
@@ -21539,7 +21557,9 @@ var dataSources = {
     uptake: {
         title: 'Uptake',
         id: "uptake",
-        firstAvailableData: dt('2017-11-15'),
+        graphResolution: 'daily',
+        showResolutionLabel: true,
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         plotArgs: Object.assign({}, plotArgs, { format: 'Percentage' }),
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: () => {},
@@ -21548,14 +21568,16 @@ var dataSources = {
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data);
+            if (LETS_SIMULATE) data = [{ d: '20171113', uptake: .89 }];
+
             data = MG.convert.date(data, 'd', '%Y%m%d');
             data = data.map(d => {
                 d.uptake = d.uptake / 100;
                 return d;
             });
-
-            if (LETS_SIMULATE) data = simulateRelease(data, 'd');
-            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'd')
+            //if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
+            //console.log(data)
             return data;
         },
         xAccessor: 'd',
@@ -21564,6 +21586,8 @@ var dataSources = {
 
     newUsers: {
         title: "New User Count",
+        graphResolution: RESOLUTION,
+        showResolutionLabel: true,
         id: RESOLUTION === 'daily' ? "newUsers_daily" : "newUsers_hourly",
         description: "new profile counts, Firefox Quantum",
         dataType: 'volume',
@@ -21576,7 +21600,6 @@ var dataSources = {
 
             var params = [data, xAccessor, xFormat];
 
-            //data = MG.convert.date(...params)
             if (RESOLUTION === 'hourly') {
                 data = data.map(d => {
                     d[xAccessor] = parseISOLocal(d[xAccessor]); //(new Date(Date.parse(d.activity_time)).toUniversalTime())
@@ -21601,9 +21624,11 @@ var dataSources = {
     dau: {
         title: "Daily Active Users",
         id: 'dau',
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         dataType: 'volume',
         hasHourlySource: false,
-        firstAvailableData: new Date('2017-11-15'),
+        firstAvailableData: new Date(FIRST_MAIN_SUMMARY_DATE),
         plotArgs,
         description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
         format: DATA_FORMAT,
@@ -21611,7 +21636,8 @@ var dataSources = {
             data = handleFormat(data);
             data = MG.convert.date(data, 'date', '%Y%m%d');
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
-            if (LETS_SIMULATE) data = simulateRelease(data, 'date');
+            if (LETS_SIMULATE) data = [{ date: dt('2017-11-13'), smooth_dau: 100323043 }];
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data;
         },
         xAccessor: 'date',
@@ -21621,6 +21647,8 @@ var dataSources = {
     stability: {
         title: "Crash Rate",
         hasHourlySource: false,
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
         plotArgs,
@@ -21637,16 +21665,19 @@ var dataSources = {
             });
             data = data.filter(d => d.channel === WHICH_VERSION && d.build_version == '57.0' && d.date > new Date('2017-10-01'));
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
-            if (LETS_SIMULATE) data = simulateRelease(data, 'activity_date');
+            if (LETS_SIMULATE) data = [{ activity_date: dt('2017-11-13'), crash_rate: .1 }];
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'activity_date')
             return data;
         }
     },
 
     pagesVisited: {
         title: "Pages Visited",
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         subtitle: "avg. per user per hr.",
         hasHourlySource: false,
-        firstAvailableData: dt('2017-11-15'),
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         id: "pagesVisited",
         dataType: 'rate',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
@@ -21656,7 +21687,8 @@ var dataSources = {
             data = handleFormat(data);
             data = MG.convert.date(data, 'date', '%Y%m%d');
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, 30);
-            if (LETS_SIMULATE) data = simulateRelease(data, 'date');
+            if (LETS_SIMULATE) data = [{ date: dt('2017-11-13'), avg_uri_new: 50.4, avg_uri_all: 50.2 }];
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data;
         },
         xAccessor: 'date',
@@ -21666,10 +21698,12 @@ var dataSources = {
 
     sessionHours: {
         title: "Session Hours",
+        graphResolution: 'daily',
+        showResolutionLabel: true,
         subtitle: "avg. per user",
         id: "sessionHours",
         hasHourlySource: false,
-        firstAvailableData: dt('2017-11-15'),
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         plotArgs: Object.assign({}, plotArgs, { 'legend': ['Quantum', 'All'] }),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
@@ -21679,7 +21713,8 @@ var dataSources = {
             data = handleFormat(data);
             data = MG.convert.date(data, 'date', '%Y%m%d');
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
-            if (LETS_SIMULATE) data = simulateRelease(data, 'date');
+            if (LETS_SIMULATE) data = [{ date: dt('2017-11-13'), avg_subsess_hours_new: 5.6, avg_subsess_hours_all: 5.2 }];
+            //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data;
         },
         xAccessor: 'date',
@@ -21713,9 +21748,12 @@ var dataSources = {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_react___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_react__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_tooltip__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dataSources_js__ = __webpack_require__(33);
 
 
 var defaults = {};
+
+
 defaults.FORMAT = 'web';
 
 // Takes an ISO time and returns a string representing how
@@ -21928,11 +21966,18 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
 
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor;
         var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined;
+        var resolutionLabel = this.props.hasOwnProperty('showResolutionLabel') ? this.props.showResolutionLabel ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'span',
+            { className: 'gd-graphic-header-label' },
+            this.props.resolution
+        ) : undefined : undefined;
+
         var subtitle = this.props.hasOwnProperty('subtitle') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-graphic-header-subtitle' },
             this.props.subtitle
         ) : undefined;
+
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-graphic-header' },
@@ -21957,6 +22002,7 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'div',
                 { className: 'gd-graphic-header-second-text' },
+                resolutionLabel,
                 singleNumber
             )
         );
@@ -22016,8 +22062,11 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
 
     componentDidMount() {
         if (this.props.hasOwnProperty('data')) {
-
-            if (this.props.data.length) {
+            var hasData = this.props.data.length > 0;
+            // if (!hasData) {
+            //     data = []
+            // }
+            if (hasData) {
                 var plotArgs = this.props.plotArgs;
 
                 var mgArgs = {
@@ -22039,12 +22088,19 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                     top: 25,
                     xax_count: 4
                 };
-                if (this.props.resolution === 'hourly') {
-                    mgArgs.max_x = new Date(Math.max(...this.props.data.map(d => d[this.props.xAccessor])));
-                    mgArgs.max_x.setDate(mgArgs.max_x.getDate() + 1);
-                    mgArgs.max_x.setHours(0, 0, 0, 0);
-                }
                 mgArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
+
+                if (mgArgs.data.length === 1) {}
+                // mgArgs.data[0][this.props.xAccessor].setHours(0,0,0,0)
+                //mgArgs.min_x = dt('2017-11-12')
+                //mgArgs.min_x.setHours(12,0,0,0)
+                //mgArgs.min_x.setDate(mgArgs.min_x.getDate()-1)
+
+                // if (this.props.resolution === 'hourly') {
+                //     mgArgs.max_x = new Date(Math.max(...this.props.data.map(d=>d[this.props.xAccessor])))
+                //     mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
+                //     mgArgs.max_x.setHours(0,0,0,0)
+                // }
                 this.setState({ loaded: true, hasData: true });
                 MG.data_graphic(mgArgs);
             } else {
@@ -22137,7 +22193,8 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
                     yAccessor: this.props.yAccessor,
                     isActive: this.props.isActive,
                     resolution: this.props.resolution,
-                    hasData: this.state.hasData
+                    hasData: this.state.hasData,
+                    showResolutionLabel: this.props.showResolutionLabel
                 });
             });
         } else {
@@ -22172,6 +22229,7 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv;
             getTheData(`data/${this.props.id}.json`, data => {
                 if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title);
+
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data);
                 this.setState({ loaded: true, data, lastDatum: data[data.length - 1], hasData: data.length });
             });
