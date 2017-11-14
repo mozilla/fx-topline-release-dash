@@ -247,6 +247,7 @@ var dataSources = {
 
     newUsers: {
         title: "New User Count",
+        subtitle: "non-cumulative",
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
         id: RESOLUTION === 'daily' ? "newUsers_daily" : "newUsers_hourly",

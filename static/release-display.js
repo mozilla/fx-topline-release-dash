@@ -1286,6 +1286,7 @@ var dataSources = {
 
     newUsers: {
         title: "New User Count",
+        subtitle: "non-cumulative",
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
         id: RESOLUTION === 'daily' ? "newUsers_daily" : "newUsers_hourly",
@@ -21763,7 +21764,6 @@ module.exports = function() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_tooltip__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dataSources_js__ = __webpack_require__(17);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dataSources_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__);
 
 
 var defaults = {};
