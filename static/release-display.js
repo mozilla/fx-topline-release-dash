@@ -21978,7 +21978,7 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
 
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor;
         var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined;
-        var resolutionLabel = this.props.hasOwnProperty('showResolutionLabel') ? this.props.showResolutionLabel ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        var resolutionLabel = this.props.hasOwnProperty('showResolutionLabel') && this.props.lastDatum !== undefined ? this.props.showResolutionLabel ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'span',
             { className: 'gd-graphic-header-label' },
             this.props.resolution
