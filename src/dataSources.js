@@ -16,7 +16,7 @@ function parseLocalTime(d) {
 var RELEASE_DATE = dt('2017-11-14')
 var DAY_AFTER = dt('2017-11-15')
 
-var FIRST_MAIN_SUMMARY_DATE = '2017-11-14'
+var FIRST_MAIN_SUMMARY_DATE = '2017-11-13'
 //var NOW = dt('2017-11-15')
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
@@ -60,10 +60,22 @@ function handleFormat(data) {
     return out
 }
 
+var DAY_FORMAT = '%b %d, %Y '
+var HOUR_FORMAT = '%I:%M %p  '
+
+var xMouseovers = {
+    uptake: DAY_FORMAT,
+    kiloUsageHours: RESOLUTION=='daily' ? DAY_FORMAT : HOUR_FORMAT,
+    successfulInstalls:DAY_FORMAT,
+    newUsers: RESOLUTION=='daily' ? DAY_FORMAT : HOUR_FORMAT,
+    pagesVisited:DAY_FORMAT,
+    sessionHours:DAY_FORMAT
+}
+
 
 var plotArgs = {
     show_rollover_text: CURRENT_SITUATION == 'day-after' ? false : true,
-    x_mouseover: RESOLUTION=='daily' ? '%b %d, %Y ' : '%I:%M %p  '
+    //x_mouseover: RESOLUTION=='daily' ? '%b %d, %Y ' : '%I:%M %p  '
 }
 
 if (CURRENT_SITUATION == 'day-of') {
@@ -138,7 +150,7 @@ var dataSources = {
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
         dataType: 'rate',
-        plotArgs: plotArgs,
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.kiloUsageHours}),
         preprocessor: data => {
             data = handleFormat(data)
             data = data.map(d=>{
@@ -167,7 +179,7 @@ var dataSources = {
         showResolutionLabel: true,
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         description: "percentage of attempted Firefox Quantum installs that are successful",
-        plotArgs: Object.assign({}, plotArgs, {format: 'Percentage', max_y:1}),
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.successfulInstalls}, {format: 'Percentage', max_y:1}),
         source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
         format: DATA_FORMAT,
         dataType: 'percentage',
@@ -207,7 +219,7 @@ var dataSources = {
         graphResolution: 'daily',
         showResolutionLabel: true,
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
-        plotArgs: Object.assign({}, plotArgs, {format: 'Percentage'}),
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.uptake}, {format: 'Percentage'}),
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
         dataType: 'percentage',
@@ -238,7 +250,7 @@ var dataSources = {
         id: RESOLUTION === 'daily' ? "newUsers_daily" : "newUsers_hourly",
         description: "new profile counts, Firefox Quantum",
         dataType: 'volume',
-        plotArgs,
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.newUsers}),
         format: DATA_FORMAT,
         preprocessor: (data) => {
             var xAccessor = RESOLUTION === 'daily' ? 'submission' : 'hour_interval'
@@ -277,7 +289,7 @@ var dataSources = {
         dataType: 'volume',
         hasHourlySource: false,
         firstAvailableData: new Date(FIRST_MAIN_SUMMARY_DATE),
-        plotArgs,
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.uptake}),
         description: "total Daily Active Users (DAU), Firefox Quantum (smoothed over the previous 7 days)",
         format: DATA_FORMAT,
         preprocessor: (data) => {
@@ -299,7 +311,7 @@ var dataSources = {
         showResolutionLabel: true,
         description: "for Firefox Quantum users, the rate (Browser Crashes + Content Crashes - Content Shutdown Crashes) per 1,000 hours",
         format: DATA_FORMAT,
-        plotArgs,
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.newUsers}),
         dataType: 'rate',
         xAccessor: 'activity_date',
         yAccessor: 'crash_rate',
@@ -341,7 +353,7 @@ var dataSources = {
         },
         xAccessor: 'date',
         yAccessor: ['avg_uri_new', 'avg_uri_all'],
-        plotArgs: Object.assign({}, plotArgs, {'legend': ['Quantum', 'All']}),
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.pagesVisited}, {'legend': ['Quantum', 'All']}),
     },
 
     sessionHours: {
@@ -352,7 +364,7 @@ var dataSources = {
         id: "sessionHours",
         hasHourlySource: false,
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
-        plotArgs: Object.assign({}, plotArgs, {'legend': ['Quantum', 'All']}),
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.sessionHours}, {'legend': ['Quantum', 'All']}),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
         source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
