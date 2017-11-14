@@ -204,8 +204,8 @@ class GraphicHeader extends React.Component {
         var resolutionLabel = this.props.hasOwnProperty('showResolutionLabel') ? (
             this.props.showResolutionLabel ? <span className='gd-graphic-header-label'>{this.props.resolution}</span> : undefined
         ) : undefined
-
-        var subtitle = this.props.hasOwnProperty('subtitle') ? <div className='gd-graphic-header-subtitle'>{this.props.subtitle}</div> : undefined
+        var st = this.props.hasOwnProperty('subtitle') ? this.props.subtitle : undefined
+        var subtitle = <div className='gd-graphic-header-subtitle'>{st}</div>
         
         return (
             <div className='gd-graphic-header'>

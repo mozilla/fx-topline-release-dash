@@ -1,5 +1,5 @@
 const DATA_FORMAT = 'json'
-const LETS_SIMULATE = true
+const LETS_SIMULATE = false
 const TRUNCATE_CURRENT_DATA_FOR_NOW = false
 const TRUNCATE_VAL = 60
 

@@ -21359,7 +21359,7 @@ module.exports = function() {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return MODE; });
 /* unused harmony export dt */
 const DATA_FORMAT = 'json';
-const LETS_SIMULATE = true;
+const LETS_SIMULATE = false;
 const TRUNCATE_CURRENT_DATA_FOR_NOW = false;
 const TRUNCATE_VAL = 60;
 
@@ -21971,12 +21971,12 @@ class GraphicHeader extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compon
             { className: 'gd-graphic-header-label' },
             this.props.resolution
         ) : undefined : undefined;
-
-        var subtitle = this.props.hasOwnProperty('subtitle') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+        var st = this.props.hasOwnProperty('subtitle') ? this.props.subtitle : undefined;
+        var subtitle = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-graphic-header-subtitle' },
-            this.props.subtitle
-        ) : undefined;
+            st
+        );
 
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
