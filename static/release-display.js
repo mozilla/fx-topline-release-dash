@@ -1171,6 +1171,8 @@ function simulateRelease(data, xAccessor, yAccessor, onlyDaily = false) {
     return data;
 }
 
+//yax_format: CURRENT_SITUATION == 'day-of' ? d3.format('.3%') : d3.format('%')
+
 function parseISOLocal(s) {
     var b = s.split(/\D/);
     var now = new Date();
@@ -1258,7 +1260,7 @@ var dataSources = {
         graphResolution: 'daily',
         showResolutionLabel: true,
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
-        plotArgs: Object.assign({}, plotArgs, { x_mouseover: xMouseovers.uptake }, { format: 'Percentage' }),
+        plotArgs: Object.assign({}, plotArgs, { x_mouseover: xMouseovers.uptake }, { format: 'Percentage', max_y: CURRENT_SITUATION == 'day-of' ? 1 : 1 }),
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: () => {},
         dataType: 'percentage',
@@ -21761,6 +21763,7 @@ module.exports = function() {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_react_tooltip___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_react_tooltip__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dataSources_js__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__dataSources_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__dataSources_js__);
 
 
 var defaults = {};
@@ -22093,7 +22096,7 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                     width: this.props.width,
                     //right: 55,
                     right: 20,
-                    left: 45,
+                    left: 50,
                     height: 250,
                     bottom: 40,
                     description: this.props.description,

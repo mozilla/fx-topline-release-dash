@@ -295,7 +295,7 @@ class DataGraphic extends React.Component {
                     width: this.props.width,
                     //right: 55,
                     right:20,
-                    left:45,
+                    left:50,
                     height: 250,
                     bottom:40,
                     description: this.props.description,

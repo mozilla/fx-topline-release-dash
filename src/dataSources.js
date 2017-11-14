@@ -132,6 +132,8 @@ function simulateRelease(data, xAccessor, yAccessor, onlyDaily=false) {
     return data
 }
 
+//yax_format: CURRENT_SITUATION == 'day-of' ? d3.format('.3%') : d3.format('%')
+
 function parseISOLocal(s) {
   var b = s.split(/\D/);
   var now = new Date();
@@ -219,7 +221,7 @@ var dataSources = {
         graphResolution: 'daily',
         showResolutionLabel: true,
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
-        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.uptake}, {format: 'Percentage'}),
+        plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.uptake}, {format: 'Percentage', max_y: CURRENT_SITUATION == 'day-of' ? 1 : 1}),
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
         dataType: 'percentage',
