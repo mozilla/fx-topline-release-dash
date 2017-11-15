@@ -97,10 +97,20 @@ render(
     <GraphicDisplay>
         <Header title='Firefox Quantum' subtitle='impact metrics'  img='static/ff-quantum.png' />
         <ToplineRow>
-        <ToplineElement 
+            <ToplineElement 
                 label='Current Firefox Version'
                 value='57'
+
             />
+            <ToplineElement 
+                    dataID={displays.cumulativeNewProfiles.id}
+                    preprocessor={displays.cumulativeNewProfiles.preprocessor}
+                    valueFormatter={(d)=>{
+                        return d3.format(',r')(d)
+                    }}
+                    label='Total New Quantum Profiles'
+                    labelStyle={{fontSize: '1.4em'}}
+                 />
             <ToplineElement value={daysSinceRelease} label={releaseTxt} />
         </ToplineRow>
         {TwoByFour.RowOne}

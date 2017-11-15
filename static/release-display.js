@@ -1186,6 +1186,14 @@ function parseISOLocal(s) {
 }
 
 var dataSources = {
+    cumulativeNewProfiles: {
+        id: 'cumulativeNewProfiles',
+        source: "https://sql.telemetry.mozilla.org/queries/49093/source",
+        preprocessor: data => {
+            data = handleFormat(data);
+            return data[0].total_new_profiles;
+        }
+    },
     kiloUsageHours: {
         id: RESOLUTION === 'daily' ? 'kiloUsageHours_daily' : 'kiloUsageHours_hourly',
         title: "Total Usage",
@@ -1568,6 +1576,16 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
             label: 'Current Firefox Version',
             value: '57'
+
+        }),
+        __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
+            dataID: __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].cumulativeNewProfiles.id,
+            preprocessor: __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["d" /* dataSources */].cumulativeNewProfiles.preprocessor,
+            valueFormatter: d => {
+                return d3.format(',r')(d);
+            },
+            label: 'Total New Quantum Profiles',
+            labelStyle: { fontSize: '1.4em' }
         }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], { value: daysSinceRelease, label: releaseTxt })
     ),
@@ -21936,25 +21954,54 @@ class MainDisclaimer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Compo
 class ToplineElement extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     constructor(props) {
         super(props);
+        this.state = { data: undefined };
+
+        if (typeof this.props.value == 'function') {
+            this.props.value.bind(this);
+        }
     }
 
     render() {
+        var value = undefined;
         var label = this.props.hasOwnProperty('label') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
-            { className: 'gd-single-number-label' },
+            { className: 'gd-single-number-label', style: this.props.labelStyle },
             this.props.label
         ) : undefined;
-        var value = this.props.hasOwnProperty('value') ? __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
-            'div',
-            { className: 'gd-single-number-value' },
-            this.props.value
-        ) : undefined;
+        //var value = this.props.hasOwnProperty('value') ? <div className='gd-single-number-value'>{this.props.value}</div> : undefined
+        if (this.props.hasOwnProperty('value')) {
+            value = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'gd-single-number-value', style: this.props.valueStyle },
+                this.props.value
+            );
+        } else if (this.state.data !== undefined) {
+            value = this.props.valueFormatter !== undefined ? this.props.valueFormatter(this.state.data) : this.state.data;
+            value = __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'gd-single-number-value', style: this.props.valueStyle },
+                value
+            );
+        }
+
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'gd-topline-element gd-single-number' },
             label,
             value
         );
+    }
+
+    componentDidMount() {
+        if (this.props.dataID) {
+            d3.json(`data/${this.props.dataID}.json`, data => {
+
+                if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data);
+                console.log(data, 'sodifnsdofidniid');
+
+                this.setState({ data });
+            });
+        }
     }
 }
 

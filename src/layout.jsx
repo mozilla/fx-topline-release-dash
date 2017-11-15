@@ -154,16 +154,43 @@ class MainDisclaimer extends React.Component {
 class ToplineElement extends React.Component {
     constructor(props) {
         super(props)
+        this.state = {data:undefined}
+
+        if (typeof this.props.value == 'function') {
+            this.props.value.bind(this)
+        }
     }
     
     render() {
-        var label = this.props.hasOwnProperty('label') ? <div className='gd-single-number-label'>{this.props.label}</div> : undefined
-        var value = this.props.hasOwnProperty('value') ? <div className='gd-single-number-value'>{this.props.value}</div> : undefined
+        var value = undefined
+        var label = this.props.hasOwnProperty('label') ? <div className='gd-single-number-label'  style={this.props.labelStyle}>{this.props.label}</div> : undefined
+        //var value = this.props.hasOwnProperty('value') ? <div className='gd-single-number-value'>{this.props.value}</div> : undefined
+        if (this.props.hasOwnProperty('value')) {
+            value = <div className='gd-single-number-value'  style={this.props.valueStyle}>{this.props.value}</div>
+        } else if (this.state.data !== undefined) {
+            value = this.props.valueFormatter !== undefined ? this.props.valueFormatter(this.state.data) : this.state.data
+            value = <div className='gd-single-number-value' style={this.props.valueStyle}>{value}</div>
+        }
+
+        
+
         return (
             <div className='gd-topline-element gd-single-number'>
                 {label}{value}
             </div>
         )
+    }
+
+    componentDidMount() {
+        if (this.props.dataID) {
+            d3.json(`data/${this.props.dataID}.json`, data=>{
+
+                if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
+                console.log(data,'sodifnsdofidniid')
+
+                this.setState({data})
+            })
+        }
     }
 }
 

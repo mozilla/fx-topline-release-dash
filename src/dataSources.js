@@ -146,6 +146,14 @@ function parseISOLocal(s) {
 }
 
 var dataSources = {
+    cumulativeNewProfiles: {
+        id: 'cumulativeNewProfiles',
+        source: "https://sql.telemetry.mozilla.org/queries/49093/source",
+        preprocessor: data => {
+            data = handleFormat(data)            
+            return data[0].total_new_profiles
+        }
+    },
     kiloUsageHours: {
         id: RESOLUTION === 'daily' ? 'kiloUsageHours_daily' : 'kiloUsageHours_hourly',
         title: "Total Usage",
