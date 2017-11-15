@@ -109,7 +109,7 @@ render(
                         return d3.format(',r')(d)
                     }}
                     label='Total New Quantum Profiles'
-                    labelStyle={{fontSize: '1.4em'}}
+                    labelStyle={{fontSize: '1.2em'}}
                  />
             <ToplineElement value={daysSinceRelease} label={releaseTxt} />
         </ToplineRow>

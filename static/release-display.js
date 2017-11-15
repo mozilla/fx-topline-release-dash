@@ -1585,7 +1585,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
                 return d3.format(',r')(d);
             },
             label: 'Total New Quantum Profiles',
-            labelStyle: { fontSize: '1.4em' }
+            labelStyle: { fontSize: '1.2em' }
         }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], { value: daysSinceRelease, label: releaseTxt })
     ),
