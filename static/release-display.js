@@ -1059,9 +1059,11 @@ function parseLocalTime(d) {}
 
 var RELEASE_DATE = dt('2017-11-14');
 var DAY_AFTER = dt('2017-11-15');
+var THREE_DAYS_AFTER = dt('2017-11-17');
 
 var FIRST_MAIN_SUMMARY_DATE = '2017-11-13';
-//var NOW = dt('2017-11-15')
+var NOW = dt('2017-11-15');
+//NOW.setHours(6,0,0,0)
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
 var NOW = new Date();
@@ -1069,6 +1071,7 @@ var NOW = new Date();
 var PANIC_SIM = true;
 
 //var MODE = 'game-time'
+
 var MODE = 'PANIC';
 
 var CURRENT_SITUATION;
@@ -1079,6 +1082,7 @@ if (NOW <= DAY_AFTER) {
     CURRENT_SITUATION = 'day-of';
 } else {
     RESOLUTION = 'daily';
+
     CURRENT_SITUATION = 'rest-of-release';
 }
 
@@ -1125,6 +1129,8 @@ if (CURRENT_SITUATION == 'day-of') {
 
 if (CURRENT_SITUATION == 'rest-of-release') {
     plotArgs.min_x = dt('2017-11-13');
+    plotArgs.max_x = THREE_DAYS_AFTER;
+    plotArgs.max_x.setHours(6, 0, 0, 0);
 }
 
 // if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
@@ -1200,6 +1206,9 @@ var dataSources = {
             });
             if (RESOLUTION == 'daily') {
                 data = MG.convert.number(data, 'kuh_weekly_smoothed');
+                data.forEach(d => {
+                    d.activity_time.setHours(0, 0, 0, 0);
+                });
             } else {
                 data = MG.convert.number(data, 'kuh_daily_smoothed');
             }
@@ -1307,7 +1316,8 @@ var dataSources = {
                     return d;
                 });
             } else {
-                data = MG.convert.date(data, ...params);
+                //console.log('sodifn', data, ...params)
+                data = MG.convert.date(data, xAccessor, xFormat);
             }
 
             data.sort((a, b) => {
