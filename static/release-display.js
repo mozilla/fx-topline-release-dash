@@ -1329,7 +1329,7 @@ var dataSources = {
             return data;
         },
         xAccessor: RESOLUTION === 'daily' ? 'submission' : 'hour_interval',
-        yAccessor: RESOLUTION === 'daily' ? 'new_profiles' : 'hourly_new_profiles_smooth',
+        yAccessor: RESOLUTION === 'daily' ? 'new_profiles_smooth' : 'hourly_new_profiles_smooth',
         source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48504/source#130999" : "https://sql.telemetry.mozilla.org/queries/48509/source#131004"
     },
     dau: {
