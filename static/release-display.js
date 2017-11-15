@@ -1302,7 +1302,7 @@ var dataSources = {
     },
 
     newUsers: {
-        title: "New User Count",
+        title: "New Profile Count",
         subtitle: "non-cumulative",
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
