@@ -1067,6 +1067,7 @@ var NOW = dt('2017-11-15');
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
 var NOW = new Date();
+//var NOW = dt('2017-11-24')
 
 var PANIC_SIM = true;
 
@@ -1131,6 +1132,10 @@ if (CURRENT_SITUATION == 'rest-of-release') {
     plotArgs.min_x = dt('2017-11-13');
     plotArgs.max_x = THREE_DAYS_AFTER;
     plotArgs.max_x.setHours(6, 0, 0, 0);
+
+    if (THREE_DAYS_AFTER < NOW) {
+        plotArgs.max_x = NOW;
+    }
 }
 
 // if (TRUNCATE_CURRENT_DATA_FOR_NOW) {
