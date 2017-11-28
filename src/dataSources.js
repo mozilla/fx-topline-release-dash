@@ -165,7 +165,7 @@ var dataSources = {
         subtitle: "1000s of hrs.",
         hourlySource: "kiloUsageHours_hourly",
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
-        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48763/source#131460" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48819/source" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
         format: DATA_FORMAT,
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
