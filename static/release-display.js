@@ -1205,7 +1205,7 @@ var dataSources = {
         subtitle: "1000s of hrs.",
         hourlySource: "kiloUsageHours_hourly",
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
-        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48763/source#131460" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48819/source" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
         format: DATA_FORMAT,
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
@@ -1580,7 +1580,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
             label: 'Current Firefox Version',
-            value: '57.01'
+            value: '57.0.1'
 
         }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
