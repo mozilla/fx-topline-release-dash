@@ -1580,7 +1580,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
             label: 'Current Firefox Version',
-            value: '57'
+            value: '57.01'
 
         }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
