@@ -36,7 +36,7 @@ function dataGraphicCell(args) {
     return (
         <GraphicContainer showResolutionLabel={args.showResolutionLabel} mode={MODE} resolution={args.graphResolution} isActive={true} xAccessor={args.xAccessor} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
-            <DataGraphic 
+            <DataGraphic
                 title={args.title}
                 description={args.description}
                 xAccessor={args.xAccessor}
@@ -97,12 +97,12 @@ render(
     <GraphicDisplay>
         <Header title='Firefox Quantum' subtitle='impact metrics'  img='static/ff-quantum.png' />
         <ToplineRow>
-            <ToplineElement 
+            <ToplineElement
                 label='Current Firefox Version'
-                value='57.0.1'
+                value='57.0.4'
 
             />
-            <ToplineElement 
+            <ToplineElement
                     dataID={displays.cumulativeNewProfiles.id}
                     preprocessor={displays.cumulativeNewProfiles.preprocessor}
                     valueFormatter={(d)=>{
