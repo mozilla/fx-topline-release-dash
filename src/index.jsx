@@ -34,7 +34,7 @@ function showDisplay(args) {
 function dataGraphicCell(args) {
     var disclaimer = args.hasOwnProperty('disclaimer') ? <GraphicDisclaimer> <span style={{fontWeight:900, paddingRight:10}}>NOTE</span>  {args.disclaimer} </ GraphicDisclaimer> : ''
     return (
-        <GraphicContainer showResolutionLabel={args.showResolutionLabel} mode={MODE} resolution={args.graphResolution} isActive={true} xAccessor={args.xAccessor} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
+        <GraphicContainer annotation={args.annotations} annotationProcessor={args.annotationProcessor} showResolutionLabel={args.showResolutionLabel} mode={MODE} resolution={args.graphResolution} isActive={true} xAccessor={args.xAccessor} yAccessor={args.yAccessor} dataType={args.dataType} id={args.id} title={args.title} description={args.description} format={args.format} preprocessor={args.preprocessor} source={args.source}>
             <GraphicHeader subtitle={args.subtitle} title={args.title} secondText={function(){ return this.props.lastDatum[args.yAccessor]}} />
             <DataGraphic
                 title={args.title}

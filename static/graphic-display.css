@@ -60,8 +60,13 @@ tspan.mg-chart-description {
     font-size:20px
 }
 
+
+
 text.mg-active-datapoint {
-    font-size:14px
+    font-size:12px;
+}
+
+text.mg-active-datapoint tspan {
 }
 
 g.mg-x-axis text {

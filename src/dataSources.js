@@ -44,8 +44,6 @@ if (NOW <= DAY_AFTER) {
     CURRENT_SITUATION = 'rest-of-release'
 }
 
-
-
 // if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
 //     var NOW = dt('2017-11-15')
 // }
@@ -247,6 +245,15 @@ var dataSources = {
         polling: ()=>{},
         dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
+        annotations: "data/throttleRate.json",
+        annotationProcessor: annotations => {
+            var rules = annotations.rules
+            rules.sort((a,b)=>a.timestamp > b.timestamp)
+            var throttles = rules.map((r)=>{
+                return {label: r.backgroundRate +'%', d: (new Date(r.timestamp))}
+            })
+            return throttles
+        },
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data)
@@ -338,7 +345,7 @@ var dataSources = {
         plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.newUsers}),
         dataType: 'rate',
         xAccessor: 'activity_date',
-        yAccessor: 'crash_rate',
+        yAccessor: ['crash_rate'],
         preprocessor: (data) => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'activity_date')

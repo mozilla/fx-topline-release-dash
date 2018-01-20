@@ -309,7 +309,6 @@ class DataGraphic extends React.Component {
             // }
             if (hasData) {
                 var plotArgs = this.props.plotArgs
-                
                 var mgArgs = {
                     mouseover_align:'left',
                     target: '#' + this.state.id,
@@ -320,17 +319,19 @@ class DataGraphic extends React.Component {
                     area: false,
                     interpolate:  d3.curveMonotoneX,
                     width: this.props.width,
-                    //right: 55,
                     right:55,
                     left:50,
                     height: 250,
                     bottom:40,
                     description: this.props.description,
-                    top:25,
+                    top:20,
+
                     xax_count: 4
                 }
-                mgArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
-                
+                var theArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
+
+                theArgs.markers = this.props.annotation || [{'date': new Date('2017-12-15'), 'label': 'hmmmm'}]
+
                 if (mgArgs.data.length === 1) {
                     // mgArgs.data[0][this.props.xAccessor].setHours(0,0,0,0)
                     //mgArgs.min_x = dt('2017-11-12')
@@ -342,8 +343,10 @@ class DataGraphic extends React.Component {
                 //     mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
                 //     mgArgs.max_x.setHours(0,0,0,0)
                 // }
+
                 this.setState({loaded:true, hasData:true})
-                MG.data_graphic(mgArgs)
+
+                MG.data_graphic(theArgs)
             } else {
                 this.setState({loaded:true, hasData:false})
             }
@@ -416,9 +419,11 @@ class GraphicContainer extends React.Component {
         var containerWidth = 1200 / this.props.totalSiblings - 60
         if (this.state.loaded) {
             var children = React.Children.map(this.props.children, (child,i)=>{
+                
                 return React.cloneElement(child, {
                     width: containerWidth,
                     data: this.state.data,
+                    annotation: this.state.annotation,
                     id: this.props.id,
                     source: this.props.source || undefined,
                     onLastUpdateData: this.props.OnLastUpdateData,
@@ -459,12 +464,35 @@ class GraphicContainer extends React.Component {
     componentDidMount() {
         if (this.props.hasOwnProperty('id') && this.props.isActive) {
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv
-            getTheData(`data/${this.props.id}.json`, (data)=> {
-                if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)
+            var promiseChain = []
 
-                if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
-                this.setState({loaded:true, data, lastDatum: data[data.length-1], hasData: data.length})
+            var dataPull = new Promise((resolve,reject)=>{
+                getTheData(`data/${this.props.id}.json`, (data)=> {
+                    if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)
+    
+                    if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
+                    this.setState({data, lastDatum: data[data.length-1]})
+                    resolve()
+                })
             })
+            promiseChain.push(dataPull)
+            if (this.props.annotation !== undefined) {
+                var annotationsPull = new Promise((resolve, rejeect)=>{
+                    d3.json(this.props.annotation, (ann)=>{
+                        var annotation = this.props.annotationProcessor(ann)
+                        this.setState({annotation})
+                        resolve(annotation)
+                    })
+                })
+                promiseChain.push(annotationsPull)
+            }
+            
+
+            var promiseChain = Promise.all(promiseChain).then(()=>{this.setState({loaded:true, hasData: this.state.data.length})})
+            
+            // add loaded: true at end!
+            // add hasData: data.length at end!
+
         } else {
             var args =[100]
             if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData)

@@ -8,5 +8,6 @@
     "newUsers_hourly": "https://sql.telemetry.mozilla.org/api/queries/48509/results.json?api_key=${API_KEY}",    
     "kiloUsageHours_daily": "https://sql.telemetry.mozilla.org/api/queries/48819/results.json?api_key=${API_KEY}",
     "kiloUsageHours_hourly": "https://sql.telemetry.mozilla.org/api/queries/48817/results.json?api_key=${API_KEY}",
-    "cumulativeNewProfiles": "https://sql.telemetry.mozilla.org/api/queries/49093/results.json?api_key=${API_KEY}"
+    "cumulativeNewProfiles": "https://sql.telemetry.mozilla.org/api/queries/49093/results.json?api_key=${API_KEY}",
+    "throttleRate": "https://aus-api.mozilla.org/api/v1/rules/145/revisions"
 }

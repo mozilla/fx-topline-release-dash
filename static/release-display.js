@@ -1287,6 +1287,15 @@ var dataSources = {
         polling: () => {},
         dataType: 'percentage',
         source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
+        annotations: "data/throttleRate.json",
+        annotationProcessor: annotations => {
+            var rules = annotations.rules;
+            rules.sort((a, b) => a.timestamp > b.timestamp);
+            var throttles = rules.map(r => {
+                return { label: r.backgroundRate + '%', d: new Date(r.timestamp) };
+            });
+            return throttles;
+        },
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data);
@@ -1378,7 +1387,7 @@ var dataSources = {
         plotArgs: Object.assign({}, plotArgs, { x_mouseover: xMouseovers.newUsers }),
         dataType: 'rate',
         xAccessor: 'activity_date',
-        yAccessor: 'crash_rate',
+        yAccessor: ['crash_rate'],
         preprocessor: data => {
             data = handleFormat(data);
             data = MG.convert.date(data, 'activity_date');
@@ -1510,7 +1519,7 @@ function dataGraphicCell(args) {
     ) : '';
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
         __WEBPACK_IMPORTED_MODULE_3__layout_jsx__["d" /* GraphicContainer */],
-        { showResolutionLabel: args.showResolutionLabel, mode: __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* MODE */], resolution: args.graphResolution, isActive: true, xAccessor: args.xAccessor, yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
+        { annotation: args.annotations, annotationProcessor: args.annotationProcessor, showResolutionLabel: args.showResolutionLabel, mode: __WEBPACK_IMPORTED_MODULE_2__dataSources_js__["a" /* MODE */], resolution: args.graphResolution, isActive: true, xAccessor: args.xAccessor, yAccessor: args.yAccessor, dataType: args.dataType, id: args.id, title: args.title, description: args.description, format: args.format, preprocessor: args.preprocessor, source: args.source },
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["g" /* GraphicHeader */], { subtitle: args.subtitle, title: args.title, secondText: function () {
                 return this.props.lastDatum[args.yAccessor];
             } }),
@@ -22145,7 +22154,6 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
             // }
             if (hasData) {
                 var plotArgs = this.props.plotArgs;
-
                 var mgArgs = {
                     mouseover_align: 'left',
                     target: '#' + this.state.id,
@@ -22156,16 +22164,18 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                     area: false,
                     interpolate: d3.curveMonotoneX,
                     width: this.props.width,
-                    //right: 55,
                     right: 55,
                     left: 50,
                     height: 250,
                     bottom: 40,
                     description: this.props.description,
-                    top: 25,
+                    top: 20,
+
                     xax_count: 4
                 };
-                mgArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
+                var theArgs = Object.assign({}, mgArgs, this.props.plotArgs || {});
+
+                theArgs.markers = this.props.annotation || [{ 'date': new Date('2017-12-15'), 'label': 'hmmmm' }];
 
                 if (mgArgs.data.length === 1) {}
                 // mgArgs.data[0][this.props.xAccessor].setHours(0,0,0,0)
@@ -22178,8 +22188,10 @@ class DataGraphic extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Componen
                 //     mgArgs.max_x.setDate(mgArgs.max_x.getDate()+1)
                 //     mgArgs.max_x.setHours(0,0,0,0)
                 // }
+
                 this.setState({ loaded: true, hasData: true });
-                MG.data_graphic(mgArgs);
+
+                MG.data_graphic(theArgs);
             } else {
                 this.setState({ loaded: true, hasData: false });
             }
@@ -22257,9 +22269,11 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
         var containerWidth = 1200 / this.props.totalSiblings - 60;
         if (this.state.loaded) {
             var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, (child, i) => {
+
                 return __WEBPACK_IMPORTED_MODULE_0_react___default.a.cloneElement(child, {
                     width: containerWidth,
                     data: this.state.data,
+                    annotation: this.state.annotation,
                     id: this.props.id,
                     source: this.props.source || undefined,
                     onLastUpdateData: this.props.OnLastUpdateData,
@@ -22304,12 +22318,35 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
     componentDidMount() {
         if (this.props.hasOwnProperty('id') && this.props.isActive) {
             var getTheData = this.props.format == 'json' ? d3.json : d3.csv;
-            getTheData(`data/${this.props.id}.json`, data => {
-                if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title);
+            var promiseChain = [];
 
-                if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data);
-                this.setState({ loaded: true, data, lastDatum: data[data.length - 1], hasData: data.length });
+            var dataPull = new Promise((resolve, reject) => {
+                getTheData(`data/${this.props.id}.json`, data => {
+                    if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title);
+
+                    if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data);
+                    this.setState({ data, lastDatum: data[data.length - 1] });
+                    resolve();
+                });
             });
+            promiseChain.push(dataPull);
+            if (this.props.annotation !== undefined) {
+                var annotationsPull = new Promise((resolve, rejeect) => {
+                    d3.json(this.props.annotation, ann => {
+                        var annotation = this.props.annotationProcessor(ann);
+                        this.setState({ annotation });
+                        resolve(annotation);
+                    });
+                });
+                promiseChain.push(annotationsPull);
+            }
+
+            var promiseChain = Promise.all(promiseChain).then(() => {
+                this.setState({ loaded: true, hasData: this.state.data.length });
+            });
+
+            // add loaded: true at end!
+            // add hasData: data.length at end!
         } else {
             var args = [100];
             if (this.props.hasOwnProperty('scaffoldData')) args.push(this.props.scaffoldData);
