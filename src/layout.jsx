@@ -321,7 +321,7 @@ class DataGraphic extends React.Component {
                     interpolate:  d3.curveMonotoneX,
                     width: this.props.width,
                     //right: 55,
-                    right:20,
+                    right:55,
                     left:50,
                     height: 250,
                     bottom:40,
