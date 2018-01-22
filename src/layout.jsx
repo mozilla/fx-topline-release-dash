@@ -324,13 +324,13 @@ class DataGraphic extends React.Component {
                     height: 250,
                     bottom:40,
                     description: this.props.description,
-                    top:20,
+                    top:35,
 
                     xax_count: 4
                 }
                 var theArgs = Object.assign({}, mgArgs, (this.props.plotArgs || {}))
 
-                theArgs.markers = this.props.annotation || [{'date': new Date('2017-12-15'), 'label': 'hmmmm'}]
+                theArgs.markers = this.props.annotation
 
                 if (mgArgs.data.length === 1) {
                     // mgArgs.data[0][this.props.xAccessor].setHours(0,0,0,0)

@@ -237,6 +237,7 @@ var dataSources = {
     uptake: {
         title: 'Uptake',
         id: "uptake",
+        subtitle: "w/ throttle rates",
         graphResolution: 'daily',
         showResolutionLabel: true,
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
@@ -249,10 +250,26 @@ var dataSources = {
         annotationProcessor: annotations => {
             var rules = annotations.rules
             rules.sort((a,b)=>a.timestamp > b.timestamp)
+
             var throttles = rules.map((r)=>{
-                return {label: r.backgroundRate +'%', d: (new Date(r.timestamp))}
+                return {mapping: r.mapping, label: r.backgroundRate +'%', d: (new Date(r.timestamp))}
             })
-            return throttles
+            
+            // take latest 100%, and latest that isn't 100%
+
+            var largest100 = throttles.filter(r=>{
+                return r.label == '100%'
+            })
+            largest100 = largest100[largest100.length-1]
+
+            var lastNon100 = throttles.filter(r=>{
+                return r.label !=='100%'
+            })
+
+            lastNon100 = lastNon100[lastNon100.length-1]
+
+
+            return [lastNon100, largest100]
         },
         format: DATA_FORMAT,
         preprocessor: data => {
