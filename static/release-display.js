@@ -1057,6 +1057,8 @@ function parseLocalTime(d) {}
 
 /* please don't touch this stuff unless you know what you're doing, yeah? */
 
+/* potch this would be the section you should touch */
+
 var RELEASE_DATE = dt('2017-11-14');
 var DAY_AFTER = dt('2017-11-15');
 var THREE_DAYS_AFTER = dt('2017-11-17');
@@ -1297,20 +1299,34 @@ var dataSources = {
                 return { mapping: r.mapping, label: r.backgroundRate + '%', d: new Date(r.timestamp) };
             });
 
-            // take latest 100%, and latest that isn't 100%
+            // get the biggest boy
+            var mappings = throttles.map(t => t.mapping);
 
-            var largest100 = throttles.filter(r => {
-                return r.label == '100%';
+            mappings = mappings.map(m => m.split('-')[1]);
+
+            var verComp = (a, b) => {
+                a = a.split('.');
+                b = b.split('.');
+                if (a.length == 2 && b.length == 2 && [parseInt(a[0])] < parseInt(b[0])) return -1;
+                if (a.length == 2 && b.length == 2 && parseInt(a[0]) > parseInt(b[0])) return 1;
+                if (a.length < b.length) return 1;
+                if (b.length < a.length) return -1;
+                if (a.length === b.length && a.length === 3) {
+                    if (parseInt(a[3]) < parseInt(b[3])) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                }
+            };
+
+            mappings.sort(verComp);
+            var matchThis = mappings[0];
+            throttles = throttles.filter(r => {
+                return r.mapping.includes(matchThis);
             });
-            largest100 = largest100[largest100.length - 1];
-
-            var lastNon100 = throttles.filter(r => {
-                return r.label !== '100%';
-            });
-
-            lastNon100 = lastNon100[lastNon100.length - 1];
-
-            return [lastNon100, largest100];
+            console.log(throttles);
+            return throttles;
         },
         format: DATA_FORMAT,
         preprocessor: data => {
