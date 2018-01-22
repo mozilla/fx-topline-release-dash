@@ -27,6 +27,10 @@ function qv(v) {
 }
 
 const IS_OFFICE_TV = qv('office-tv')
+const DISPLAY_WIDTH = IS_OFFICE_TV ? 1800 : 1200
+if (IS_OFFICE_TV) {
+  document.body.classList.add('office-tv')
+}
 
 
 /*
@@ -416,10 +420,10 @@ class GraphicContainer extends React.Component {
     }
 
     render() {
-        var containerWidth = 1200 / this.props.totalSiblings - 60
+        var containerWidth = DISPLAY_WIDTH / this.props.totalSiblings - 60
         if (this.state.loaded) {
             var children = React.Children.map(this.props.children, (child,i)=>{
-                
+
                 return React.cloneElement(child, {
                     width: containerWidth,
                     data: this.state.data,
