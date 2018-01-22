@@ -21866,6 +21866,10 @@ function qv(v) {
 }
 
 const IS_OFFICE_TV = qv('office-tv');
+const DISPLAY_WIDTH = IS_OFFICE_TV ? 1800 : 1200;
+if (IS_OFFICE_TV) {
+    document.body.classList.add('office-tv');
+}
 
 /*
  * JavaScript Pretty Date
@@ -22298,7 +22302,7 @@ class GraphicContainer extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Com
     }
 
     render() {
-        var containerWidth = 1200 / this.props.totalSiblings - 60;
+        var containerWidth = DISPLAY_WIDTH / this.props.totalSiblings - 60;
         if (this.state.loaded) {
             var children = __WEBPACK_IMPORTED_MODULE_0_react___default.a.Children.map(this.props.children, (child, i) => {
 

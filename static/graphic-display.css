@@ -51,6 +51,10 @@ div.graphic-display {
     box-shadow:0px 0px 50px rgba(0,0,0,.1);
 }
 
+.office-tv div.graphic-display {
+  max-width: 1800px;
+}
+
 
 text.mg-header {
     font-size: 20px;
@@ -399,7 +403,7 @@ div.gd-tooltip:after {
     }
 
     div.graphic-display {
-        width:1600px;
+        width:1920px;
         min-height:calc( 100vh - 100px );
         box-shadow: 0px 0px 30px rgba(0,0,0,.15);
     }
