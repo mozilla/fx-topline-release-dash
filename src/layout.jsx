@@ -477,12 +477,18 @@ class GraphicContainer extends React.Component {
             })
             promiseChain.push(dataPull)
             if (this.props.annotation !== undefined) {
-                var annotationsPull = new Promise((resolve, rejeect)=>{
-                    d3.json(this.props.annotation, (ann)=>{
-                        var annotation = this.props.annotationProcessor(ann)
-                        this.setState({annotation})
+                var annotationsPull = new Promise((resolve, reject)=>{
+                    var that = this
+                    d3.json(this.props.annotation, function(ann){
+                        if (ann == null) {
+                            that.setState({annotation:undefined})
+                            resolve(ann)
+                        }
+                        var annotation = that.props.annotationProcessor(ann)
+                        that.setState({annotation})
+                        
                         resolve(annotation)
-                    })
+                    }, )
                 })
                 promiseChain.push(annotationsPull)
             }
