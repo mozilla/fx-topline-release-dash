@@ -1061,7 +1061,7 @@ function parseLocalTime(d) {}
 
 var RELEASE_DATE = dt('2018-01-23');
 var DAY_AFTER = dt('2018-01-24');
-var THREE_DAYS_AFTER = dt('2018-01-16');
+var THREE_DAYS_AFTER = dt('2018-01-26');
 
 var FIRST_MAIN_SUMMARY_DATE = '2018-01-22';
 var NOW = dt('2018-01-23');
