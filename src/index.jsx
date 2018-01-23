@@ -99,7 +99,7 @@ render(
         <ToplineRow>
             <ToplineElement
                 label='Current Firefox Version'
-                value='57.0.4'
+                value='58.0'
 
             />
             <ToplineElement

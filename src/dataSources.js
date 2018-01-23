@@ -8,19 +8,19 @@ function dt(d){
 }
 
 function parseLocalTime(d) {
-    
+
 }
 
 /* please don't touch this stuff unless you know what you're doing, yeah? */
 
 /* potch this would be the section you should touch */
 
-var RELEASE_DATE = dt('2017-11-14')
-var DAY_AFTER = dt('2017-11-15')
-var THREE_DAYS_AFTER = dt('2017-11-17')
+var RELEASE_DATE = dt('2018-01-23')
+var DAY_AFTER = dt('2018-01-24')
+var THREE_DAYS_AFTER = dt('2018-01-16')
 
-var FIRST_MAIN_SUMMARY_DATE = '2017-11-13'
-var NOW = dt('2017-11-15')
+var FIRST_MAIN_SUMMARY_DATE = '2018-01-22'
+var NOW = dt('2018-01-23')
 //NOW.setHours(6,0,0,0)
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
@@ -39,10 +39,10 @@ var RESOLUTION
 if (NOW <= DAY_AFTER) {
     RESOLUTION = 'hourly'
     CURRENT_SITUATION='day-of'
-    
+
 } else {
     RESOLUTION = 'daily'
-    
+
     CURRENT_SITUATION = 'rest-of-release'
 }
 
@@ -83,16 +83,16 @@ var plotArgs = {
 }
 
 if (CURRENT_SITUATION == 'day-of') {
-    plotArgs.max_x = dt('2017-11-15')
+    plotArgs.max_x = dt('2018-01-24')
     plotArgs.max_x.setHours(6,0,0,0)
-    plotArgs.min_x = dt('2017-11-13')
+    plotArgs.min_x = dt('2018-01-22')
 }
 
 if (CURRENT_SITUATION == 'rest-of-release') {
-    plotArgs.min_x = dt('2017-11-13')
+    plotArgs.min_x = dt('2018-01-22')
     plotArgs.max_x = THREE_DAYS_AFTER
     plotArgs.max_x.setHours(6,0,0,0)
-    
+
     if (THREE_DAYS_AFTER < NOW) {
         plotArgs.max_x = NOW
     }
@@ -138,7 +138,7 @@ function simulateRelease(data, xAccessor, yAccessor, onlyDaily=false) {
     //     lastPt[xAccessor].setDate(2017,11,13)
     //     data.unshift(lastPt)
     // }
-    
+
     return data
 }
 
@@ -155,7 +155,7 @@ var dataSources = {
         id: 'cumulativeNewProfiles',
         source: "https://sql.telemetry.mozilla.org/queries/49093/source",
         preprocessor: data => {
-            data = handleFormat(data)            
+            data = handleFormat(data)
             return data[0].total_new_profiles
         }
     },
@@ -181,14 +181,14 @@ var dataSources = {
                 data = MG.convert.number(data,'kuh_weekly_smoothed')
                 data.forEach(d=>{
                     d.activity_time.setHours(0,0,0,0)
-                })    
+                })
             } else {
                 data = MG.convert.number(data,'kuh_daily_smoothed')
             }
 
             if (LETS_SIMULATE) data = simulateRelease(data, 'activity_time')
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
-            
+
             return data
         },
         xAccessor: 'activity_time',
@@ -229,7 +229,7 @@ var dataSources = {
 
             if (LETS_SIMULATE) out = simulateRelease(out, 'day')
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
-            
+
             return out
         },
         xAccessor: 'day',
@@ -256,7 +256,7 @@ var dataSources = {
             var throttles = rules.map((r)=>{
                 return {mapping: r.mapping, label: r.backgroundRate +'%', d: (new Date(r.timestamp))}
             })
-            
+
             // get the biggest boy
             var mappings = throttles.map(t=>t.mapping)
 
@@ -285,7 +285,7 @@ var dataSources = {
             })
             console.log(throttles)
             return throttles
-            
+
         },
         format: DATA_FORMAT,
         preprocessor: data => {
@@ -298,7 +298,7 @@ var dataSources = {
                 return d
             })
             //if (LETS_SIMULATE) data = simulateRelease(data, 'd')
-            //if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
+            //if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
             //console.log(data)
             return data
         },
@@ -359,7 +359,7 @@ var dataSources = {
         preprocessor: (data) => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
-            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)                        
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
             if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), smooth_dau: 100323043}]
             //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data
@@ -387,8 +387,8 @@ var dataSources = {
                 d.date = d.activity_date
                 return d
             })
-            data = data.filter(d=>d.channel === WHICH_VERSION && d.build_version=='57.0' && d.date > new Date('2017-10-01'))
-            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
+            data = data.filter(d=>d.channel === WHICH_VERSION && d.build_version=='58.0' && d.date > new Date('2018-01-01'))
+            if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
             if (LETS_SIMULATE) data = [{activity_date: dt('2017-11-13'), crash_rate: .1}]
             //if (LETS_SIMULATE) data = simulateRelease(data, 'activity_date')
             return data
@@ -401,7 +401,7 @@ var dataSources = {
         showResolutionLabel: true,
         subtitle: "avg. per user per hr.",
         hasHourlySource: false,
-        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),  
+        firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         id: "pagesVisited",
         dataType: 'rate',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
@@ -411,7 +411,7 @@ var dataSources = {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,30)
-            if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), avg_uri_new: 50.4, avg_uri_all: 50.2 }]          
+            if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), avg_uri_new: 50.4, avg_uri_all: 50.2 }]
             //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data
         },
@@ -437,7 +437,7 @@ var dataSources = {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
-            if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), avg_subsess_hours_new: 5.6, avg_subsess_hours_all: 5.2 }]            
+            if (LETS_SIMULATE) data = [{date: dt('2017-11-13'), avg_subsess_hours_new: 5.6, avg_subsess_hours_all: 5.2 }]
             //if (LETS_SIMULATE) data = simulateRelease(data, 'date')
             return data
         },

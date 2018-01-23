@@ -1059,12 +1059,12 @@ function parseLocalTime(d) {}
 
 /* potch this would be the section you should touch */
 
-var RELEASE_DATE = dt('2017-11-14');
-var DAY_AFTER = dt('2017-11-15');
-var THREE_DAYS_AFTER = dt('2017-11-17');
+var RELEASE_DATE = dt('2018-01-23');
+var DAY_AFTER = dt('2018-01-24');
+var THREE_DAYS_AFTER = dt('2018-01-16');
 
-var FIRST_MAIN_SUMMARY_DATE = '2017-11-13';
-var NOW = dt('2017-11-15');
+var FIRST_MAIN_SUMMARY_DATE = '2018-01-22';
+var NOW = dt('2018-01-23');
 //NOW.setHours(6,0,0,0)
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
@@ -1125,13 +1125,13 @@ var plotArgs = {
 };
 
 if (CURRENT_SITUATION == 'day-of') {
-    plotArgs.max_x = dt('2017-11-15');
+    plotArgs.max_x = dt('2018-01-24');
     plotArgs.max_x.setHours(6, 0, 0, 0);
-    plotArgs.min_x = dt('2017-11-13');
+    plotArgs.min_x = dt('2018-01-22');
 }
 
 if (CURRENT_SITUATION == 'rest-of-release') {
-    plotArgs.min_x = dt('2017-11-13');
+    plotArgs.min_x = dt('2018-01-22');
     plotArgs.max_x = THREE_DAYS_AFTER;
     plotArgs.max_x.setHours(6, 0, 0, 0);
 
@@ -1339,7 +1339,7 @@ var dataSources = {
                 return d;
             });
             //if (LETS_SIMULATE) data = simulateRelease(data, 'd')
-            //if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)            
+            //if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,TRUNCATE_VAL)
             //console.log(data)
             return data;
         },
@@ -1428,7 +1428,7 @@ var dataSources = {
                 d.date = d.activity_date;
                 return d;
             });
-            data = data.filter(d => d.channel === WHICH_VERSION && d.build_version == '57.0' && d.date > new Date('2017-10-01'));
+            data = data.filter(d => d.channel === WHICH_VERSION && d.build_version == '58.0' && d.date > new Date('2018-01-01'));
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0, TRUNCATE_VAL);
             if (LETS_SIMULATE) data = [{ activity_date: dt('2017-11-13'), crash_rate: .1 }];
             //if (LETS_SIMULATE) data = simulateRelease(data, 'activity_date')
@@ -1621,7 +1621,7 @@ Object(__WEBPACK_IMPORTED_MODULE_1_react_dom__["render"])(__WEBPACK_IMPORTED_MOD
         null,
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {
             label: 'Current Firefox Version',
-            value: '57.0.4'
+            value: '58.0'
 
         }),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__layout_jsx__["j" /* ToplineElement */], {

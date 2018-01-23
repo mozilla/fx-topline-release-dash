@@ -1,13 +1,12 @@
 {
-    "successfulInstalls":"https://sql.telemetry.mozilla.org/api/queries/3648/results.json?api_key=${API_KEY}",
-    "uptake":"https://sql.telemetry.mozilla.org/api/queries/48512/results.json?api_key=${API_KEY}",
-    "newUsers_daily":"https://sql.telemetry.mozilla.org/api/queries/48504/results.json?api_key=${API_KEY}",
-    "newUsers_hourly": "https://sql.telemetry.mozilla.org/api/queries/48509/results.json?api_key=${API_KEY}",
-    "pagesVisited":"https://sql.telemetry.mozilla.org/api/queries/48587/results.json?api_key=${API_KEY}",
-    "sessionHours":"https://sql.telemetry.mozilla.org/api/queries/48583/results.json?api_key=${API_KEY}",
-    "newUsers_hourly": "https://sql.telemetry.mozilla.org/api/queries/48509/results.json?api_key=${API_KEY}",    
-    "kiloUsageHours_daily": "https://sql.telemetry.mozilla.org/api/queries/48819/results.json?api_key=${API_KEY}",
-    "kiloUsageHours_hourly": "https://sql.telemetry.mozilla.org/api/queries/48817/results.json?api_key=${API_KEY}",
-    "cumulativeNewProfiles": "https://sql.telemetry.mozilla.org/api/queries/49093/results.json?api_key=${API_KEY}",
-    "throttleRate": "https://aus-api.mozilla.org/api/v1/rules/145/revisions"
+  "successfulInstalls":"https://sql.telemetry.mozilla.org/api/queries/50182/results.json?api_key=${API_KEY}",
+  "uptake":"https://sql.telemetry.mozilla.org/api/queries/50183/results.json?api_key=${API_KEY}",
+  "newUsers_daily":"https://sql.telemetry.mozilla.org/api/queries/50184/results.json?api_key=${API_KEY}",
+  "newUsers_hourly": "https://sql.telemetry.mozilla.org/api/queries/50185/results.json?api_key=${API_KEY}",
+  "pagesVisited":"https://sql.telemetry.mozilla.org/api/queries/50186/results.json?api_key=${API_KEY}",
+  "sessionHours":"https://sql.telemetry.mozilla.org/api/queries/50187/results.json?api_key=${API_KEY}",
+  "kiloUsageHours_daily": "https://sql.telemetry.mozilla.org/api/queries/50180/results.json?api_key=${API_KEY}",
+  "kiloUsageHours_hourly": "https://sql.telemetry.mozilla.org/api/queries/50181/results.json?api_key=${API_KEY}",
+  "cumulativeNewProfiles": "https://sql.telemetry.mozilla.org/api/queries/50179/results.json?api_key=${API_KEY}",
+  "throttleRate": "https://aus-api.mozilla.org/api/v1/rules/145/revisions"
 }
