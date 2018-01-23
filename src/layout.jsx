@@ -44,7 +44,7 @@ function prettyDate(time){
 	//var date = new Date((time || "").replace(/-/g,"/").replace(/[TZ]/g," ")),
 	var  	diff = (((new Date()).getTime() - date.getTime()) / 1000),
 		day_diff = Math.floor(diff / 86400);
-			
+
 	if ( isNaN(day_diff) || day_diff < 0 || day_diff >= 31 )
 		return;
 	return day_diff == 0 && (
@@ -103,7 +103,7 @@ class GraphicDisplay extends React.Component {
     }
 
     render() {
-        
+
         var lastUpdatedElement = Object.values(this.state.lastUpdated)
         if (lastUpdatedElement.length) lastUpdatedElement = Math.max(...lastUpdatedElement)
         else lastUpdatedElement = undefined
@@ -164,7 +164,7 @@ class ToplineElement extends React.Component {
             this.props.value.bind(this)
         }
     }
-    
+
     render() {
         var value = undefined
         var label = this.props.hasOwnProperty('label') ? <div className='gd-single-number-label'  style={this.props.labelStyle}>{this.props.label}</div> : undefined
@@ -176,7 +176,7 @@ class ToplineElement extends React.Component {
             value = <div className='gd-single-number-value' style={this.props.valueStyle}>{value}</div>
         }
 
-        
+
 
         return (
             <div className='gd-topline-element gd-single-number'>
@@ -229,7 +229,7 @@ class GraphicHeader extends React.Component {
         this.setState({hasData})
     }
     render() {
-        
+
         var yAccessor = Array.isArray(this.props.yAccessor) ? this.props.yAccessor[0] : this.props.yAccessor
         var singleNumber = this.props.lastDatum !== undefined ? dataFormats[this.props.dataType](this.props.lastDatum[yAccessor]) : undefined
         var resolutionLabel = (this.props.hasOwnProperty('showResolutionLabel') && this.props.lastDatum !== undefined) ? (
@@ -237,11 +237,11 @@ class GraphicHeader extends React.Component {
         ) : undefined
         var st = this.props.hasOwnProperty('subtitle') ? this.props.subtitle : undefined
         var subtitle = <div className='gd-graphic-header-subtitle'>{st}</div>
-        
+
         return (
             <div className='gd-graphic-header'>
                 <div className={'gd-graphic-header-download'}>
-                    <a 
+                    <a
                         className={(this.props.isActive ? "" : 'inactive-data-source ') + ((IS_OFFICE_TV) ? 'hide-on-monitor-display ' : '')}
 
                          href={this.props.source} target='_blank'>
@@ -250,7 +250,7 @@ class GraphicHeader extends React.Component {
                 </div>
                 <div className={"gd-graphic-header-title " +(this.props.isActive ? "" : 'inactive-data-source')}>{this.props.title}{subtitle}</div>
                 <div className="gd-graphic-header-second-text">{resolutionLabel}{singleNumber}</div>
-                    
+
             </div>
         )
     }
@@ -263,7 +263,7 @@ class NoDataPlaceholder extends React.Component {
 
     render() {
         return (
-            <GraphicPlaceholder className='gd-no-data-available' aboveText="no data available" />
+            <GraphicPlaceholder className='gd-no-data-available' aboveText="data not yet available" />
         )
     }
 }
@@ -355,7 +355,7 @@ class DataGraphic extends React.Component {
                 this.setState({loaded:true, hasData:false})
             }
 
-            
+
         }
     }
 }
@@ -443,16 +443,16 @@ class GraphicContainer extends React.Component {
                 })
             })
         } else {
-            var children =  <div className='gd-loading-graphic'><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>    
+            var children =  <div className='gd-loading-graphic'><i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw"></i></div>
         }
-        
+
         return (
-            <div 
-                onMouseOver={this.handleHover} 
-                onMouseOut={this.handleHover} 
+            <div
+                onMouseOver={this.handleHover}
+                onMouseOut={this.handleHover}
                 data-tip={this.props.description}
                 ref='graphicContainer'
-                className='gd-graphic-container' 
+                className='gd-graphic-container'
                 style={{width: containerWidth}}>
                 {children}
             </div>
@@ -473,7 +473,7 @@ class GraphicContainer extends React.Component {
             var dataPull = new Promise((resolve,reject)=>{
                 getTheData(`data/${this.props.id}.json`, (data)=> {
                     if (this.props.format == 'json') this.props.onLastUpdateData(new Date(data.query_result.retrieved_at), this.props.title)
-    
+
                     if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
                     this.setState({data, lastDatum: data[data.length-1]})
                     resolve()
@@ -490,16 +490,16 @@ class GraphicContainer extends React.Component {
                         }
                         var annotation = that.props.annotationProcessor(ann)
                         that.setState({annotation})
-                        
+
                         resolve(annotation)
                     }, )
                 })
                 promiseChain.push(annotationsPull)
             }
-            
+
 
             var promiseChain = Promise.all(promiseChain).then(()=>{this.setState({loaded:true, hasData: this.state.data.length})})
-            
+
             // add loaded: true at end!
             // add hasData: data.length at end!
 
@@ -509,7 +509,7 @@ class GraphicContainer extends React.Component {
             var data = fakeIt(...args)
             this.setState({loaded: true, data})
         }
-        
+
     }
 }
 

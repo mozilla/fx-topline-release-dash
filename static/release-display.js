@@ -22137,7 +22137,7 @@ class NoDataPlaceholder extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Co
     }
 
     render() {
-        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(GraphicPlaceholder, { className: 'gd-no-data-available', aboveText: 'no data available' });
+        return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(GraphicPlaceholder, { className: 'gd-no-data-available', aboveText: 'data not yet available' });
     }
 }
 
