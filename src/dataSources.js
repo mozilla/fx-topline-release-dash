@@ -153,7 +153,7 @@ function parseISOLocal(s) {
 var dataSources = {
     cumulativeNewProfiles: {
         id: 'cumulativeNewProfiles',
-        source: "https://sql.telemetry.mozilla.org/queries/49093/source",
+        source: "https://sql.telemetry.mozilla.org/queries/50179/source",
         preprocessor: data => {
             data = handleFormat(data)
             return data[0].total_new_profiles
@@ -165,7 +165,7 @@ var dataSources = {
         subtitle: "1000s of hrs.",
         hourlySource: "kiloUsageHours_hourly",
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
-        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48819/source" : "https://sql.telemetry.mozilla.org/queries/48817/source#131589",
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/50180/source" : "https://sql.telemetry.mozilla.org/queries/50181/source",
         format: DATA_FORMAT,
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
@@ -203,7 +203,7 @@ var dataSources = {
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         description: "percentage of attempted Firefox Quantum installs that are successful",
         plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.successfulInstalls}, {format: 'Percentage', max_y:1}),
-        source: "https://sql.telemetry.mozilla.org/queries/3648#7201",
+        source: "https://sql.telemetry.mozilla.org/queries/50182/source",
         format: DATA_FORMAT,
         dataType: 'percentage',
         preprocessor: data => {
@@ -247,7 +247,7 @@ var dataSources = {
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
         dataType: 'percentage',
-        source: "https://sql.telemetry.mozilla.org/queries/48512/source#130992",
+        source: "https://sql.telemetry.mozilla.org/queries/50183/source",
         annotations: "data/throttleRate.json",
         annotationProcessor: annotations => {
             var rules = annotations.rules
@@ -343,7 +343,7 @@ var dataSources = {
         },
         xAccessor: RESOLUTION === 'daily' ? 'submission' : 'hour_interval',
         yAccessor: RESOLUTION === 'daily' ? 'new_profiles_smooth' : 'hourly_new_profiles_smooth',
-        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/48504/source#130999" : "https://sql.telemetry.mozilla.org/queries/48509/source#131004"
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/50184/source" : "https://sql.telemetry.mozilla.org/queries/50185/source"
     },
     dau: {
         title: "Daily Active Users",
@@ -406,7 +406,7 @@ var dataSources = {
         dataType: 'rate',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
         format: DATA_FORMAT,
-        source: 'https://sql.telemetry.mozilla.org/queries/48587/source',
+        source: 'https://sql.telemetry.mozilla.org/queries/50186/source',
         preprocessor: (data) => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
@@ -431,7 +431,7 @@ var dataSources = {
         plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.sessionHours}, {'legend': ['Quantum', 'All']}),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
-        source: 'https://sql.telemetry.mozilla.org/queries/48583/source',
+        source: 'https://sql.telemetry.mozilla.org/queries/50187/source',
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data)
