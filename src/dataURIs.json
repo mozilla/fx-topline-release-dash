@@ -1,12 +1,12 @@
 {
-  "successfulInstalls":"https://sql.telemetry.mozilla.org/api/queries/50182/results.json?api_key=${API_KEY}",
-  "uptake":"https://sql.telemetry.mozilla.org/api/queries/50183/results.json?api_key=${API_KEY}",
-  "newUsers_daily":"https://sql.telemetry.mozilla.org/api/queries/50184/results.json?api_key=${API_KEY}",
-  "newUsers_hourly": "https://sql.telemetry.mozilla.org/api/queries/50185/results.json?api_key=${API_KEY}",
-  "pagesVisited":"https://sql.telemetry.mozilla.org/api/queries/50186/results.json?api_key=${API_KEY}",
-  "sessionHours":"https://sql.telemetry.mozilla.org/api/queries/50187/results.json?api_key=${API_KEY}",
-  "kiloUsageHours_daily": "https://sql.telemetry.mozilla.org/api/queries/50180/results.json?api_key=${API_KEY}",
-  "kiloUsageHours_hourly": "https://sql.telemetry.mozilla.org/api/queries/50181/results.json?api_key=${API_KEY}",
-  "cumulativeNewProfiles": "https://sql.telemetry.mozilla.org/api/queries/50179/results.json?api_key=${API_KEY}",
+  "successfulInstalls":"https://sql.telemetry.mozilla.org/api/queries/51808/results.json?api_key=${API_KEY}",
+  "uptake":"https://sql.telemetry.mozilla.org/api/queries/51809/results.json?api_key=${API_KEY}",
+  "newUsers_daily":"https://sql.telemetry.mozilla.org/api/queries/51810/results.json?api_key=${API_KEY}",
+  "newUsers_hourly": "https://sql.telemetry.mozilla.org/api/queries/51811/results.json?api_key=${API_KEY}",
+  "pagesVisited":"https://sql.telemetry.mozilla.org/api/queries/51812/results.json?api_key=${API_KEY}",
+  "sessionHours":"https://sql.telemetry.mozilla.org/api/queries/51813/results.json?api_key=${API_KEY}",
+  "kiloUsageHours_daily": "https://sql.telemetry.mozilla.org/api/queries/51806/results.json?api_key=${API_KEY}",
+  "kiloUsageHours_hourly": "https://sql.telemetry.mozilla.org/api/queries/51807/results.json?api_key=${API_KEY}",
+  "cumulativeNewProfiles": "https://sql.telemetry.mozilla.org/api/queries/51805/results.json?api_key=${API_KEY}",
   "throttleRate": "https://aus-api.mozilla.org/api/v1/rules/145/revisions"
 }

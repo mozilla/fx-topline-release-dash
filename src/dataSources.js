@@ -15,12 +15,12 @@ function parseLocalTime(d) {
 
 /* potch this would be the section you should touch */
 
-var RELEASE_DATE = dt('2018-01-23')
-var DAY_AFTER = dt('2018-01-24')
-var THREE_DAYS_AFTER = dt('2018-01-26')
+var RELEASE_DATE = dt('2018-03-13')
+var DAY_AFTER = dt('2018-03-14')
+var THREE_DAYS_AFTER = dt('2018-03-16')
 
-var FIRST_MAIN_SUMMARY_DATE = '2018-01-22'
-var NOW = dt('2018-01-23')
+var FIRST_MAIN_SUMMARY_DATE = '2018-03-12'
+var NOW = dt('2018-03-13')
 //NOW.setHours(6,0,0,0)
 //var NOW = dt('2017-11-14')
 //NOW.setHours(8,0,0,0)
@@ -45,7 +45,7 @@ if (NOW <= DAY_AFTER) {
 
     CURRENT_SITUATION = 'rest-of-release'
 }
-
+console.log('RESOLUTION', RESOLUTION)
 // if (CURRENT_SITUATION == 'day-after' && LETS_SIMULATE) {
 //     var NOW = dt('2017-11-15')
 // }
@@ -83,13 +83,13 @@ var plotArgs = {
 }
 
 if (CURRENT_SITUATION == 'day-of') {
-    plotArgs.max_x = dt('2018-01-24')
+    plotArgs.max_x = dt('2018-03-14')
     plotArgs.max_x.setHours(6,0,0,0)
-    plotArgs.min_x = dt('2018-01-22')
+    plotArgs.min_x = dt('2018-03-13')
 }
 
 if (CURRENT_SITUATION == 'rest-of-release') {
-    plotArgs.min_x = dt('2018-01-22')
+    plotArgs.min_x = dt('2018-03-12')
     plotArgs.max_x = THREE_DAYS_AFTER
     plotArgs.max_x.setHours(6,0,0,0)
 
@@ -153,7 +153,7 @@ function parseISOLocal(s) {
 var dataSources = {
     cumulativeNewProfiles: {
         id: 'cumulativeNewProfiles',
-        source: "https://sql.telemetry.mozilla.org/queries/50179/source",
+        source: "https://sql.telemetry.mozilla.org/queries/51805/source",
         preprocessor: data => {
             data = handleFormat(data)
             return data[0].total_new_profiles
@@ -165,7 +165,7 @@ var dataSources = {
         subtitle: "1000s of hrs.",
         hourlySource: "kiloUsageHours_hourly",
         description: "total hours browsed by Firefox Quantum users (in 1000s of hours)",
-        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/50180/source" : "https://sql.telemetry.mozilla.org/queries/50181/source",
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/51806/source" : "https://sql.telemetry.mozilla.org/queries/51807/source",
         format: DATA_FORMAT,
         graphResolution: RESOLUTION,
         showResolutionLabel: true,
@@ -203,7 +203,7 @@ var dataSources = {
         firstAvailableData: dt(FIRST_MAIN_SUMMARY_DATE),
         description: "percentage of attempted Firefox Quantum installs that are successful",
         plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.successfulInstalls}, {format: 'Percentage', max_y:1}),
-        source: "https://sql.telemetry.mozilla.org/queries/50182/source",
+        source: "https://sql.telemetry.mozilla.org/queries/51808/source",
         format: DATA_FORMAT,
         dataType: 'percentage',
         preprocessor: data => {
@@ -247,7 +247,7 @@ var dataSources = {
         description: 'percentage of Daily Active Users (DAUs) on Firefox Quantum',
         polling: ()=>{},
         dataType: 'percentage',
-        source: "https://sql.telemetry.mozilla.org/queries/50183/source",
+        source: "https://sql.telemetry.mozilla.org/queries/51809/source",
         annotations: "data/throttleRate.json",
         annotationProcessor: annotations => {
             var rules = annotations.rules
@@ -336,14 +336,14 @@ var dataSources = {
             data.sort((a,b)=>{
                 return a[xAccessor] > b[xAccessor] ? 1 : -1
             })
-
+            console.log(data,'???')
             if (LETS_SIMULATE) data = simulateRelease(data, xAccessor)
             if (TRUNCATE_CURRENT_DATA_FOR_NOW) data = data.slice(0,30)
             return data
         },
         xAccessor: RESOLUTION === 'daily' ? 'submission' : 'hour_interval',
         yAccessor: RESOLUTION === 'daily' ? 'new_profiles_smooth' : 'hourly_new_profiles_smooth',
-        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/50184/source" : "https://sql.telemetry.mozilla.org/queries/50185/source"
+        source: RESOLUTION === 'daily' ? "https://sql.telemetry.mozilla.org/queries/51810/source" : "https://sql.telemetry.mozilla.org/queries/51811/source"
     },
     dau: {
         title: "Daily Active Users",
@@ -406,7 +406,7 @@ var dataSources = {
         dataType: 'rate',
         description: "average number of URIs visited (per hour) per user, Firefox Quantum vs all",
         format: DATA_FORMAT,
-        source: 'https://sql.telemetry.mozilla.org/queries/50186/source',
+        source: 'https://sql.telemetry.mozilla.org/queries/51812/source',
         preprocessor: (data) => {
             data = handleFormat(data)
             data = MG.convert.date(data, 'date', '%Y%m%d')
@@ -431,7 +431,7 @@ var dataSources = {
         plotArgs: Object.assign({}, plotArgs, {x_mouseover: xMouseovers.sessionHours}, {'legend': ['Quantum', 'All']}),
         dataType: 'rate',
         description: "average number of hours spent in browser per user, Firefox Quantum vs all",
-        source: 'https://sql.telemetry.mozilla.org/queries/50187/source',
+        source: 'https://sql.telemetry.mozilla.org/queries/51813/source',
         format: DATA_FORMAT,
         preprocessor: data => {
             data = handleFormat(data)
