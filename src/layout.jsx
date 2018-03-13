@@ -190,7 +190,6 @@ class ToplineElement extends React.Component {
             d3.json(`data/${this.props.dataID}.json`, data=>{
 
                 if (this.props.preprocessor !== undefined) data = this.props.preprocessor(data)
-                console.log(data,'sodifnsdofidniid')
 
                 this.setState({data})
             })
